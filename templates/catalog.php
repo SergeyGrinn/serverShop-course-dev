@@ -62,8 +62,7 @@
                         <p><?= htmlspecialchars($server['description']) ?></p>
                         <span class="price">from <?= number_format($server['base_price'], 0, '.', ' ') ?> €</span>
                     </div>
-                    <a href="/configurator?id=<?= $server['id'] ?>" class="btn">Configure</a>
-                </div>
+                <a href="/L/course/public/configurator.php?id=<?= $server['id'] ?>" class="btn">Configure</a>                </div>
             <?php endforeach; ?>
         </section>
     </div>
