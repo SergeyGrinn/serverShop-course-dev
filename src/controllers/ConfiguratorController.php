@@ -36,8 +36,8 @@ foreach ($components as $component) {
     $grouped[$component['type']][] = $component;
 }
 
-require_once base_path('templates/header.php');
-require_once base_path('templates/configurator.php');
-require_once base_path('templates/footer.php');
+require base_path('templates/header.php');
+require base_path('templates/configurator.php');
+require base_path('templates/footer.php');
 }
 }
