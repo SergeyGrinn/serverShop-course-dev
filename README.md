@@ -4,4 +4,14 @@ E-Shop for renting physical servers. For now you can filter servers by RAM, Pric
 
 Demo homepage done, polishing in process.
 
+### **Notes**
+
 -Nevermind, KJS is working propely now, but it only serves only one purpose - calculating total sum of product when choosing different components (external SSD only atm)
+
+### ***TO DO:***
+
+-Deletion from cart function not working, fix.
+
+-Dynamic update of cart depending on user action (delete, add, etc.)
+
+-Login, register, logout.

@@ -24,3 +24,28 @@ function ConfiguratorViewModel(basePrice) {
 
 var vm = new ConfiguratorViewModel(parseFloat(document.getElementById('base-price').value));
 ko.applyBindings(vm, document.getElementById('configurator-app'));
+
+document.getElementById('add-to-cart').addEventListener('click', function() {
+    const serverId = new URLSearchParams(window.location.search).get('id');
+    const selectedInputs = document.querySelectorAll('input[type="radio"]:checked');
+
+    const componentIds = Array.from(selectedInputs).map(input => parseInt(input.value));
+    const totalPrice = vm.totalPrice();
+
+    fetch('/L/course/api/cart/add.php', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            server_id: serverId,
+            component_ids: componentIds,
+            total_price: totalPrice
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            loadCart(); // Refresh cart contents even if it's already open
+            openCart();
+        }
+    });
+});
