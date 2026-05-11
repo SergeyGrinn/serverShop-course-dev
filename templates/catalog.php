@@ -5,11 +5,16 @@
         <aside class="w-64 flex-shrink-0 bg-white rounded-lg border border-gray-200 p-5 h-fit">
             <h2 class="text-lg font-bold mb-4">Filter</h2>
 
-            <div class="flex flex-col gap-2 mb-4">
-                <label class="text-sm text-gray-600">Price: <span id="price-value">0</span> €</label>
-                <input type="range" min="0" max="300" value="0" class="w-full"
-                    oninput="document.getElementById('price-value').textContent = this.value">
-            </div>
+        <div class="flex flex-col gap-2 mb-4">
+                <label class="text-sm text-gray-600">Price</label>
+                <div class="flex gap-2 items-center">
+                    <input type="number" id="price-from" placeholder="From" min="0"
+                    class="w-full border border-gray-300 rounded px-2 py-1 text-sm">
+                    <span class="text-gray-400">—</span>
+                    <input type="number" id="price-to" placeholder="To" min="0"
+                    class="w-full border border-gray-300 rounded px-2 py-1 text-sm">
+                </div>
+        </div>
 
             <div class="flex flex-col gap-2 mb-4">
                 <label class="text-sm text-gray-600">RAM</label>

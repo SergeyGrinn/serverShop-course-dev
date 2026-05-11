@@ -1,0 +1,7 @@
+CREATE TABLE carts (
+    id int AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NULL,
+    session_id VARCHAR(255) NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
