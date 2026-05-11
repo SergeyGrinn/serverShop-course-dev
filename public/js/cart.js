@@ -35,13 +35,13 @@ function loadCart() {
             const total = document.getElementById('cart-total');
 
             if (data.items.length === 0) {
-                empty.style.display = 'block';
+                if (empty) empty.style.display = 'block';
                 cartItemsContainer.innerHTML = '<p class="text-gray-500">Your cart is empty.</p>';
                 total.textContent = '€0.00';
                 return;
             }
 
-            empty.style.display = 'none'; // Hide empty message
+            if (empty) empty.style.display = 'none'; // Hide empty message
             let totalPrice = 0; // Initialize total price
 
             cartItemsContainer.innerHTML = data.items.map(item => {
