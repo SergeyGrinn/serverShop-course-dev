@@ -39,7 +39,7 @@ document.getElementById('add-to-cart').addEventListener('click', function() {
             server_id: serverId,
             component_ids: componentIds,
             total_price: totalPrice
-        })
+        }) 
     })
     .then(res => res.json())
     .then(data => {
