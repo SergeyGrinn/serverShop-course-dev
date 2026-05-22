@@ -6,6 +6,5 @@ CREATE TABLE components (
     type ENUM('CPU', 'GPU', 'RAM', 'SSD', 'HDD') NOT NULL,
     value VARCHAR(50) NOT NULL,
     price DECIMAL(10, 2) NOT NULL,
-    server_id INT,
-    available BOOLEAN NOT NULL DEFAULT TRUE,
+    available BOOLEAN NOT NULL DEFAULT TRUE
 );

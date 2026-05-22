@@ -76,4 +76,4 @@ function removeItem(item_id) {
     .then(data => {
         if (data.success) loadCart(); // Reload cart after removal
     });
-} 
+}

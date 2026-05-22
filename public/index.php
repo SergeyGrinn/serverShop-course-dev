@@ -10,4 +10,4 @@ require_once BASE_PATH . 'src/Controllers/ServerController.php';
 require_once BASE_PATH . 'src/Controllers/ConfiguratorController.php';
 
 $controller = new ServerController();
-$controller->index(); 
+$controller->index();
