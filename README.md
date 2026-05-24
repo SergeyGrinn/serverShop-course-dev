@@ -10,8 +10,4 @@ Demo homepage done, polishing in process.
 
 ### ***TO DO:***
 
--Deletion from cart function not working, fix.
-
--Dynamic update of cart depending on user action (delete, add, etc.)
-
--Login, register, logout.
+-Delete a server from admin server list
