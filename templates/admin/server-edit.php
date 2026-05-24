@@ -12,7 +12,7 @@
             </div>
         <?php endif; ?>
 
-        <form method="POST" class="bg-white rounded-lg shadow p-6">
+        <form method="POST" class="bg-white rounded-lg shadow p-6" enctype="multipart/form-data">
             <div class="mb-4">
                 <label class="block text-sm font-medium mb-2">Server Name</label>
                 <input type="text" name="name" value="<?= htmlspecialchars($_POST['name'] ?? $server['name']) ?>" class="w-full border rounded px-3 py-2" required>
@@ -24,8 +24,13 @@
             </div>
 
             <div class="mb-4">
-                <label class="block text-sm font-medium mb-2">Image URL</label>
-                <input type="text" name="image" value="<?= htmlspecialchars($_POST['image'] ?? $server['image']) ?>" class="w-full border rounded px-3 py-2">
+                <label class="block text-sm font-medium mb-2">Image</label>
+                    <?php if ($server['image']): ?>
+                        <img src="/L/course/public/assets/images/<?= htmlspecialchars($server['image']) ?>" 
+                        class="w-32 h-32 object-cover rounded mb-2">
+                    <?php endif; ?>
+                    <input type="file" name="image" accept="image/*" class="w-full border rounded px-3 py-2">
+                    <p class="text-xs text-gray-400 mt-1">Leave empty to keep current image</p>
             </div>
 
             <div class="mb-4">

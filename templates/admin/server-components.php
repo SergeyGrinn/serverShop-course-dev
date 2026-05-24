@@ -58,11 +58,12 @@
             <div class="bg-white rounded-lg shadow p-6">
                 <h2 class="text-xl font-semibold mb-4">Add New Component</h2>
                 
-                <form method="POST" action="/L/course/public/admin/components.php?action=create" id="createComponentForm">
+                <form method="POST" action="/L/course/public/admin/servers.php?action=components&id=<?= $server['id'] ?>" id="createComponentForm">
                     <div class="space-y-4">
                         <div>
                             <label class="block text-sm font-medium mb-2">Component Name</label>
                             <input type="text" name="name" class="w-full border rounded px-3 py-2 text-sm" required>
+                            <input type="hidden" name="sub_action" value="create_component">
                         </div>
 
                         <div>

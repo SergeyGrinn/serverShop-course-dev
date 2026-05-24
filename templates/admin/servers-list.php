@@ -24,7 +24,12 @@
                     <?php foreach ($servers as $server): ?>
                     <tr class="border-b hover:bg-gray-50">
                         <td class="px-6 py-3"><?= $server['id'] ?></td>
-                        <td class="px-6 py-3"><?= htmlspecialchars($server['name']) ?></td>
+                        <td class="px-6 py-3">
+                            <a href="/L/course/public/configurator.php?id=<?= $server['id'] ?>" target="_blank" 
+                                class="hover:text-green-700 hover:underline">
+                                <?= htmlspecialchars($server['name']) ?>
+                            </a>
+                        </td>
                         <td class="px-6 py-3">$<?= number_format($server['base_price'], 2) ?></td>
                         <td class="px-6 py-3">
                             <span class="px-3 py-1 rounded text-white text-sm" style="background-color: <?= $server['available'] ? '#22c55e' : '#ef4444' ?>;">

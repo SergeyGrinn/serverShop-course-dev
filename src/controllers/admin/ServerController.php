@@ -28,7 +28,14 @@ class ServerController {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $name = $_POST['name'] ?? '';
             $description = $_POST['description'] ?? '';
-            $image = $_POST['image'] ?? '';
+            $image = '';
+                if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+                $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
+                $filename = uniqid() . '.' . $ext;
+                $uploadPath = BASE_PATH . 'public/assets/images/' . $filename;
+                move_uploaded_file($_FILES['image']['tmp_name'], $uploadPath);
+                $image = $filename;
+            }
             $base_price = $_POST['base_price'] ?? '';
 
             $errors = [];
@@ -58,7 +65,14 @@ class ServerController {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $name = $_POST['name'] ?? '';
             $description = $_POST['description'] ?? '';
-            $image = $_POST['image'] ?? '';
+            $image = $server['image'];
+                if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+                $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
+                $filename = uniqid() . '.' . $ext;
+                $uploadPath = BASE_PATH . 'public/assets/images/' . $filename;
+                move_uploaded_file($_FILES['image']['tmp_name'], $uploadPath);
+                $image = $filename;
+            }
             $base_price = $_POST['base_price'] ?? '';
             $available = isset($_POST['available']) ? 1 : 0;
 
@@ -85,42 +99,66 @@ class ServerController {
     }
 
     public function components($id) {
-        $server = $this->serverModel->getByIdAdmin($id);
-        
-        if (!$server) {
-            header('Location: /L/course/public/admin/servers.php');
-            exit;
-        }
-
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $component_ids = $_POST['components'] ?? [];
-            $current_components = $this->serverComponentModel->getServerComponents($id);
-            
-            // Remove unchecked components
-            foreach ($current_components as $comp_id) {
-                if (!in_array($comp_id, $component_ids)) {
-                    $this->serverComponentModel->detachComponent($id, $comp_id);
-                }
-            }
-            
-            // Add new components
-            foreach ($component_ids as $comp_id) {
-                if (!in_array($comp_id, $current_components)) {
-                    $this->serverComponentModel->attachComponent($id, $comp_id);
-                }
-            }
-
-            // Delete components from server if "Remove" button is clicked
-            
-
-            header('Location: /L/course/public/admin/servers.php');
-            exit;
-        }
-
-        $allComponents = $this->componentModel->getAll();
-        $serverComponents = $this->serverComponentModel->getServerComponents($id);
-        $componentModel = $this->componentModel;
-        
-        require base_path('templates/admin/server-components.php');
+    $server = $this->serverModel->getByIdAdmin($id);
+    
+    if (!$server) {
+        header('Location: /L/course/public/admin/servers.php');
+        exit;
     }
+
+    // Создание нового компонента
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['sub_action']) && $_POST['sub_action'] === 'create_component') {
+        $name = $_POST['name'] ?? '';
+        $type = $_POST['type'] ?? '';
+        $price = $_POST['price'] ?? 0;
+        $value = '';
+
+        switch ($type) {
+            case 'cpu':
+                $value = "{$_POST['cpu_cores']} cores, {$_POST['cpu_frequency']} GHz";
+                break;
+            case 'gpu':
+                $value = "{$_POST['gpu_vram']} GB VRAM";
+                break;
+            case 'ram':
+                $value = "{$_POST['ram_capacity']} GB";
+                break;
+            case 'ssd':
+            case 'hdd':
+                $value = "{$_POST['storage_capacity']} GB";
+                break;
+        }
+
+        $this->componentModel->create($name, $type, $value, $price);
+        header("Location: /L/course/public/admin/servers.php?action=components&id={$id}");
+        exit;
+    }
+
+    // Сохранение привязки компонентов к серверу
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $component_ids = $_POST['components'] ?? [];
+        $current_components = $this->serverComponentModel->getServerComponents($id);
+        
+        foreach ($current_components as $comp_id) {
+            if (!in_array($comp_id, $component_ids)) {
+                $this->serverComponentModel->detachComponent($id, $comp_id);
+            }
+        }
+        
+        foreach ($component_ids as $comp_id) {
+            if (!in_array($comp_id, $current_components)) {
+                $this->serverComponentModel->attachComponent($id, $comp_id);
+            }
+        }
+
+        header("Location: /L/course/public/admin/servers.php?action=components&id={$id}");
+        exit;
+    }
+
+    $allComponents = $this->componentModel->getAll();
+    $serverComponents = $this->serverComponentModel->getServerComponents($id);
+    $componentModel = $this->componentModel;
+    
+    require base_path('templates/admin/server-components.php');
+}
 }

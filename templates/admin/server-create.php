@@ -12,7 +12,7 @@
             </div>
         <?php endif; ?>
 
-        <form method="POST" class="bg-white rounded-lg shadow p-6">
+        <form method="POST" class="bg-white rounded-lg shadow p-6" enctype="multipart/form-data">
             <div class="mb-4">
                 <label class="block text-sm font-medium mb-2">Server Name</label>
                 <input type="text" name="name" value="<?= htmlspecialchars($_POST['name'] ?? '') ?>" class="w-full border rounded px-3 py-2" required>
@@ -24,8 +24,8 @@
             </div>
 
             <div class="mb-4">
-                <label class="block text-sm font-medium mb-2">Image URL</label>
-                <input type="text" name="image" value="<?= htmlspecialchars($_POST['image'] ?? '') ?>" class="w-full border rounded px-3 py-2">
+                <label class="block text-sm font-medium mb-2">Image</label>
+                <input type="file" name="image" accept="image/*" class="w-full border rounded px-3 py-2">
             </div>
 
             <div class="mb-6">
