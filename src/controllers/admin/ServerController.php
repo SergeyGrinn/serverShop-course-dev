@@ -110,6 +110,9 @@ class ServerController {
                 }
             }
 
+            // Delete components from server if "Remove" button is clicked
+            
+
             header('Location: /L/course/public/admin/servers.php');
             exit;
         }

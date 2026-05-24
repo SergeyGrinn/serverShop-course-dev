@@ -56,39 +56,12 @@ class Component {
     }
 
     public function getComponentDisplay($component) {
-        $value = $component['value'];
-        
-        $data = @json_decode($value, true);
-        if (!$data) {
-            $data = ['raw' => $value];
-        }
+    return $component['name'] . ' (' . $component['value'] . ')';
+}
 
-        $display = $component['name'];
-        
-        switch ($component['type']) {
-            case 'CPU':
-                if (isset($data['cores']) && isset($data['frequency'])) {
-                    $display .= " ({$data['cores']} cores, {$data['frequency']} GHz)";
-                }
-                break;
-            case 'GPU':
-                if (isset($data['vram'])) {
-                    $display .= " ({$data['vram']} GB)";
-                }
-                break;
-            case 'RAM':
-                if (isset($data['capacity'])) {
-                    $display .= " ({$data['capacity']} GB)";
-                }
-                break;
-            case 'SSD':
-            case 'HDD':
-                if (isset($data['capacity'])) {
-                    $display .= " ({$data['capacity']} GB)";
-                }
-                break;
-        }
-        
-        return $display;
-    }
+    public function delete($id) {
+    $stmt = $this->pdo->prepare("DELETE FROM components WHERE id = :id");
+    $stmt->execute([':id' => $id]);
+}
+
 }

@@ -25,6 +25,7 @@
                         <th class="px-6 py-3 text-left">Name</th>
                         <th class="px-6 py-3 text-left">Specs</th>
                         <th class="px-6 py-3 text-left">Price</th>
+                        <th class="px-6 py-3 text-left"> </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -38,6 +39,14 @@
                         <td class="px-6 py-3"><?= htmlspecialchars($component['name']) ?></td>
                         <td class="px-6 py-3 text-sm text-gray-600"><?= htmlspecialchars($component['value']) ?></td>
                         <td class="px-6 py-3">$<?= number_format($component['price'], 2) ?></td>
+                        <td class="px-6 py-3">
+                            <form method="POST" action="/L/course/public/admin/components.php?action=delete" onsubmit="return confirm('Are you sure?');">
+                                    <input type="hidden" name="id" value="<?= $component['id'] ?>">
+                                        <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600">
+                                            Delete
+                                        </button>
+                            </form>
+                        </td>
                     </tr>
                     <?php endforeach; ?>
                 </tbody>

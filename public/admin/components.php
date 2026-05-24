@@ -16,6 +16,14 @@ if ($action === 'create' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = $_POST['name'] ?? '';
     $type = $_POST['type'] ?? '';
     $price = $_POST['price'] ?? 0;
+}
+    if ($action === 'delete' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+        $id = $_POST['id'] ?? null;
+        if ($id) {
+            $componentModel->delete($id);
+        }
+        header('Location: /L/course/public/admin/components.php');
+        exit;
     
     $errors = [];
     
@@ -26,29 +34,29 @@ if ($action === 'create' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     $value = [];
     
     switch ($type) {
-        case 'CPU':
-            $cores = $_POST['cpu_cores'] ?? null;
-            $frequency = $_POST['cpu_frequency'] ?? null;
-            if (!$cores || !$frequency) $errors[] = 'CPU cores and frequency are required';
-            $value = ['cores' => (int)$cores, 'frequency' => (float)$frequency];
-            break;
-        case 'GPU':
-            $vram = $_POST['gpu_vram'] ?? null;
-            if (!$vram) $errors[] = 'GPU VRAM is required';
-            $value = ['vram' => (int)$vram];
-            break;
-        case 'RAM':
-            $capacity = $_POST['ram_capacity'] ?? null;
-            if (!$capacity) $errors[] = 'RAM capacity is required';
-            $value = ['capacity' => (int)$capacity];
-            break;
-        case 'SSD':
-        case 'HDD':
-            $capacity = $_POST['storage_capacity'] ?? null;
-            if (!$capacity) $errors[] = 'Storage capacity is required';
-            $value = ['capacity' => (int)$capacity];
-            break;
-    }
+    case 'cpu':
+        $cores = $_POST['cpu_cores'] ?? null;
+        $frequency = $_POST['cpu_frequency'] ?? null;
+        if (!$cores || !$frequency) $errors[] = 'CPU cores and frequency are required';
+        $value = "{$cores} cores, {$frequency} GHz";
+        break;
+    case 'gpu':
+        $vram = $_POST['gpu_vram'] ?? null;
+        if (!$vram) $errors[] = 'GPU VRAM is required';
+        $value = "{$vram} GB VRAM";
+        break;
+    case 'ram':
+        $capacity = $_POST['ram_capacity'] ?? null;
+        if (!$capacity) $errors[] = 'RAM capacity is required';
+        $value = "{$capacity} GB";
+        break;
+    case 'ssd':
+    case 'hdd':
+        $capacity = $_POST['storage_capacity'] ?? null;
+        if (!$capacity) $errors[] = 'Storage capacity is required';
+        $value = "{$capacity} GB";
+        break;
+}
     
     if (empty($errors)) {
         $componentModel->create($name, $type, $value, $price);

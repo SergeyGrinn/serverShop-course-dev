@@ -23,7 +23,7 @@
                         }
                         ?>
 
-                        <?php foreach (['CPU', 'GPU', 'RAM', 'SSD', 'HDD'] as $type): ?>
+                        <?php foreach (['cpu', 'gpu', 'ram', 'ssd', 'hdd'] as $type): ?>
                             <?php if (isset($componentsByType[$type])): ?>
                             <div class="border-t pt-3">
                                 <h3 class="font-medium text-sm mb-2"><?= $type ?></h3>
@@ -69,11 +69,11 @@
                             <label class="block text-sm font-medium mb-2">Type</label>
                             <select name="type" id="componentType" class="w-full border rounded px-3 py-2 text-sm" required onchange="updateComponentFields()">
                                 <option value="">Select type...</option>
-                                <option value="CPU">CPU</option>
-                                <option value="GPU">GPU</option>
-                                <option value="RAM">RAM</option>
-                                <option value="SSD">SSD</option>
-                                <option value="HDD">HDD</option>
+                                <option value="cpu">CPU</option>
+                                <option value="gpu">GPU</option>
+                                <option value="ram">RAM</option>
+                                <option value="ssd">SSD</option>
+                                <option value="hdd">HDD</option>
                             </select>
                         </div>
 
@@ -131,17 +131,17 @@ function updateComponentFields() {
     document.getElementById('storageFields').classList.add('hidden');
 
     switch(type) {
-        case 'CPU':
+        case 'cpu':
             document.getElementById('cpuFields').classList.remove('hidden');
             break;
-        case 'GPU':
+        case 'gpu':
             document.getElementById('gpuFields').classList.remove('hidden');
             break;
-        case 'RAM':
+        case 'ram':
             document.getElementById('ramFields').classList.remove('hidden');
             break;
-        case 'SSD':
-        case 'HDD':
+        case 'ssd':
+        case 'hdd':
             document.getElementById('storageFields').classList.remove('hidden');
             break;
     }
