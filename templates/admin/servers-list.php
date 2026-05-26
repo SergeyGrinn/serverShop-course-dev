@@ -43,11 +43,10 @@
                             <a href="/L/course/public/admin/servers.php?action=edit&id=<?= $server['id'] ?>" class="bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600">
                                 Edit
                             </a>
-                            <form method="POST" style="display:inline;" onsubmit="return confirm('Are you sure?');">
-                                <input type="hidden" name="action" value="delete">
+                            <form method="POST" action="/L/course/public/admin/servers.php?action=delete" style="display:inline;" onsubmit="return confirm('Are you sure?');">
                                 <input type="hidden" name="id" value="<?= $server['id'] ?>">
                                 <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600">
-                                    Delete
+                                Delete
                                 </button>
                             </form>
                         </td>
