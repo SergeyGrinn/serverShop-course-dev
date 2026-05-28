@@ -30,7 +30,7 @@
                                 <?= htmlspecialchars($server['name']) ?>
                             </a>
                         </td>
-                        <td class="px-6 py-3">$<?= number_format($server['base_price'], 2) ?></td>
+                        <td class="px-6 py-3">€<?= number_format($server['base_price'], 2) ?></td>
                         <td class="px-6 py-3">
                             <span class="px-3 py-1 rounded text-white text-sm" style="background-color: <?= $server['available'] ? '#22c55e' : '#ef4444' ?>;">
                                 <?= $server['available'] ? 'Available' : 'Unavailable' ?>

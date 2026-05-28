@@ -1,13 +1,15 @@
 Repo for course project.
 
-E-Shop for renting physical servers. For now you can filter servers by RAM, Price, CPU cores and storage amount.
-
-Demo homepage done, polishing in process.
+E-Shop for renting physical servers. WIP.
 
 ### **Notes**
 
--Nevermind, KJS is working propely now, but it only serves only one purpose - calculating total sum of product when choosing different components (external SSD only atm)
+-KJS is working propely now, but it only serves only one purpose - calculating total sum of product when choosing different components 
 
 ### ***TO DO:***
 
--Delete a server from admin server list
+-Make catalog filters work
+-Add proper home page template and make "Server Catalog" redirect to actual catalog and not the current page.
+-Make a template for "Servers" page. Come up with some page with summary of how servers work and what's the purpose.
+-"Contact" page template
+-Make a checkout page with billing address, email field and more checkout-page-necessary stuff. Make sure that user can checkout only if email is valid or if user is logged in.
