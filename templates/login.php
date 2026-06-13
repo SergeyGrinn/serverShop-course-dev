@@ -25,7 +25,7 @@
         </form>
 
         <p class="text-center text-sm text-gray-500 mt-4">
-            Don't have an account? <a href="/L/course/public/register.php" class="text-green-700 hover:underline">Register</a>
+            Don't have an account? <a href="register.php" class="text-green-700 hover:underline">Register</a>
         </p>
     </div>
 </main>

@@ -34,7 +34,7 @@
                                             <?= in_array($component['id'], $serverComponents) ? 'checked' : '' ?> 
                                             class="mr-2">
                                         <span class="text-sm"><?= htmlspecialchars($componentModel->getComponentDisplay($component)) ?></span>
-                                        <span class="text-gray-500 text-xs ml-2">$<?= number_format($component['price'], 2) ?></span>
+                                        <span class="text-gray-500 text-xs ml-2">€<?= number_format($component['price'], 2) ?></span>
                                     </label>
                                     <?php endforeach; ?>
                                 </div>
@@ -47,7 +47,7 @@
                         <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 text-sm">
                             Save Components
                         </button>
-                        <a href="/L/course/public/admin/servers.php" class="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500 text-sm">
+                        <a href="servers.php" class="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500 text-sm">
                             Back
                         </a>
                     </div>
@@ -58,7 +58,7 @@
             <div class="bg-white rounded-lg shadow p-6">
                 <h2 class="text-xl font-semibold mb-4">Add New Component</h2>
                 
-                <form method="POST" action="/L/course/public/admin/servers.php?action=components&id=<?= $server['id'] ?>" id="createComponentForm">
+                <form method="POST" action="servers.php?action=components&id=<?= $server['id'] ?>" id="createComponentForm">
                     <div class="space-y-4">
                         <div>
                             <label class="block text-sm font-medium mb-2">Component Name</label>

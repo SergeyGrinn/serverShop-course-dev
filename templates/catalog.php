@@ -65,7 +65,7 @@
         <section class="flex-1 grid grid-cols-2 gap-5 content-start">
             <?php foreach ($servers as $server): ?>
                 <div class="bg-white rounded-lg border border-gray-200 p-4 flex flex-col gap-3">
-                    <img src="/L/course/public/assets/images/<?= htmlspecialchars($server['image']) ?>"
+                    <img src="<?= BASE_URL ?>/assets/images/<?= htmlspecialchars($server['image']) ?>"
                          alt="<?= htmlspecialchars($server['name']) ?>"
                          class="w-full h-44 object-cover rounded-md bg-gray-100">
                     <div>
@@ -73,7 +73,7 @@
                         <p class="text-sm text-gray-500 mt-1"><?= htmlspecialchars($server['description']) ?></p>
                         <span class="text-green-700 font-bold text-lg mt-2 block">from <?= number_format($server['base_price'], 0, '.', ' ') ?> €</span>
                     </div>
-                    <a href="/L/course/public/configurator.php?id=<?= $server['id'] ?>"
+                    <a href="<?= BASE_URL ?>/configurator.php?id=<?= $server['id'] ?>"
                        class="block text-center py-2 px-4 rounded-lg text-white mt-auto" style="background-color: #308020;">Configure</a>
                 </div>
             <?php endforeach; ?>

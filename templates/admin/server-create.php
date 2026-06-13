@@ -37,7 +37,7 @@
                 <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700">
                     Create Server
                 </button>
-                <a href="/L/course/public/admin/servers.php" class="bg-gray-400 text-white px-6 py-2 rounded hover:bg-gray-500">
+                <a href="servers.php" class="bg-gray-400 text-white px-6 py-2 rounded hover:bg-gray-500">
                     Cancel
                 </a>
             </div>

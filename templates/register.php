@@ -37,7 +37,7 @@
         </form>
 
         <p class="text-center text-sm text-gray-500 mt-4">
-            Already have an account? <a href="/L/course/public/login.php" class="text-green-700 hover:underline">Login</a>
+            Already have an account? <a href="login.php" class="text-green-700 hover:underline">Login</a>
         </p>
     </div>
 </main>

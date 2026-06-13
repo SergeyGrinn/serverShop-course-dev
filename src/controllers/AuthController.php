@@ -30,7 +30,7 @@ class AuthController {
 
             if (empty($errors)) {
                 $this->userModel->create($name, $email, $password);
-                header('Location: /L/course/public/login.php');
+                header('Location: ' . BASE_URL . '/login.php');
                 exit;
             }
         }
@@ -61,7 +61,7 @@ class AuthController {
                 ':cart_id' => $cart['id']
             ]);
 
-                header('Location: /L/course/public/index.php');
+                header('Location: ' . BASE_URL . '/index.php');
                 exit;
             }
 

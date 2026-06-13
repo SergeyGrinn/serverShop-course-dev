@@ -61,4 +61,9 @@ class Cart {
         $stmt = $this->pdo->prepare("DELETE FROM cart_items WHERE id = :id");
         $stmt->execute([':id' => $item_id]);
     }
+
+    public function clearCart($cart_id) {
+        $stmt = $this->pdo->prepare("DELETE FROM cart_items WHERE cart_id = :cart_id");
+        return $stmt->execute([':cart_id' => $cart_id]);
+    }
 }

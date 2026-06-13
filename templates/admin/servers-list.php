@@ -4,7 +4,7 @@
     <div class="max-w-6xl mx-auto">
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-3xl font-bold">Manage Servers</h1>
-            <a href="/L/course/public/admin/servers.php?action=create" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+            <a href="servers.php?action=create" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
                 Add New Server
             </a>
         </div>
@@ -25,7 +25,7 @@
                     <tr class="border-b hover:bg-gray-50">
                         <td class="px-6 py-3"><?= $server['id'] ?></td>
                         <td class="px-6 py-3">
-                            <a href="/L/course/public/configurator.php?id=<?= $server['id'] ?>" target="_blank" 
+                            <a href="../../configurator.php?id=<?= $server['id'] ?>" target="_blank" 
                                 class="hover:text-green-700 hover:underline">
                                 <?= htmlspecialchars($server['name']) ?>
                             </a>
@@ -37,13 +37,13 @@
                             </span>
                         </td>
                         <td class="px-6 py-3 flex gap-2">
-                            <a href="/L/course/public/admin/servers.php?action=components&id=<?= $server['id'] ?>" class="bg-green-500 text-white px-3 py-1 rounded text-sm hover:bg-green-600">
+                            <a href="servers.php?action=components&id=<?= $server['id'] ?>" class="bg-green-500 text-white px-3 py-1 rounded text-sm hover:bg-green-600">
                                 Components
                             </a>
-                            <a href="/L/course/public/admin/servers.php?action=edit&id=<?= $server['id'] ?>" class="bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600">
+                            <a href="servers.php?action=edit&id=<?= $server['id'] ?>" class="bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600">
                                 Edit
                             </a>
-                            <form method="POST" action="/L/course/public/admin/servers.php?action=delete" style="display:inline;" onsubmit="return confirm('Are you sure?');">
+                            <form method="POST" action="servers.php?action=delete" style="display:inline;" onsubmit="return confirm('Are you sure?');">
                                 <input type="hidden" name="id" value="<?= $server['id'] ?>">
                                 <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600">
                                 Delete

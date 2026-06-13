@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/../Core/bootstrap.php';
+
 define('DB_HOST', 'localhost');
 define('DB_NAME', 'server_eshop');
 define('DB_USER', 'root');

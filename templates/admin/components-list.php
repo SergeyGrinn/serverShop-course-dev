@@ -4,7 +4,7 @@
     <div class="max-w-5xl mx-auto">
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-3xl font-bold">Components Library</h1>
-            <a href="/L/course/public/admin/components.php?action=create" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+            <a href="components.php?action=create" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
                 Add Component
             </a>
         </div>
@@ -38,9 +38,9 @@
                         </td>
                         <td class="px-6 py-3"><?= htmlspecialchars($component['name']) ?></td>
                         <td class="px-6 py-3 text-sm text-gray-600"><?= htmlspecialchars($component['value']) ?></td>
-                        <td class="px-6 py-3">$<?= number_format($component['price'], 2) ?></td>
+                        <td class="px-6 py-3">€<?= number_format($component['price'], 2) ?></td>
                         <td class="px-6 py-3">
-                            <form method="POST" action="/L/course/public/admin/components.php?action=delete" onsubmit="return confirm('Are you sure?');">
+                            <form method="POST" action="components.php?action=delete" onsubmit="return confirm('Are you sure?');">
                                     <input type="hidden" name="id" value="<?= $component['id'] ?>">
                                         <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600">
                                             Delete

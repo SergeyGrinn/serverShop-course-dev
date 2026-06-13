@@ -2,5 +2,5 @@
 
 session_start();
 session_destroy();
-header('Location: /L/course/public/index.php');
+header('Location: ' . BASE_URL . '/index.php');
 exit;

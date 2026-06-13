@@ -14,7 +14,7 @@
             <span class="font-semibold">Total:</span>
             <span id="cart-total" class="font-bold text-green-700">0 €</span>
         </div>
-        <a href="/L/course/public/checkout.php" class="block text-center text-white py-2 rounded-lg font-semibold" style="background-color: #308020;">Checkout</a>
+        <a href="<?= APP_URL ?>public/checkout.php" class="block text-center text-white py-2 rounded-lg font-semibold" style="background-color: #308020;">Checkout</a>
     </div>
 
 </div>

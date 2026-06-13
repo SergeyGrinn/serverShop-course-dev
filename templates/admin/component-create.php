@@ -66,7 +66,7 @@
                     <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-sm">
                         Create Component
                     </button>
-                    <a href="/L/course/public/admin/components.php" class="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500 text-sm">
+                    <a href="components.php" class="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500 text-sm">
                         Cancel
                     </a>
                 </div>

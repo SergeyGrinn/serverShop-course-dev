@@ -26,7 +26,7 @@
             <div class="mb-4">
                 <label class="block text-sm font-medium mb-2">Image</label>
                     <?php if ($server['image']): ?>
-                        <img src="/L/course/public/assets/images/<?= htmlspecialchars($server['image']) ?>" 
+                        <img src="../../assets/images/<?= htmlspecialchars($server['image']) ?>" 
                         class="w-32 h-32 object-cover rounded mb-2">
                     <?php endif; ?>
                     <input type="file" name="image" accept="image/*" class="w-full border rounded px-3 py-2">
@@ -49,7 +49,7 @@
                 <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
                     Update Server
                 </button>
-                <a href="/L/course/public/admin/servers.php" class="bg-gray-400 text-white px-6 py-2 rounded hover:bg-gray-500">
+                <a href="servers.php" class="bg-gray-400 text-white px-6 py-2 rounded hover:bg-gray-500">
                     Cancel
                 </a>
             </div>

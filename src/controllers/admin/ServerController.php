@@ -130,7 +130,7 @@ class ServerController {
         }
 
         $this->componentModel->create($name, $type, $value, $price);
-        header("Location: /L/course/public/admin/servers.php?action=components&id={$id}");
+        header('Location: /L/course/public/admin/servers.php?action=components&id=' . $id);
         exit;
     }
 
@@ -151,7 +151,7 @@ class ServerController {
             }
         }
 
-        header("Location: /L/course/public/admin/servers.php?action=components&id={$id}");
+        header("Location: servers.php?action=components&id={$id}");
         exit;
     }
 
