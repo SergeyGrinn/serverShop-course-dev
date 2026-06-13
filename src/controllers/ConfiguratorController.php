@@ -18,14 +18,14 @@ public function index() { // Display configurator
     $server_id = $_GET['id'] ?? null; // Get selected server ID from query parameter
 
     if (!$server_id) {
-        header('Location: /L/course/public/index.php'); // Redirect to server catalog if no server selected
+        header('Location: ' . BASE_URL . '/public/index.php'); // Redirect to server catalog if no server selected
         exit;
     }
 
 $server = $this->serverModel->getById($server_id); // Get selected server details
 
     if(!$server) {
-        header('Location: /L/course/public/index.php'); // Redirect to server catalog if server not found
+        header('Location: ' . BASE_URL . '/public/index.php'); // Redirect to server catalog if server not found
         exit;
     }
 $components = $this->componentModel->getByServer($server_id); // Get components compatible with selected server

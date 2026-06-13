@@ -1,15 +1,19 @@
 <?php
 
+const BASE_PATH = __DIR__ . '/../../../';
+require_once BASE_PATH . 'src/Config/app.php';
+require_once BASE_PATH . 'src/Core/functions.php';
+require_once BASE_PATH . 'src/Config/db.php';
+require_once BASE_PATH . 'src/Models/Order.php';
+require_once BASE_PATH . 'src/Helpers/Response.php';
+
+header('Content-Type: application/json');
+
 session_start();
 
-// Store session_id
 if (!isset($_SESSION['session_id'])) {
     $_SESSION['session_id'] = session_id();
 }
-
-require_once '../../src/Config/db.php';
-require_once '../../src/Models/Order.php';
-require_once '../../src/Helpers/Response.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
@@ -27,10 +31,8 @@ if (!isset($data['order_id']) || empty($data['order_id'])) {
 
 $orderId = intval($data['order_id']);
 
-
 $orderModel = new Order($pdo);
 $order = $orderModel->get($orderId);
-
 
 if (!$order) {
     http_response_code(404);
@@ -39,31 +41,29 @@ if (!$order) {
 }
 
 $isOwner = false;
-if (isset($_SESSION['user_id']) && $order['user_id'] == $_SESSION['user_id']) { // Allow cancellation (logged-in)
+if (isset($_SESSION['user_id']) && $order['user_id'] == $_SESSION['user_id']) {
     $isOwner = true;
-} elseif ($order['session_id'] === ($_SESSION['session_id'] ?? session_id())) { // Allow cancellation (guest)
+} elseif ($order['session_id'] === ($_SESSION['session_id'] ?? session_id())) {
     $isOwner = true;
 }
 
 if (!$isOwner) {
     http_response_code(403);
-    Response::json(['success' => false, 'message' => 'You can only cancel your own orders']);
+    Response::json(['success' => false, 'message' => 'You can only pay for your own orders']);
     exit;
 }
-
 
 if ($order['status'] !== 'pending') {
     http_response_code(400);
     Response::json([
         'success' => false, 
-        'message' => 'Cannot cancel order with status: ' . $order['status']
+        'message' => 'Cannot pay for order with status: ' . $order['status']
     ]);
     exit;
 }
 
 try {
-    
-    $success = $orderModel->updateStatus($orderId, 'cancelled');
+    $success = $orderModel->updateStatus($orderId, 'processing');
     
     if (!$success) {
         throw new Exception('Failed to update order status');
@@ -72,13 +72,14 @@ try {
     http_response_code(200);
     Response::json([
         'success' => true,
-        'message' => 'Order successfully cancelled'
+        'message' => 'Payment successfully processed',
+        'orderId' => $orderId
     ]);
 
 } catch (Exception $e) {
     http_response_code(500);
     Response::json([
         'success' => false,
-        'message' => 'Error cancelling order: ' . $e->getMessage()
+        'message' => 'Error processing payment: ' . $e->getMessage()
     ]);
 }

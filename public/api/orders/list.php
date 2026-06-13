@@ -1,15 +1,19 @@
 <?php
 
-session_start();
+const BASE_PATH = __DIR__ . '/../../../';
+require_once BASE_PATH . 'src/Config/app.php';
+require_once BASE_PATH . 'src/Core/functions.php';
+require_once BASE_PATH . 'src/Config/db.php';
+require_once BASE_PATH . 'src/Models/Order.php';
+require_once BASE_PATH . 'src/Helpers/Response.php';
 
+header('Content-Type: application/json');
+
+session_start();
 
 if (!isset($_SESSION['session_id'])) {
     $_SESSION['session_id'] = session_id();
 }
-
-require_once '../../src/Config/db.php';
-require_once '../../src/Models/Order.php';
-require_once '../../src/Helpers/Response.php';
 
 if (!isset($_SESSION['user_id'])) {
     http_response_code(401); 

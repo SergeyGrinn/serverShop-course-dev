@@ -32,7 +32,7 @@ document.getElementById('add-to-cart').addEventListener('click', function() {
     const componentIds = Array.from(selectedInputs).map(input => parseInt(input.value));
     const totalPrice = vm.totalPrice();
 
-    fetch('/L/course/api/cart/add.php', {
+    fetch(BASE_URL + '/api/cart/add.php', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({

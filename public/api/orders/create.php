@@ -1,9 +1,14 @@
 <?php
 
-require_once '../../src/Config/db.php';
-require_once '../../src/Models/Order.php';
-require_once '../../src/Models/Cart.php';
-require_once '../../src/Helpers/Response.php';
+const BASE_PATH = __DIR__ . '/../../../';
+require_once BASE_PATH . 'src/Config/app.php';
+require_once BASE_PATH . 'src/Core/functions.php';
+require_once BASE_PATH . 'src/Config/db.php';
+require_once BASE_PATH . 'src/Models/Order.php';
+require_once BASE_PATH . 'src/Models/Cart.php';
+require_once BASE_PATH . 'src/Helpers/Response.php';
+
+header('Content-Type: application/json');
 
 session_start();
 

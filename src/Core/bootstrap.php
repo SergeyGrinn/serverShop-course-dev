@@ -1,26 +1,5 @@
 <?php
-/**
- * Application Bootstrap Configuration
- * 
- * This file defines all application paths dynamically
- * So when you move the project - all paths work automatically
- * 
- * It should be included at the very beginning of every PHP file
- */
 
-// ====== Determine root paths automatically ======
-
-/**
- * ROOT_PATH: Абсолютный путь к корневой папке проекта на файловой системе
- * 
- * Explanation: We go 2 levels up from bootstrap.php location
- * bootstrap.php location: /xampp/htdocs/L/course/src/Core/bootstrap.php
- * Go up 1 level: /xampp/htdocs/L/course/src/
- * Go up 2 levels: /xampp/htdocs/L/course/ <- THIS IS ROOT
- * 
- * __DIR__ = directory of current file
- * dirname(__DIR__, 2) = go 2 directories up
- */
 define('ROOT_PATH', dirname(__DIR__, 2) . DIRECTORY_SEPARATOR);
 
 /**

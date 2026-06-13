@@ -46,7 +46,7 @@ class ServerController {
 
             if (empty($errors)) {
                 $this->serverModel->create($name, $description, $image, $base_price);
-                header('Location: /L/course/public/admin/servers.php');
+                header('Location: ' . BASE_URL . '/public/admin/servers.php');
                 exit;
             }
         }
@@ -58,7 +58,7 @@ class ServerController {
         $server = $this->serverModel->getByIdAdmin($id);
         
         if (!$server) {
-            header('Location: /L/course/public/admin/servers.php');
+            header('Location: ' . BASE_URL . '/public/admin/servers.php');
             exit;
         }
 
@@ -84,7 +84,7 @@ class ServerController {
 
             if (empty($errors)) {
                 $this->serverModel->update($id, $name, $description, $image, $base_price, $available);
-                header('Location: /L/course/public/admin/servers.php');
+                header('Location: ' . BASE_URL . '/public/admin/servers.php');
                 exit;
             }
         }
@@ -94,7 +94,7 @@ class ServerController {
 
     public function delete($id) {
         $this->serverModel->delete($id);
-        header('Location: /L/course/public/admin/servers.php');
+        header('Location: ' . BASE_URL . '/public/admin/servers.php');
         exit;
     }
 
@@ -102,7 +102,7 @@ class ServerController {
     $server = $this->serverModel->getByIdAdmin($id);
     
     if (!$server) {
-        header('Location: /L/course/public/admin/servers.php');
+        header('Location: ' . BASE_URL . '/public/admin/servers.php');
         exit;
     }
 
@@ -130,7 +130,7 @@ class ServerController {
         }
 
         $this->componentModel->create($name, $type, $value, $price);
-        header('Location: /L/course/public/admin/servers.php?action=components&id=' . $id);
+        header('Location: ' . BASE_URL . '/public/admin/servers.php?action=components&id=' . $id);
         exit;
     }
 

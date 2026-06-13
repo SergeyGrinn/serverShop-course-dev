@@ -18,7 +18,7 @@ if ($action === 'delete' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($id) {
         $componentModel->delete($id);
     }
-    header('Location: /L/course/public/admin/components.php');
+    header('Location: ' . BASE_URL . '/public/admin/components.php');
     exit;
 }
 
@@ -62,7 +62,7 @@ if ($action === 'create' && $_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (empty($errors)) {
         $componentModel->create($name, $type, $value, $price);
-        header('Location: /L/course/public/admin/components.php');
+        header('Location: ' . BASE_URL . '/public/admin/components.php');
         exit;
     }
 }

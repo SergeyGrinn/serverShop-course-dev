@@ -16,6 +16,4 @@ E-Shop for renting physical servers. WIP.
 
 - "Contact" page template.
 
-- Make a checkout page with billing address, email field and more checkout-page-necessary stuff. Make sure that user can checkout only if email is valid or if user is logged in.
-
--
+- Fix api links because cart and checkout not working now

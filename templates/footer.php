@@ -4,6 +4,6 @@
         <p>&copy; <?= date('Y') ?> Server Catalog. All rights reserved.</p>
     </footer>
 
-<script src="/L/course/public/js/cart.js"></script>
+<script src="<?= APP_URL ?>public/js/cart.js"></script>
 </body>
 </html>

@@ -1,17 +1,10 @@
 <?php
-/**
- * Order confirmation page
- * 
- * Shows:
- * - Order details (ID, date, status)
- * - Items in order with components
- * - Total price
- * - Actions based on order status:
- *   - If pending: "Pay Now" button to process payment
- *   - If processing: Shipping information
- *   - If completed: Tracking info
- *   - If cancelled: Cannot perform actions
- */
+
+const BASE_PATH = __DIR__ . '/../';
+require_once BASE_PATH . 'src/Config/app.php';
+require_once BASE_PATH . 'src/Core/functions.php';
+require_once BASE_PATH . 'src/Config/db.php';
+require_once BASE_PATH . 'src/Models/Order.php';
 
 session_start();
 
@@ -24,7 +17,7 @@ require_once '../src/Models/Order.php';
 // Check if order ID is provided in URL
 // Example: /order.php?id=123
 if (!isset($_GET['id']) || empty($_GET['id'])) {
-    header('Location: /L/course/public/index.php?message=Order not found');
+    header('Location: ' . BASE_URL . '/index.php?message=Order not found');
     exit;
 }
 
@@ -37,7 +30,7 @@ $order = $orderModel->get($orderId);
 
 // If order doesn't exist
 if (!$order) {
-    header('Location: /L/course/public/index.php?message=Order not found');
+    header('Location: ' . BASE_URL . '/index.php?message=Order not found');
     exit;
 }
 
@@ -54,7 +47,7 @@ if (isset($_SESSION['user_id']) && $order['user_id'] == $_SESSION['user_id']) {
 // If trying to view someone else's order - redirect
 if (!$isOwner && $order['user_id'] !== null) {
     http_response_code(403); // 403 = Forbidden
-    header('Location: /L/course/public/index.php?message=Access denied');
+    header('Location: ' . BASE_URL . '/index.php?message=Access denied');
     exit;
 }
 
@@ -128,7 +121,7 @@ require_once '../templates/header.php';
                         <div class="flex gap-4 mb-4">
                             <?php if ($item['image']): ?>
                                 <img 
-                                    src="/L/course/public/assets/uploads/<?= htmlspecialchars($item['image']) ?>" 
+                                    src="<?= BASE_URL ?>/assets/uploads/<?= htmlspecialchars($item['image']) ?>" 
                                     alt="<?= htmlspecialchars($item['server_name']) ?>" 
                                     class="w-24 h-24 object-cover rounded"
                                 >
@@ -281,7 +274,7 @@ require_once '../templates/header.php';
             
             <!-- Back to Catalog -->
             <a 
-                href="/L/course/public/index.php"
+                href="<?= BASE_URL ?>/index.php"
                 class="block w-full text-center py-3 font-bold rounded border-2 mt-4 transition"
                 style="border-color: #ccc; color: #666; hover:background-color: #f5f5f5;"
             >
@@ -306,7 +299,7 @@ async function processPayment(orderId) {
     payButton.textContent = 'Processing...';
     
     try {
-        const response = await fetch('/L/course/api/orders/pay.php', {
+        const response = await fetch(BASE_URL + '/api/orders/pay.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -353,7 +346,7 @@ async function cancelOrder(orderId) {
     cancelButton.textContent = 'Cancelling...';
     
     try {
-        const response = await fetch('/L/course/api/orders/cancel.php', {
+        const response = await fetch(BASE_URL + '/api/orders/cancel.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

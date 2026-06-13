@@ -27,7 +27,7 @@ overlay.addEventListener('click', closeCart);
 // Cart item loading
 
 function loadCart() {
-    fetch('/L/course/api/cart/get.php')
+    fetch(BASE_URL + '/api/cart/get.php')
         .then(res => res.json())
         .then(data => {
             const cartItemsContainer = document.getElementById('cart-items');
@@ -48,7 +48,7 @@ function loadCart() {
                 totalPrice += parseFloat(item.total_price); // Add item total price to overall total
                 return `
                     <div class="flex items-center gap-3 py-3 border-b border-gray-100">
-                        <img src="/L/course/public/assets/images/${item.image}" class="w-12 h-12 object-cover rounded">
+                        <img src="${BASE_URL}/public/assets/images/${item.image}" class="w-12 h-12 object-cover rounded">
                         <div class="flex-1">
                             <p class="font-semibold text-sm">${item.name}</p>
                             ${item.components.length > 0 ? item.components.map(c => `
@@ -67,7 +67,7 @@ function loadCart() {
 // Remove item from cart
 
 function removeItem(item_id) {
-    fetch('/L/course/api/cart/remove.php', {
+    fetch(BASE_URL + '/api/cart/remove.php', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({item_id: item_id})
