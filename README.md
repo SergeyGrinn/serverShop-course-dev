@@ -4,10 +4,10 @@ E-Shop for renting physical servers. WIP.
 
 ### **Notes**
 
--KJS is working propely now, but it only serves only one purpose - calculating total sum of product when choosing different components 
+-KJS is working propely now, used for filters and dynamic price update on configurator page
 
 ### ***TO DO:***
 
-- Make catalog filters work
+- Review all extra files and mark some as placeholders for future use
 
 
