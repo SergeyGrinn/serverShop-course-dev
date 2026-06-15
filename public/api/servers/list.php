@@ -13,22 +13,33 @@ $ram = $_GET['ram'] ?? null;
 $storage = $_GET['storage'] ?? null;
 $cpu_cores = $_GET['cpu_cores'] ?? null;
 
-$where = ['s.available = 1'];
+$where = ['available = 1'];
 $params = [];
 
 if ($price_from){
-    $where[] = 's.base_price >= :price_from';
+    $where[] = 'base_price >= :price_from';
     $params[':price_from'] = $price_from;
 }
 if ($price_to){
-    $where[] = 's.base_price <= :price_to';
+    $where[] = 'base_price <= :price_to';
     $params[':price_to'] = $price_to;
 }
+if ($ram){
+    $where[] = 'default_ram = :ram';
+    $params[':ram'] = $ram;
+}
+if ($storage){
+    $where[] = 'default_storage = :storage';
+    $params[':storage'] = $storage;
+}
+if ($cpu_cores){
+    $where[] = 'default_cpu_cores = :cpu_cores';
+    $params[':cpu_cores'] = $cpu_cores;
+}
 
-whereStr = implode(' AND ', $where);
+$whereStr = implode(' AND ', $where);
 
-$stmt = $pdo->prepare("
-    SELECT * FROM servers WHERE {whereStr} ORDER BY id DESC");
+$stmt = $pdo->prepare("SELECT * FROM servers WHERE {$whereStr} ORDER BY id DESC");
 $stmt->execute($params);
 $servers = $stmt->fetchAll();
 

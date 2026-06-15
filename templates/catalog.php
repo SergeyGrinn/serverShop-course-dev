@@ -52,20 +52,22 @@
                 <label class="text-sm text-gray-600">CPU Cores</label>
                 <select data-bind="value: cpuCores" class="w-full border border-gray-300 rounded px-2 py-1 text-sm">
                     <option value="">Any</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="4">4</option>
-                    <option value="8">8</option>
-                    <option value="16">16</option>
-                    <option value="32">32</option>
+                    <option value="1">1 Cores</option>
+                    <option value="2">2 Cores</option>
+                    <option value="4">3 Cores</option>
+                    <option value="4">4 Cores</option>
+                    <option value="8">5 Cores</option>
+                    <option value="8">6 Cores</option>
+                    <option value="8">7 Cores</option>
+                    <option value="8">8 Cores</option>
+                    <option value="16">16 Cores</option>
+                    <option value="32">32 Cores</option>
                 </select>
             </div>
         </aside>
 
         <!-- Catalog -->
         <section class="flex-1 content-start">
-            <div data-bind="if: loading" class="text-center py-10 text-gray-400">Loading...</div>
-            <div data-bind="if: servers().length === 0 && !loading()" class="text-center py-10 text-gray-400">No servers found</div>
             <div data-bind="if: servers().length > 0" class="grid grid-cols-2 gap-5">
                 <!-- ko foreach: servers -->
                 <div class="bg-white rounded-lg border border-gray-200 p-4 flex flex-col gap-3">
@@ -73,8 +75,12 @@
                          class="w-full h-44 object-cover rounded-md bg-gray-100">
                     <div>
                         <h2 class="text-lg font-semibold" data-bind="text: name"></h2>
-                        <p class="text-sm text-gray-500 mt-1" data-bind="text: description"></p>
-                        <span class="text-green-700 font-bold text-lg mt-2 block" data-bind="text: 'from ' + base_price + ' €'"></span>
+                        <p class="text-sm text-gray-500 mt-1">
+                            CPU: <span data-bind="text: default_cpu_cores || 'N/A'"></span> cores | 
+                            RAM: <span data-bind="text: default_ram ? default_ram + ' GB' : 'N/A'"></span> | 
+                            Storage: <span data-bind="text: default_storage ? default_storage + ' GB' : 'N/A'"></span>
+                        </p>
+                        <span class="text-green-700 font-bold text-lg mt-2 block" data-bind="text: 'from ' + parseFloat(base_price).toFixed(0) + ' €'"></span>
                     </div>
                     <a data-bind="attr: { href: '<?= BASE_URL ?>/configurator.php?id=' + id }"
                        class="block text-center py-2 px-4 rounded-lg text-white mt-auto" style="background-color: #308020;">Configure</a>
@@ -99,7 +105,7 @@ function CatalogViewModel() {
     self.cpuCores = ko.observable('');
 
     self.loadServers = function() {
-        self.loading(true);
+        self.loading(false);
 
         var params = new URLSearchParams();
         if (self.priceFrom()) params.append('price_from', self.priceFrom());
@@ -107,6 +113,7 @@ function CatalogViewModel() {
         if (self.ram()) params.append('ram', self.ram());
         if (self.storage()) params.append('storage', self.storage());
         if (self.cpuCores()) params.append('cpu_cores', self.cpuCores());
+        
 
         fetch(BASE_URL + '/api/servers/list.php?' + params.toString())
             .then(res => res.json())

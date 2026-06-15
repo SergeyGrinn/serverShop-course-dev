@@ -7,7 +7,11 @@
                  alt="<?= htmlspecialchars($server['name']) ?>"
                  class="w-full rounded-lg border border-gray-200">
             <h1 class="text-xl font-bold mt-4"><?= htmlspecialchars($server['name']) ?></h1>
-            <p class="text-sm text-gray-500 mt-1"><?= htmlspecialchars($server['description']) ?></p>
+            <p class="text-sm text-gray-500 mt-1">
+                CPU: <?= $server['default_cpu_cores'] ?? 'N/A' ?> cores | 
+                RAM: <?= $server['default_ram'] ? $server['default_ram'] . ' GB' : 'N/A' ?> | 
+                Storage: <?= $server['default_storage'] ? $server['default_storage'] . ' GB' : 'N/A' ?>
+            </p>
         </div>
 
     <!-- Hidden base price -->
