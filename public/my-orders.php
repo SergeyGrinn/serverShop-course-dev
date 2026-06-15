@@ -1,14 +1,4 @@
 <?php
-/**
- * My Orders page
- * 
- * Shows:
- * - List of all orders created by current user
- * - Order status, date, price, items count
- * - Links to view each order
- * 
- * Only accessible to logged-in users
- */
 
 session_start();
 
@@ -21,7 +11,7 @@ if (!isset($_SESSION['user_id'])) {
 require_once '../src/Config/db.php';
 require_once '../src/Models/Order.php';
 
-// ====== Get user's orders ======
+// Get user's orders 
 
 $orderModel = new Order($pdo);
 $orders = $orderModel->getByUser($_SESSION['user_id']);

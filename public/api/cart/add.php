@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-const BASE_PATH = __DIR__ . '/../../';
+const BASE_PATH = __DIR__ . '/../../../';
 require_once BASE_PATH . 'src/Core/functions.php';
 require_once BASE_PATH . 'src/Config/db.php';
 require_once BASE_PATH . 'src/Models/Cart.php';

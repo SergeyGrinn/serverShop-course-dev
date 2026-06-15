@@ -48,7 +48,7 @@ function loadCart() {
                 totalPrice += parseFloat(item.total_price); // Add item total price to overall total
                 return `
                     <div class="flex items-center gap-3 py-3 border-b border-gray-100">
-                        <img src="${BASE_URL}/public/assets/images/${item.image}" class="w-12 h-12 object-cover rounded">
+                        <img src="${BASE_URL}/assets/images/${item.image}" class="w-12 h-12 object-cover rounded">
                         <div class="flex-1">
                             <p class="font-semibold text-sm">${item.name}</p>
                             ${item.components.length > 0 ? item.components.map(c => `

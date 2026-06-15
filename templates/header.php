@@ -7,6 +7,9 @@
     <link rel="stylesheet" href="<?= BASE_URL ?>/css/main.css">
     <script src="<?= BASE_URL ?>/js/knockout.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    const BASE_URL = '<?= BASE_URL ?>';
+    </script>
 </head>
 <body>
     <?php 
@@ -19,10 +22,10 @@
     ?>
     <header class="border-b px-8 h-16 flex items-center" style="background-color: #cbe3c5; border-color: #6a8a63;">
         <nav class="w-full flex items-center justify-between">
-            <a href="" class="font-bold text-lg">Server Catalog</a>
+            <span class="font-bold text-lg">Server Catalog</span>
 
             <ul class="flex gap-8 list-none">
-                <li><a href="<?= BASE_URL ?>/index.php" class="no-underline text-gray-700 hover:text-green-700">Home</a></li>
+                <li><a href="<?= BASE_URL ?>/home.php" class="no-underline text-gray-700 hover:text-green-700">Home</a></li>
                 <li><a href="<?= BASE_URL ?>/servers.php" class="no-underline text-gray-700 hover:text-green-700">Servers</a></li>
                 <li><a href="<?= BASE_URL ?>/contact.php" class="no-underline text-gray-700 hover:text-green-700">Contact</a></li>
             </ul>

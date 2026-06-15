@@ -183,6 +183,3 @@ document.getElementById('checkoutForm').addEventListener('submit', async functio
 });
 </script>
 
-<?php
-require_once base_path('templates/footer.php');
-?>
