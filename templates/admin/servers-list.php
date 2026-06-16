@@ -25,8 +25,9 @@
                     <tr class="border-b hover:bg-gray-50">
                         <td class="px-6 py-3"><?= $server['id'] ?></td>
                         <td class="px-6 py-3">
-                            <a href="../../configurator.php?id=<?= $server['id'] ?>" target="_blank" 
-                                class="hover:text-green-700 hover:underline">
+                            <a href="<?= BASE_URL ?>/configurator.php?id=<?= $server['id'] ?>"
+                            target="_blank"
+                            class="hover:text-green-700 hover:underline">
                                 <?= htmlspecialchars($server['name']) ?>
                             </a>
                         </td>

@@ -26,7 +26,7 @@
 
             <ul class="flex gap-8 list-none">
                 <li><a href="<?= BASE_URL ?>/home.php" class="no-underline text-gray-700 hover:text-green-700">Home</a></li>
-                <li><a href="<?= BASE_URL ?>/servers.php" class="no-underline text-gray-700 hover:text-green-700">Servers</a></li>
+                <li><a href="<?= BASE_URL ?>/index.php" class="no-underline text-gray-700 hover:text-green-700">Servers</a></li>
                 <li><a href="<?= BASE_URL ?>/contact.php" class="no-underline text-gray-700 hover:text-green-700">Contact</a></li>
             </ul>
 
