@@ -18,7 +18,7 @@ if ($action === 'delete' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($id) {
         $componentModel->delete($id);
     }
-    header('Location: ' . BASE_URL . '/public/admin/components.php');
+    header('Location: ' . BASE_URL . '/admin/components.php');
     exit;
 }
 

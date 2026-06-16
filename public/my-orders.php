@@ -4,7 +4,7 @@ session_start();
 
 // Redirect to login if not authenticated
 if (!isset($_SESSION['user_id'])) {
-    header('Location: ' . BASE_URL . '/public/login.php?redirect=my-orders.php');
+    header('Location: ' . BASE_URL . '/login.php?redirect=my-orders.php');
     exit;
 }
 
@@ -42,8 +42,7 @@ require_once '../templates/header.php';
     <?php if (empty($orders)): ?>
         <div class="bg-white border rounded-lg p-12 text-center">
             <p class="text-xl text-gray-600 mb-4">You haven't placed any orders yet</p>
-            <a 
-                href="' . BASE_URL . '/public/index.php"
+            <a href="' . BASE_URL . '/index.php"
                 class="inline-block px-6 py-2 rounded font-semibold text-white transition"
                 style="background-color: #6a8a63; hover:background-color: #5a7a53;"
             >
@@ -106,7 +105,7 @@ require_once '../templates/header.php';
                     <!-- View Button -->
                     <div>
                         <a 
-                            href="<?= BASE_URL ?>/public/order.php?id=<?= $order['id'] ?>"
+                            href="<?= BASE_URL ?>/order.php?id=<?= $order['id'] ?>"
                             class="inline-block px-4 py-2 rounded font-semibold transition"
                             style="background-color: #6a8a63; color: white; hover:background-color: #5a7a53;"
                         >
