@@ -44,7 +44,7 @@
                     <option value="512">512 GB</option>
                     <option value="1000">1 TB</option>
                     <option value="2000">2 TB</option>
-                    <option value="4000">4 TB</option>
+                    <option value="4000x">4 TB</option>
                 </select>
             </div>
 
