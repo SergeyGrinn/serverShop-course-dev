@@ -1,3 +1,4 @@
+<?php
 /**
  * Validation helper.
  * Reserved for future form validation methods.
