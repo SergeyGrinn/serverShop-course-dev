@@ -121,7 +121,7 @@ require_once '../templates/header.php';
                         <div class="flex gap-4 mb-4">
                             <?php if ($item['image']): ?>
                                 <img 
-                                    src="<?= BASE_URL ?>/assets/uploads/<?= htmlspecialchars($item['image']) ?>" 
+                                    src="<?= BASE_URL ?>/assets/images/<?= htmlspecialchars($item['image']) ?>" 
                                     alt="<?= htmlspecialchars($item['server_name']) ?>" 
                                     class="w-24 h-24 object-cover rounded"
                                 >

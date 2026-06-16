@@ -33,7 +33,11 @@ class Cart {
         $ids = json_decode($item['component_ids'], true);
         if (!empty($ids)) {
             $placeholders = implode(',', array_fill(0, count($ids), '?'));
-            $stmt2 = $this->pdo->prepare("SELECT name, value, type FROM components WHERE id IN ($placeholders)");
+            $stmt2 = $this->pdo->prepare("
+                SELECT name, value, type, price
+                FROM components
+                WHERE id IN ($placeholders)
+            ");
             $stmt2->execute($ids);
             $item['components'] = $stmt2->fetchAll();
         } else {

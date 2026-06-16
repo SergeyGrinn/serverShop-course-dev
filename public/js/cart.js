@@ -52,7 +52,7 @@ function loadCart() {
                         <div class="flex-1">
                             <p class="font-semibold text-sm">${item.name}</p>
                             ${item.components.length > 0 ? item.components.map(c => `
-                            <p class="text-xs text-gray-400">${c.type}: ${c.value}</p>`).join('') : ''}
+                            <p class="text-xs text-gray-400">${c.type}: ${c.name} (${c.value})</p>`).join('') : ''}
                             <p class="text-green-700 font-bold">€${item.total_price}</p>
                         </div>
                         <button onclick="removeItem(${item.id})" class="text-gray-400 hover:text-red-500">&times;</button>

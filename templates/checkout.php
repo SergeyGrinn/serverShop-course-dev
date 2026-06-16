@@ -27,9 +27,20 @@ require_once base_path('templates/header.php');
                             <?php if (!empty($item['components'])): ?>
                                 <div class="text-sm text-gray-600 mt-2">
                                     <p class="font-semibold">Components:</p>
-                                    <ul class="list-disc list-inside">
+                                    <ul class="space-y-1">
                                         <?php foreach ($item['components'] as $component): ?>
-                                            <li><?= htmlspecialchars($component['name']) ?> <span class="font-semibold">(<?= htmlspecialchars($component['value']) ?>)</span></li>
+                                            <li class="flex justify-between text-sm">
+                                                <span>
+                                                    <?= htmlspecialchars($component['name']) ?>
+                                                    <span class="font-semibold">
+                                                        (<?= htmlspecialchars($component['value']) ?>)
+                                                    </span>
+                                                </span>
+
+                                                <span class="text-gray-500">
+                                                    +€<?= number_format($component['price'], 2) ?>
+                                                </span>
+                                            </li>
                                         <?php endforeach; ?>
                                     </ul>
                                 </div>

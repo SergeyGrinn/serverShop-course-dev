@@ -36,7 +36,10 @@
                     data-price="<?= $cpu['price'] ?>"
                     data-bind="click: function() { $root.selectComponent('cpu', <?= $cpu['price'] ?>); return true; }"
                     <?= !$cpu['available'] ? 'disabled' : '' ?>>
-                <span class="flex-1"><?= htmlspecialchars($cpu['value']) ?></span>
+                <span class="flex-1">
+                    <?= htmlspecialchars($cpu['name']) ?>
+                    (<?= htmlspecialchars($cpu['value']) ?>)
+                </span>
                 <span class="text-green-700 font-semibold">+<?= number_format($cpu['price'], 0, '.', ' ') ?> €</span>
             </label>
         <?php endforeach; ?>
@@ -59,7 +62,10 @@
                     data-price="<?= $ram['price'] ?>"
                     data-bind="click: function() { $root.selectComponent('ram', <?= $ram['price'] ?>); return true; }"
                     <?= !$ram['available'] ? 'disabled' : '' ?>>
-                <span class="flex-1"><?= htmlspecialchars($ram['value']) ?></span>
+                <span class="flex-1">
+                    <?= htmlspecialchars($ram['name']) ?>
+                    (<?= htmlspecialchars($ram['value']) ?>)
+                </span>
                 <span class="text-green-700 font-semibold">+<?= number_format($ram['price'], 0, '.', ' ') ?> €</span>
             </label>
         <?php endforeach; ?>
@@ -82,7 +88,10 @@
                     data-price="<?= $ssd['price'] ?>"
                     data-bind="click: function() { $root.selectComponent('ssd', <?= $ssd['price'] ?>); return true; }"
                     <?= !$ssd['available'] ? 'disabled' : '' ?>>
-                <span class="flex-1"><?= htmlspecialchars($ssd['value']) ?></span>
+                <span class="flex-1">
+                    <?= htmlspecialchars($ssd['name']) ?>
+                    (<?= htmlspecialchars($ssd['value']) ?>)
+                </span>
                 <span class="text-green-700 font-semibold">+<?= number_format($ssd['price'], 0, '.', ' ') ?> €</span>
             </label>
         <?php endforeach; ?>
@@ -105,7 +114,10 @@
                     data-price="<?= $hdd['price'] ?>"
                     data-bind="click: function() { $root.selectComponent('hdd', <?= $hdd['price'] ?>); return true; }"
                     <?= !$hdd['available'] ? 'disabled' : '' ?>>
-                <span class="flex-1"><?= htmlspecialchars($hdd['value']) ?></span>
+                <span class="flex-1">
+                    <?= htmlspecialchars($hdd['name']) ?>
+                    (<?= htmlspecialchars($hdd['value']) ?>)
+                </span>
                 <span class="text-green-700 font-semibold">+<?= number_format($hdd['price'], 0, '.', ' ') ?> €</span>
             </label>
         <?php endforeach; ?>
@@ -128,7 +140,10 @@
                     data-price="<?= $gpu['price'] ?>"
                     data-bind="click: function() { $root.selectComponent('gpu', <?= $gpu['price'] ?>); return true; }"
                     <?= !$gpu['available'] ? 'disabled' : '' ?>>
-                <span class="flex-1"><?= htmlspecialchars($gpu['value']) ?></span>
+                <span class="flex-1">
+                    <?= htmlspecialchars($gpu['name']) ?>
+                    (<?= htmlspecialchars($gpu['value']) ?>)
+                </span>
                 <span class="text-green-700 font-semibold">+<?= number_format($gpu['price'], 0, '.', ' ') ?> €</span>
             </label>
         <?php endforeach; ?>
