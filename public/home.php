@@ -1,4 +1,5 @@
 <?php
+
 const BASE_PATH = __DIR__ . '/../';
 require_once BASE_PATH . 'src/Config/app.php';
 require_once BASE_PATH . 'src/Core/functions.php';
@@ -13,4 +14,8 @@ require base_path('templates/header.php');
     </div>
 </main>
 
-<?php require base_path('templates/footer.php'); ?>
+<?php 
+
+require base_path('templates/footer.php');
+
+?>

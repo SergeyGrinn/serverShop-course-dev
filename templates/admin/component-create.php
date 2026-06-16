@@ -58,7 +58,7 @@
                 </div>
 
                 <div class="flex flex-col gap-2 mb-6">
-                    <label class="text-sm font-medium">Price ($)</label>
+                    <label class="text-sm font-medium">Price (€)</label>
                     <input type="number" name="price" class="border rounded px-3 py-2 text-sm" step="0.01" min="0" required>
                 </div>
 

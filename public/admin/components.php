@@ -62,7 +62,27 @@ if ($action === 'create' && $_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (empty($errors)) {
         $componentModel->create($name, $type, $value, $price);
-        header('Location: ' . BASE_URL . '/public/admin/components.php');
+        header('Location: ' . BASE_URL . '/admin/components.php');
+        exit;
+    }
+}
+
+if ($action === 'edit' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    $id = $_POST['id'] ?? null;
+    $name = $_POST['name'] ?? '';
+    $type = $_POST['type'] ?? '';
+    $value = $_POST['value'] ?? '';
+    $price = $_POST['price'] ?? 0;
+
+    $errors = [];
+
+    if (empty($name)) $errors[] = 'Component name is required';
+    if (empty($type)) $errors[] = 'Component type is required';
+    if (empty($price) || !is_numeric($price)) $errors[] = 'Valid price is required';
+
+    if (empty($errors)) {
+        $componentModel->update($id, $name, $type, $value, $price);
+        header('Location: ' . BASE_URL . '/admin/components.php');
         exit;
     }
 }
@@ -71,6 +91,10 @@ $allComponents = $componentModel->getAll();
 
 if ($action === 'create') {
     require base_path('templates/admin/component-create.php');
+} elseif ($action === 'edit') {
+    $id = $_GET['id'] ?? null;
+    $component = $componentModel->getById($id);
+    require base_path('templates/admin/component-edit.php');
 } else {
     require base_path('templates/admin/components-list.php');
 }

@@ -42,9 +42,9 @@
                     <option value="128">128 GB</option>
                     <option value="256">256 GB</option>
                     <option value="512">512 GB</option>
-                    <option value="1024">1 TB</option>
-                    <option value="2048">2 TB</option>
-                    <option value="4096">4 TB</option>
+                    <option value="1000">1 TB</option>
+                    <option value="2000">2 TB</option>
+                    <option value="4000">4 TB</option>
                 </select>
             </div>
 
@@ -54,12 +54,13 @@
                     <option value="">Any</option>
                     <option value="1">1 Cores</option>
                     <option value="2">2 Cores</option>
-                    <option value="4">3 Cores</option>
+                    <option value="3">3 Cores</option>
                     <option value="4">4 Cores</option>
-                    <option value="8">5 Cores</option>
-                    <option value="8">6 Cores</option>
-                    <option value="8">7 Cores</option>
+                    <option value="5">5 Cores</option>
+                    <option value="6">6 Cores</option>
+                    <option value="7">7 Cores</option>
                     <option value="8">8 Cores</option>
+                    <option value="12">12 Cores</option>
                     <option value="16">16 Cores</option>
                     <option value="32">32 Cores</option>
                 </select>

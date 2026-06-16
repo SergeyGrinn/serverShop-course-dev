@@ -29,7 +29,7 @@
             </div>
 
             <div class="mb-6">
-                <label class="block text-sm font-medium mb-2">Base Price ($)</label>
+                <label class="block text-sm font-medium mb-2">Base Price (€)</label>
                 <input type="number" name="base_price" step="0.01" value="<?= htmlspecialchars($_POST['base_price'] ?? '') ?>" class="w-full border rounded px-3 py-2" required>
             </div>
 
