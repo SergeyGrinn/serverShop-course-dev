@@ -8,6 +8,6 @@ E-Shop for renting physical servers. WIP.
 
 ### ***TO DO:***
 
-- Review all extra files and mark some as placeholders for future use
+- Add function to set default specs for servers (if it's a already built computer)
 
 
