@@ -151,7 +151,7 @@
 <?php endif; ?>
 
     <!-- Total Price -->
-        <div class="bg-white rounded-lg border border-gray-200 p-5 flex items-center justify-between">
+        <div class="bg-white rounded-lg border border-gray-200 p-5 flex flex-wrap items-center justify-between gap-3">
             <h2 class="text-xl font-bold">Total: <span data-bind="text: totalPrice"></span> €</h2>
             <button class="text-white px-6 py-2 rounded-lg font-semibold" style="background-color: #308020;" id="add-to-cart">Add to Cart</button>
         </div>

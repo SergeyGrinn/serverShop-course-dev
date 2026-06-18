@@ -55,6 +55,18 @@
     font-size: 14px;
     padding: 20px 40px;
  }
+
+ html, body {
+  min-height: 100%;
+ }
+ body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+ }
+ main {
+  flex: 1 0 auto;
+ }
  
    /* === CATALOG === */
 
@@ -137,4 +149,4 @@
 .btn:hover {
    background: #2a7016;
 }
-   
+
