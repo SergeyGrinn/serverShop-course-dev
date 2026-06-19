@@ -61,17 +61,14 @@ define('LOGS_PATH', ROOT_PATH . 'logs' . DIRECTORY_SEPARATOR);
  */
 
 // Get the directory where public folder is located
-$scriptDir = dirname($_SERVER['SCRIPT_NAME']);
+$scriptName = $_SERVER['SCRIPT_NAME'];
 
-// Remove '/public' from the end to get base app URL
-// Example: /L/course/public/ -> /L/course/
-if (str_ends_with($scriptDir, '/public')) {
-    define('APP_URL', substr($scriptDir, 0, -7) . '/');
-} elseif (str_ends_with($scriptDir, '\\public')) {
-    define('APP_URL', substr($scriptDir, 0, -7) . '/');
+$publicPos = strpos($scriptName, '/public/');
+
+if ($publicPos !== false) {
+    define('APP_URL', substr($scriptName, 0, $publicPos) . '/');
 } else {
-    // Fallback if not in public folder
-    define('APP_URL', $scriptDir . '/');
+    define('APP_URL', dirname($scriptName) . '/');
 }
 
 /**
