@@ -85,7 +85,7 @@ try {
         throw new Exception('Failed to create order');
     }
     
-    $cartModel->clearCart($cart['id']);
+    //$cartModel->clearCart($cart['id']);
     
     http_response_code(201);
     Response::json([

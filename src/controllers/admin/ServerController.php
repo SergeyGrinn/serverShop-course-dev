@@ -28,7 +28,7 @@ class ServerController {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $name = $_POST['name'] ?? '';
             $description = $_POST['description'] ?? '';
-            $image = '';
+            $image = 'emptyimage.png';
                 if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
                 $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
                 $filename = uniqid() . '.' . $ext;
@@ -42,7 +42,9 @@ class ServerController {
 
             if (empty($name)) $errors[] = 'Name is required';
             if (empty($description)) $errors[] = 'Description is required';
-            if (empty($base_price) || !is_numeric($base_price)) $errors[] = 'Valid price is required';
+            if ($base_price === '' || !is_numeric($base_price) || (float) $base_price < 0) {
+                $errors[] = 'Price must be a non-negative number';
+            }
 
             if (empty($errors)) {
                 $this->serverModel->create($name, $description, $image, $base_price);
@@ -74,13 +76,15 @@ class ServerController {
                 $image = $filename;
             }
             $base_price = $_POST['base_price'] ?? '';
-            $available = isset($_POST['available']) ? 1 : 0;
+            $available = $server['available'];
 
             $errors = [];
 
             if (empty($name)) $errors[] = 'Name is required';
             if (empty($description)) $errors[] = 'Description is required';
-            if (empty($base_price) || !is_numeric($base_price)) $errors[] = 'Valid price is required';
+            if ($base_price === '' || !is_numeric($base_price) || (float) $base_price < 0) {
+                $errors[] = 'Price must be a non-negative number';
+            }
 
             if (empty($errors)) {
                 $this->serverModel->update($id, $name, $description, $image, $base_price, $available);
@@ -92,6 +96,12 @@ class ServerController {
         require base_path('templates/admin/server-edit.php');
     }
 
+    public function toggleAvailability($id) {
+        $this->serverModel->toggleAvailability($id);
+        header('Location: ' . BASE_URL . '/admin/servers.php');
+        exit;
+    }
+    
     public function delete($id) {
         $this->serverModel->delete($id);
         header('Location: ' . BASE_URL . '/admin/servers.php');
@@ -106,12 +116,17 @@ class ServerController {
         exit;
     }
 
-    // Создание нового компонента
+    // Creation of a new component
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['sub_action']) && $_POST['sub_action'] === 'create_component') {
         $name = $_POST['name'] ?? '';
         $type = $_POST['type'] ?? '';
         $price = $_POST['price'] ?? 0;
         $value = '';
+
+        $errors = [];
+        if ($price === '' || !is_numeric($price) || (float) $price < 0) {
+            $errors[] = 'Price must be a non-negative number';
+        }
 
         switch ($type) {
             case 'cpu':
@@ -129,13 +144,15 @@ class ServerController {
                 break;
         }
 
-        $this->componentModel->create($name, $type, $value, $price);
-        header('Location: ' . BASE_URL . '/admin/servers.php?action=components&id=' . $id);
-        exit;
+        if (empty($errors)) {
+            $this->componentModel->create($name, $type, $value, $price);
+            header('Location: ' . BASE_URL . '/admin/servers.php?action=components&id=' . $id);
+            exit;
+        }
     }
 
-    // Сохранение привязки компонентов к серверу
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Saving the selected components for the server
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['sub_action'] ?? '') !== 'create_component') {
         $component_ids = $_POST['components'] ?? [];
         $current_components = $this->serverComponentModel->getServerComponents($id);
         

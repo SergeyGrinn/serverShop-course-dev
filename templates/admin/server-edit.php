@@ -12,7 +12,7 @@
             </div>
         <?php endif; ?>
 
-        <form method="POST" class="bg-white rounded-lg shadow p-6" enctype="multipart/form-data">
+        <form method="POST" class="notification-validation-form bg-white rounded-lg shadow p-6" enctype="multipart/form-data" novalidate>
             <div class="mb-4">
                 <label class="block text-sm font-medium mb-2">Server Name</label>
                 <input type="text" name="name" value="<?= htmlspecialchars($_POST['name'] ?? $server['name']) ?>" class="w-full border rounded px-3 py-2" required>
@@ -29,20 +29,17 @@
                         <img src="../../assets/images/<?= htmlspecialchars($server['image']) ?>" 
                         class="w-32 h-32 object-cover rounded mb-2">
                     <?php endif; ?>
-                    <input type="file" name="image" accept="image/*" class="w-full border rounded px-3 py-2">
+                    <div class="custom-file-picker">
+                        <input id="server-image-edit" type="file" name="image" accept="image/*" class="custom-file-input">
+                        <label for="server-image-edit" class="custom-file-button">Choose File</label>
+                        <span class="custom-file-name">No file chosen</span>
+                    </div>
                     <p class="text-xs text-gray-400 mt-1">Leave empty to keep current image</p>
             </div>
 
             <div class="mb-4">
                 <label class="block text-sm font-medium mb-2">Base Price (€)</label>
-                <input type="number" name="base_price" step="0.01" value="<?= htmlspecialchars($_POST['base_price'] ?? $server['base_price']) ?>" class="w-full border rounded px-3 py-2" required>
-            </div>
-
-            <div class="mb-6">
-                <label class="flex items-center">
-                    <input type="checkbox" name="available" <?= (isset($_POST['available']) ? $_POST['available'] : $server['available']) ? 'checked' : '' ?> class="mr-2">
-                    <span class="text-sm font-medium">Available for sale</span>
-                </label>
+                <input type="number" name="base_price" step="0.01" min="0" value="<?= htmlspecialchars($_POST['base_price'] ?? $server['base_price']) ?>" class="w-full border rounded px-3 py-2" required>
             </div>
 
             <div class="flex gap-4">

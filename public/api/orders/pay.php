@@ -5,6 +5,7 @@ require_once BASE_PATH . 'src/Config/app.php';
 require_once BASE_PATH . 'src/Core/functions.php';
 require_once BASE_PATH . 'src/Config/db.php';
 require_once BASE_PATH . 'src/Models/Order.php';
+require_once BASE_PATH . 'src/Models/Cart.php';
 require_once BASE_PATH . 'src/Helpers/Response.php';
 
 header('Content-Type: application/json');
@@ -68,6 +69,10 @@ try {
     if (!$success) {
         throw new Exception('Failed to update order status');
     }
+
+    $cartModel = new Cart($pdo);
+    $cart = $cartModel->getOrCreateCart($_SESSION['session_id'] ?? session_id());
+    $cartModel->clearCart($cart['id']);
     
     http_response_code(200);
     Response::json([

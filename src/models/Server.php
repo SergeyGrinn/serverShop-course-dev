@@ -60,9 +60,19 @@ class Server {
             ':available' => $available
         ]);
     }
-
+    public function toggleAvailability($id) {
+            $stmt = $this->pdo->prepare(
+                "UPDATE servers 
+                SET available = NOT available 
+                WHERE id = :id"
+            );
+            return $stmt->execute([':id' => $id]);
+        }
+        
     public function delete($id) {
         $stmt = $this->pdo->prepare("DELETE FROM servers WHERE id = :id");
         return $stmt->execute([':id' => $id]);
     }
+
+    
 }

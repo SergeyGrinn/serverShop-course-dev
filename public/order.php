@@ -313,18 +313,18 @@ async function processPayment(orderId) {
         
         if (data.success) {
             // Show success message
-            alert('✓ ' + data.message);
+            showNotification(data.message, 'success');
             
-            // Reload page to show updated status
-            location.reload();
+            // Keep the notification visible before showing the updated status.
+            setTimeout(() => location.reload(), 4000);
         } else {
             // Show error message
-            alert('✗ Error: ' + data.message);
+            showNotification(data.message, 'error');
             payButton.disabled = false;
             payButton.textContent = '💳 Pay Now';
         }
     } catch (error) {
-        alert('✗ Error: ' + error.message);
+        showNotification(error.message, 'error');
         payButton.disabled = false;
         payButton.textContent = '💳 Pay Now';
     }
@@ -360,18 +360,18 @@ async function cancelOrder(orderId) {
         
         if (data.success) {
             // Show success message
-            alert('✓ ' + data.message);
+            showNotification(data.message, 'success');
             
-            // Reload page to show updated status
-            location.reload();
+            // Keep the notification visible before showing the updated status.
+            setTimeout(() => location.reload(), 8000);
         } else {
             // Show error message
-            alert('✗ Error: ' + data.message);
+            showNotification(data.message, 'error');
             cancelButton.disabled = false;
             cancelButton.textContent = '✕ Cancel Order';
         }
     } catch (error) {
-        alert('✗ Error: ' + error.message);
+        showNotification(error.message, 'error');
         cancelButton.disabled = false;
         cancelButton.textContent = '✕ Cancel Order';
     }

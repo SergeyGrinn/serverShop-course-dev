@@ -13,7 +13,7 @@
         <?php endif; ?>
 
         <div class="bg-white rounded-lg shadow p-6">
-            <form method="POST">
+            <form method="POST" class="notification-validation-form" novalidate>
                 <div class="flex flex-col gap-2 mb-4">
                     <label class="text-sm font-medium">Component Name</label>
                     <input type="text" name="name" value="<?= htmlspecialchars($component['name']) ?>" 
@@ -39,7 +39,7 @@
 
                 <div class="flex flex-col gap-2 mb-6">
                     <label class="text-sm font-medium">Price (€)</label>
-                    <input type="number" name="price" step="0.01" value="<?= $component['price'] ?>" 
+                    <input type="number" name="price" step="0.01" min="0" value="<?= $component['price'] ?>" 
                            class="border rounded px-3 py-2 text-sm" required>
                 </div>
 

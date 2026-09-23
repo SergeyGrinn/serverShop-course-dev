@@ -58,7 +58,7 @@
             <div class="bg-white rounded-lg shadow p-6">
                 <h2 class="text-xl font-semibold mb-4">Add New Component</h2>
                 
-                <form method="POST" action="servers.php?action=components&id=<?= $server['id'] ?>" id="createComponentForm">
+                <form method="POST" action="servers.php?action=components&id=<?= $server['id'] ?>" id="createComponentForm" class="notification-validation-form" novalidate>
                     <div class="space-y-4">
                         <div>
                             <label class="block text-sm font-medium mb-2">Component Name</label>

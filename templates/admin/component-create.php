@@ -13,7 +13,7 @@
         <?php endif; ?>
 
         <div class="bg-white rounded-lg shadow p-6">
-            <form method="POST">
+            <form method="POST" class="notification-validation-form" novalidate>
                 <div class="flex flex-col gap-2 mb-4">
                     <label class="text-sm font-medium">Component Name</label>
                     <input type="text" name="name" class="border rounded px-3 py-2 text-sm" required>

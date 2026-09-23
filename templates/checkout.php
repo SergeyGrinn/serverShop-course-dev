@@ -50,7 +50,16 @@ require_once base_path('templates/header.php');
                     
                     <div class="flex justify-between items-center">
                         <span class="font-semibold">Price:</span>
-                        <span class="text-lg font-bold" style="color: #6a8a63;">€<?= number_format($item['total_price'], 2) ?></span>
+                        <div class="flex items-center gap-4">
+                            <span class="text-lg font-bold" style="color: #6a8a63;">
+                                €<?= number_format($item['total_price'], 2) ?>
+                            </span>
+                            <button
+                                type="button"
+                                class="remove-checkout-item bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600"
+                                data-item-id="<?= $item['id'] ?>"
+                                >Remove</button>
+                        </div>
                     </div>
                 </div>
             <?php endforeach; ?>
@@ -67,7 +76,7 @@ require_once base_path('templates/header.php');
             <div class="bg-white border rounded-lg p-6">
                 <h2 class="text-xl font-bold mb-6">Buyer Information</h2>
                 
-                <form id="checkoutForm">
+                <form id="checkoutForm" class="notification-validation-form no-inline-validation-errors" novalidate>
                     
                     <!-- Full Name -->
                     <div class="mb-4">
@@ -133,9 +142,6 @@ require_once base_path('templates/header.php');
                     </button>
                 </form>
                 
-                <!-- Info Message -->
-                <div id="messageContainer" class="mt-4 p-3 rounded hidden"></div>
-                
                 <!-- Loading Indicator -->
                 <div id="loadingSpinner" class="mt-4 text-center hidden">
                     <p class="text-gray-600">Processing order...</p>
@@ -148,15 +154,17 @@ require_once base_path('templates/header.php');
 <!-- Form submission handler -->
 <script>
 document.getElementById('checkoutForm').addEventListener('submit', async function(e) {
+    if (!this.checkValidity()) {
+        return;
+    }
+
     e.preventDefault();
     
     const loadingSpinner = document.getElementById('loadingSpinner');
-    const messageContainer = document.getElementById('messageContainer');
     const submitButton = this.querySelector('button[type="submit"]');
     
     loadingSpinner.classList.remove('hidden');
     submitButton.disabled = true;
-    messageContainer.classList.add('hidden');
     
     try {
         const formData = new FormData(this);
@@ -171,26 +179,46 @@ document.getElementById('checkoutForm').addEventListener('submit', async functio
         loadingSpinner.classList.add('hidden');
         
         if (data.success) {
-            messageContainer.classList.remove('hidden');
-            messageContainer.classList.add('bg-green-100', 'border', 'border-green-400', 'text-green-700');
-            messageContainer.textContent = '✓ ' + data.message + ' Redirecting...';
+            showNotification(data.message + ' Redirecting...', 'success');
             
             setTimeout(() => {
                 window.location.href = '<?= BASE_URL ?>/order.php?id=' + data.orderId;
             }, 2000);
         } else {
-            messageContainer.classList.remove('hidden');
-            messageContainer.classList.add('bg-red-100', 'border', 'border-red-400', 'text-red-700');
-            messageContainer.textContent = '✗ Error: ' + data.message;
+            showNotification(data.message, 'error');
             submitButton.disabled = false;
         }
     } catch (error) {
         loadingSpinner.classList.add('hidden');
-        messageContainer.classList.remove('hidden');
-        messageContainer.classList.add('bg-red-100', 'border', 'border-red-400', 'text-red-700');
-        messageContainer.textContent = '✗ Error: ' + error.message;
+        showNotification(error.message, 'error');
         submitButton.disabled = false;
     }
+});
+
+document.querySelectorAll('.remove-checkout-item').forEach(button => {
+    button.addEventListener('click', async function() {
+        this.disabled = true;
+
+        try {
+            const response = await fetch('<?= BASE_URL ?>/api/cart/remove.php', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({item_id: this.dataset.itemId})
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                window.location.reload();
+            } else {
+                this.disabled = false;
+                showNotification(data.message || 'Unable to remove item', 'error');
+            }
+        } catch (error) {
+            this.disabled = false;
+            showNotification('Unable to remove item: ' + error.message, 'error');
+        }
+    });
 });
 </script>
 

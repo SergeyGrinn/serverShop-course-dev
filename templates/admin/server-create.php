@@ -12,7 +12,7 @@
             </div>
         <?php endif; ?>
 
-        <form method="POST" class="bg-white rounded-lg shadow p-6" enctype="multipart/form-data">
+        <form method="POST" class="notification-validation-form bg-white rounded-lg shadow p-6" enctype="multipart/form-data" novalidate>
             <div class="mb-4">
                 <label class="block text-sm font-medium mb-2">Server Name</label>
                 <input type="text" name="name" value="<?= htmlspecialchars($_POST['name'] ?? '') ?>" class="w-full border rounded px-3 py-2" required>
@@ -25,12 +25,16 @@
 
             <div class="mb-4">
                 <label class="block text-sm font-medium mb-2">Image</label>
-                <input type="file" name="image" accept="image/*" class="w-full border rounded px-3 py-2">
+                <div class="custom-file-picker">
+                    <input id="server-image-create" type="file" name="image" accept="image/*" class="custom-file-input">
+                    <label for="server-image-create" class="custom-file-button">Choose File</label>
+                    <span class="custom-file-name">No file chosen</span>
+                </div>
             </div>
 
             <div class="mb-6">
                 <label class="block text-sm font-medium mb-2">Base Price (€)</label>
-                <input type="number" name="base_price" step="0.01" value="<?= htmlspecialchars($_POST['base_price'] ?? '') ?>" class="w-full border rounded px-3 py-2" required>
+                <input type="number" name="base_price" step="0.01" min="0" value="<?= htmlspecialchars($_POST['base_price'] ?? '') ?>" class="w-full border rounded px-3 py-2" required>
             </div>
 
             <div class="flex gap-4">

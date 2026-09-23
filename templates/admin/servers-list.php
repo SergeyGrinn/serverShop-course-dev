@@ -11,7 +11,7 @@
 
         <div class="bg-white rounded-lg shadow overflow-x-auto">
             <table class="w-full">
-                <thead class="bg-gray-100 border-b">
+                <thead class="bg-gray-100 border-b border-gray-200">
                     <tr>
                         <th class="px-6 py-3 text-left">ID</th>
                         <th class="px-6 py-3 text-left">Name</th>
@@ -22,7 +22,7 @@
                 </thead>
                 <tbody>
                     <?php foreach ($servers as $server): ?>
-                    <tr class="border-b hover:bg-gray-50">
+                    <tr class="border-b border-gray-200 hover:bg-gray-50">
                         <td class="px-6 py-3"><?= $server['id'] ?></td>
                         <td class="px-6 py-3">
                             <a href="<?= BASE_URL ?>/configurator.php?id=<?= $server['id'] ?>"
@@ -33,9 +33,16 @@
                         </td>
                         <td class="px-6 py-3">€<?= number_format($server['base_price'], 2) ?></td>
                         <td class="px-6 py-3">
-                            <span class="px-3 py-1 rounded text-white text-sm" style="background-color: <?= $server['available'] ? '#22c55e' : '#ef4444' ?>;">
-                                <?= $server['available'] ? 'Available' : 'Unavailable' ?>
-                            </span>
+                            <form method="POST" action="servers.php?action=toggle-availability">
+                                <input type="hidden" name="id" value="<?= $server['id'] ?>">
+                                    <button
+                                        type="submit"
+                                        class="px-3 py-1 rounded text-white text-sm shadow-sm transition duration-200 ease-out hover:scale-105 hover:opacity-90 hover:shadow-md active:scale-95"
+                                        style="background-color: <?= $server['available'] ? '#22c55e' : '#ef4444' ?>;"
+                                    >
+                                        <?= $server['available'] ? 'Available' : 'Unavailable' ?>
+                                    </button>
+                            </form>
                         </td>
                         <td class="px-6 py-3 flex gap-2">
                             <a href="servers.php?action=components&id=<?= $server['id'] ?>" class="bg-green-500 text-white px-3 py-1 rounded text-sm hover:bg-green-600">
@@ -44,7 +51,7 @@
                             <a href="servers.php?action=edit&id=<?= $server['id'] ?>" class="bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600">
                                 Edit
                             </a>
-                            <form method="POST" action="servers.php?action=delete" style="display:inline;" onsubmit="return confirm('Are you sure?');">
+                            <form method="POST" action="servers.php?action=delete" class="confirm-delete-form" style="display:inline;">
                                 <input type="hidden" name="id" value="<?= $server['id'] ?>">
                                 <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600">
                                 Delete

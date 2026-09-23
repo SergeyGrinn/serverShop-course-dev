@@ -31,7 +31,9 @@ if ($action === 'create' && $_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (empty($name)) $errors[] = 'Component name is required';
     if (empty($type)) $errors[] = 'Component type is required';
-    if (empty($price) || !is_numeric($price)) $errors[] = 'Valid price is required';
+    if ($price === '' || !is_numeric($price) || (float) $price < 0) {
+        $errors[] = 'Price must be a non-negative number';
+    }
 
     $value = [];
 
@@ -78,7 +80,9 @@ if ($action === 'edit' && $_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (empty($name)) $errors[] = 'Component name is required';
     if (empty($type)) $errors[] = 'Component type is required';
-    if (empty($price) || !is_numeric($price)) $errors[] = 'Valid price is required';
+    if ($price === '' || !is_numeric($price) || (float) $price < 0) {
+        $errors[] = 'Price must be a non-negative number';
+    }
 
     if (empty($errors)) {
         $componentModel->update($id, $name, $type, $value, $price);

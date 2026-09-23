@@ -8,17 +8,19 @@ E-Shop for renting physical servers. WIP.
 
 ### ***TO DO:***
 
-- Add function to set default specs for servers (if it's an already built computer)
-- Add CSRF token
-- Add function to download an invoice file
+- Implement function to set default specs for servers (if it's an already built computer)
+- Implement CSRF token
+- Implement function to download an invoice file
 - Invoice should be sent to client email
-- Local Tailwind
-- Admin panel redesign & separate admin page style 
-- Cookie files
-- Ability to delete items from cart
-- Website notifications instead of localhost ones
-- Fix negative price bug
+- Admin panel redesign & separate admin page style (partly done)
+- 
+- Implement user profile page
+- Implement order manage page for admin & user
+- Find a way to build project easily (pref. Docker)
+- Add info to Home and Contact page
+- 
 -  
--  
+
+
 
 

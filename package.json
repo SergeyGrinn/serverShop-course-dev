@@ -1,0 +1,25 @@
+{
+  "name": "course",
+  "version": "1.0.0",
+  "description": "Repo for course project.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SergeyGrinn/serverShop-course-dev.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/SergeyGrinn/serverShop-course-dev/issues"
+  },
+  "homepage": "https://github.com/SergeyGrinn/serverShop-course-dev#readme",
+  "dependencies": {
+    "@tailwindcss/cli": "^4.3.3",
+    "tailwindcss": "^4.3.3"
+  }
+}

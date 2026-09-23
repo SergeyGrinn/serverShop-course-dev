@@ -19,7 +19,7 @@
 
         <div class="bg-white rounded-lg shadow overflow-x-auto">
             <table class="w-full">
-                <thead class="bg-gray-100 border-b">
+                <thead class="bg-gray-100 border-b border-gray-200">
                     <tr>
                         <th class="px-6 py-3 text-left">Type</th>
                         <th class="px-6 py-3 text-left">Name</th>
@@ -30,7 +30,7 @@
                 </thead>
                 <tbody>
                     <?php foreach ($allComponents as $component): ?>
-                    <tr class="border-b hover:bg-gray-50">
+                    <tr class="border-b border-gray-200 hover:bg-gray-50">
                         <td class="px-6 py-3">
                             <span class="px-3 py-1 rounded bg-blue-100 text-blue-800 text-sm">
                                 <?= $component['type'] ?>
@@ -44,8 +44,8 @@
                                class="bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600">
                                 Edit
                             </a>
-                            <form method="POST" action="<?= BASE_URL ?>/admin/components.php?action=delete" 
-                                  onsubmit="return confirm('Are you sure?');">
+                                <form method="POST" action="<?= BASE_URL ?>/admin/components.php?action=delete" 
+                                    class="confirm-delete-form">
                                 <input type="hidden" name="id" value="<?= $component['id'] ?>">
                                 <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600">
                                     Delete

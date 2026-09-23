@@ -21,11 +21,14 @@ class AuthController {
             $errors = [];
 
             if (empty($name)) $errors[] = 'Name is required';
-            if (empty($email)) $errors[] = 'Email is required';
-            if (!empty($email) && !filter_var($email, FILTER_VALIDATE_EMAIL)) $errors[] = 'Invalid email format';
-            if (!empty($email) && !preg_match('/^[^@]+@[^@]+\.[a-z]{2,6}$/i', $email)) $errors[] = 'Email must have a valid domain extension';
+            if (empty($email)) {
+                $errors[] = 'Email is required';
+            } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL) || !preg_match('/^[^@]+@[^@]+\.[a-z]{2,6}$/i', $email)) {
+                $errors[] = 'Invalid email format';
+            }
             if (empty($password)) $errors[] = 'Password is required';
-            if ($password !== $confPassword) $errors[] = 'Passwords do not match';
+            if (empty($confPassword)) $errors[] = 'Confirmation password is required';
+            if (!empty($password) && !empty($confPassword) && $password !== $confPassword) $errors[] = 'Passwords do not match';
             if (!empty($email) && $this->userModel->findByEmail($email)) $errors[] = 'Email already taken';
 
             if (empty($errors)) {

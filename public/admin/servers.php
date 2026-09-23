@@ -35,4 +35,12 @@ switch ($action) {
         break;
     default:
         $controller->index();
+        break;
+    case 'toggle-availability':
+        $id = $_POST['id'] ?? null;
+
+        if ($id) {
+            $controller->toggleAvailability($id);
+        }
+        break;
 }
