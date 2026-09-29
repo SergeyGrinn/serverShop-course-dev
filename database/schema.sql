@@ -112,7 +112,7 @@ CREATE TABLE `servers` (
   `base_price` decimal(10,2) NOT NULL,
   `available` tinyint(1) NOT NULL DEFAULT 1,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `default_ram` int(11) DEFAULT NULL,
+  `default_ram` decimal(8,3) DEFAULT NULL,
   `default_storage` int(11) DEFAULT NULL,
   `default_cpu_cores` int(11) DEFAULT NULL,
   `default_gpu_vram` int(11) DEFAULT NULL

@@ -138,17 +138,17 @@ class ServerController {
 
         $providedCount = 0;
         foreach ($fields as $column => [$field, $label]) {
-            $value = $input[$field] ?? '';
-            if ($value === '') {
+            $rawValue = $input[$field] ?? '';
+            if ($rawValue === '') {
                 continue;
             }
 
-            if (filter_var($value, FILTER_VALIDATE_INT) === false || (int) $value < 1) {
-                $errors[] = $label . ' must be a positive whole number';
+            $value = $this->parseHardwareValue($column, $rawValue, $label, $errors);
+            if ($value === null) {
                 continue;
             }
 
-            $defaults[$column] = (int) $value;
+            $defaults[$column] = $value;
             $providedCount++;
         }
 
@@ -157,6 +157,25 @@ class ServerController {
         }
 
         return $defaults;
+    }
+
+    private function parseHardwareValue(string $column, string $value, string $label, array &$errors) {
+        $parsedValue = null;
+
+        if ($column === 'default_ram') {
+            $ramValue = trim($value);
+            if (is_numeric($ramValue) && (float) $ramValue > 0 && preg_match('/^\d+(?:\.\d{1,3})?$/', $ramValue)) {
+                $parsedValue = (float) $ramValue;
+            } else {
+                $errors[] = $label . ' must be positive and use at most 3 decimal places';
+            }
+        } elseif (filter_var($value, FILTER_VALIDATE_INT) !== false && (int) $value > 0) {
+            $parsedValue = (int) $value;
+        } else {
+            $errors[] = $label . ' must be a positive whole number';
+        }
+
+        return $parsedValue;
     }
 
     public function toggleAvailability($id) {

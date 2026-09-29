@@ -35,6 +35,7 @@
                         <td class="px-6 py-3">
                             <form method="POST" action="servers.php?action=toggle-availability">
                                 <input type="hidden" name="id" value="<?= $server['id'] ?>">
+                                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(csrf_token(), ENT_QUOTES, 'UTF-8') ?>">
                                     <button
                                         type="submit"
                                         class="px-3 py-1 rounded text-white text-sm shadow-sm transition duration-200 ease-out hover:scale-105 hover:opacity-90 hover:shadow-md active:scale-95"
@@ -53,6 +54,7 @@
                             </a>
                             <form method="POST" action="servers.php?action=delete" class="confirm-delete-form" style="display:inline;">
                                 <input type="hidden" name="id" value="<?= $server['id'] ?>">
+                                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(csrf_token(), ENT_QUOTES, 'UTF-8') ?>">
                                 <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600">
                                 Delete
                                 </button>

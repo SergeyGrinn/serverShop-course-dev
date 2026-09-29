@@ -33,7 +33,10 @@ if (!isset($_COOKIE['cookie_consent'])): ?>
 
                 await fetch('<?= BASE_URL ?>/api/cookies/consent.php', {
                     method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-Token': CSRF_TOKEN
+                    },
                     body: JSON.stringify({consent: button.dataset.consent})
                 });
 

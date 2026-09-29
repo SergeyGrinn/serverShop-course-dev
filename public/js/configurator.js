@@ -34,7 +34,10 @@ document.getElementById('add-to-cart').addEventListener('click', function() {
 
     fetch(BASE_URL + '/api/cart/add.php', {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': CSRF_TOKEN
+        },
         body: JSON.stringify({
             server_id: serverId,
             component_ids: componentIds,

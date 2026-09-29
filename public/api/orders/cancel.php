@@ -20,6 +20,12 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
+if (!csrf_verify($_SERVER['HTTP_X_CSRF_TOKEN'] ?? null)) {
+    http_response_code(403);
+    Response::json(['success' => false, 'message' => 'Invalid CSRF token']);
+    exit;
+}
+
 $data = json_decode(file_get_contents('php://input'), true) ?? $_POST;
 
 if (!isset($data['order_id']) || empty($data['order_id'])) {

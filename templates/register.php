@@ -11,6 +11,7 @@ $hasError = function (string $message) use ($submitted, $errors) {
         <h1 class="text-2xl font-bold mb-6">Register</h1>
 
         <form method="POST" class="notification-validation-form" novalidate>
+            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(csrf_token(), ENT_QUOTES, 'UTF-8') ?>">
             <div class="flex flex-col gap-2 mb-4">
                 <label class="text-sm font-medium">Name</label>
                 <input type="text" name="name" data-validation-message="Name is required" value="<?= htmlspecialchars($_POST['name'] ?? '') ?>"

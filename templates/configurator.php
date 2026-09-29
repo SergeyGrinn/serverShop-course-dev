@@ -1,3 +1,13 @@
+<?php
+$ramDisplay = 'N/A';
+if ($server['default_ram'] !== null) {
+    $ramGb = (float) $server['default_ram'];
+    $ramDisplay = $ramGb < 1
+        ? round($ramGb * 1000) . ' MB'
+        : rtrim(rtrim(number_format($ramGb, 2, '.', ''), '0'), '.') . ' GB';
+}
+?>
+
 <main class="max-w-6xl mx-auto px-5 py-8">
     <div class="flex gap-8">
 
@@ -9,7 +19,7 @@
             <h1 class="text-xl font-bold mt-4"><?= htmlspecialchars($server['name']) ?></h1>
             <p class="text-sm text-gray-500 mt-1">
                 CPU: <?= $server['default_cpu_cores'] ?? 'N/A' ?> cores | 
-                RAM: <?= $server['default_ram'] ? $server['default_ram'] . ' GB' : 'N/A' ?> | 
+                RAM: <?= htmlspecialchars($ramDisplay) ?> | 
                 GPU: <?= $server['default_gpu_vram'] ? $server['default_gpu_vram'] . ' GB' : 'N/A' ?> | 
                 Storage: <?= $server['default_storage'] ? $server['default_storage'] . ' GB' : 'N/A' ?>
             </p>

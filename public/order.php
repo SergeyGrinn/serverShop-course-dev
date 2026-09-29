@@ -302,7 +302,8 @@ async function processPayment(orderId) {
         const response = await fetch(BASE_URL + '/api/orders/pay.php', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'X-CSRF-Token': CSRF_TOKEN
             },
             body: JSON.stringify({
                 order_id: orderId
@@ -349,7 +350,8 @@ async function cancelOrder(orderId) {
         const response = await fetch(BASE_URL + '/api/orders/cancel.php', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'X-CSRF-Token': CSRF_TOKEN
             },
             body: JSON.stringify({
                 order_id: orderId

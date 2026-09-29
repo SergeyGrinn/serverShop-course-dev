@@ -22,6 +22,12 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
+if (!csrf_verify($_SERVER['HTTP_X_CSRF_TOKEN'] ?? null)) {
+    http_response_code(403);
+    Response::json(['success' => false, 'message' => 'Invalid CSRF token']);
+    exit;
+}
+
 // Validate and sanitize input data
 $name = trim($_POST['name'] ?? ''); 
 $email = trim($_POST['email'] ?? '');

@@ -11,6 +11,7 @@
                 <h2 class="text-xl font-semibold mb-4">Current Components</h2>
                 
                 <form method="POST" id="componentsForm">
+                    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(csrf_token(), ENT_QUOTES, 'UTF-8') ?>">
                     <div class="space-y-3">
                         <?php
                         $componentsByType = [];
@@ -59,6 +60,7 @@
                 <h2 class="text-xl font-semibold mb-4">Add New Component</h2>
                 
                 <form method="POST" action="servers.php?action=components&id=<?= $server['id'] ?>" id="createComponentForm" class="notification-validation-form" novalidate>
+                    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(csrf_token(), ENT_QUOTES, 'UTF-8') ?>">
                     <div class="space-y-4">
                         <div>
                             <label class="block text-sm font-medium mb-2">Component Name</label>

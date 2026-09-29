@@ -1,4 +1,7 @@
 <?php
+require_once __DIR__ . '/../src/Core/bootstrap.php';
+require_once __DIR__ . '/../src/Core/functions.php';
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -25,6 +28,8 @@ $isAdmin = ($_SESSION['user_role'] ?? '') === 'admin';
     
     <script>
     const BASE_URL = '<?= BASE_URL ?>';
+    const CSRF_TOKEN = '<?= htmlspecialchars(csrf_token(), ENT_QUOTES) ?>';
+    
     if (localStorage.getItem('theme') === 'dark') {
         document.documentElement.classList.add('dark-theme');
     }
@@ -46,7 +51,10 @@ $isAdmin = ($_SESSION['user_role'] ?? '') === 'admin';
             <div class="flex items-center gap-4">
                 <?php if (isset($_SESSION['user_id'])): ?>
                     <span class="text-gray-700">Hello, <?= htmlspecialchars($_SESSION['user_name']) ?></span>
-                    <a href="<?= BASE_URL ?>/logout.php" class="no-underline text-gray-700 hover:text-green-700">Logout</a>
+                    <form method="POST" action="<?= BASE_URL ?>/logout.php" class="inline-flex">
+                        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(csrf_token(), ENT_QUOTES, 'UTF-8') ?>">
+                        <button type="submit" class="no-underline text-gray-700 hover:text-green-700">Logout</button>
+                    </form>
                     <?php if ($_SESSION['user_role'] === 'admin'): ?>
                         <div class="admin-pages-menu">
                             <button type="button" class="admin-pages-trigger" aria-haspopup="true">

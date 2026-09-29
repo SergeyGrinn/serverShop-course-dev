@@ -8,6 +8,11 @@ require_once BASE_PATH . 'src/Config/db.php';
 require_once BASE_PATH . 'src/Models/Server.php';
 require_once BASE_PATH . 'src/Controllers/Admin/ServerController.php';
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !csrf_verify($_POST['csrf_token'] ?? null)) {
+    http_response_code(403);
+    exit('Invalid CSRF token');
+}
+
 $action = $_GET['action'] ?? 'list';
 $controller = new ServerController($pdo);
 

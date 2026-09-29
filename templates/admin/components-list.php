@@ -47,6 +47,7 @@
                                 <form method="POST" action="<?= BASE_URL ?>/admin/components.php?action=delete" 
                                     class="confirm-delete-form">
                                 <input type="hidden" name="id" value="<?= $component['id'] ?>">
+                                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(csrf_token(), ENT_QUOTES, 'UTF-8') ?>">
                                 <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600">
                                     Delete
                                 </button>

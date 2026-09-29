@@ -10,6 +10,11 @@ require_once BASE_PATH . 'src/Middleware/Admin.php';
 
 Admin::check();
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !csrf_verify($_POST['csrf_token'] ?? null)) {
+    http_response_code(403);
+    exit('Invalid CSRF token');
+}
+
 $componentModel = new Component($pdo);
 $action = $_GET['action'] ?? 'list';
 

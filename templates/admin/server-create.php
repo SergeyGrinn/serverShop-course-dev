@@ -22,6 +22,7 @@ $hardwareValues = [
         <?php endif; ?>
 
         <form method="POST" class="notification-validation-form bg-white rounded-lg shadow p-6" enctype="multipart/form-data" novalidate>
+            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(csrf_token(), ENT_QUOTES, 'UTF-8') ?>">
             <div class="mb-4">
                 <label class="block text-sm font-medium mb-2">Server Name</label>
                 <input type="text" name="name" value="<?= htmlspecialchars($_POST['name'] ?? '') ?>" class="w-full border rounded px-3 py-2" required>
@@ -42,7 +43,7 @@ $hardwareValues = [
             <div class="built-in-hardware-fields grid grid-cols-2 gap-4 mb-6 <?= $hasBuiltInHardware ? '' : 'hidden' ?>">
                 <div>
                     <label class="block text-sm font-medium mb-2" for="default-ram">RAM (GB)</label>
-                    <input id="default-ram" type="number" name="ram" min="1" step="1" value="<?= htmlspecialchars((string) $hardwareValues['ram']) ?>" class="w-full border rounded px-3 py-2">
+                    <input id="default-ram" type="number" name="ram" min="0.001" step="0.001" value="<?= htmlspecialchars((string) $hardwareValues['ram']) ?>" class="w-full border rounded px-3 py-2">
                 </div>
                 <div>
                     <label class="block text-sm font-medium mb-2" for="default-cpu-cores">CPU cores</label>

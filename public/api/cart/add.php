@@ -8,6 +8,18 @@ require_once BASE_PATH . 'src/Models/Cart.php';
 
 header('Content-Type: application/json');
 
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    echo json_encode(['success' => false, 'message' => 'Request must be POST']);
+    exit;
+}
+
+if (!csrf_verify($_SERVER['HTTP_X_CSRF_TOKEN'] ?? null)) {
+    http_response_code(403);
+    echo json_encode(['success' => false, 'message' => 'Invalid CSRF token']);
+    exit;
+}
+
 $data = json_decode(file_get_contents('php://input'), true);
 
 $server_id = $data['server_id'] ?? null;

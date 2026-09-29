@@ -171,6 +171,7 @@ document.getElementById('checkoutForm').addEventListener('submit', async functio
         
         const response = await fetch('<?= BASE_URL ?>/api/orders/create.php', {
             method: 'POST',
+            headers: {'X-CSRF-Token': CSRF_TOKEN},
             body: formData
         });
         
@@ -202,7 +203,10 @@ document.querySelectorAll('.remove-checkout-item').forEach(button => {
         try {
             const response = await fetch('<?= BASE_URL ?>/api/cart/remove.php', {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-Token': CSRF_TOKEN
+                },
                 body: JSON.stringify({item_id: this.dataset.itemId})
             });
 

@@ -1,7 +1,13 @@
 <?php
 
-function base_path($path = '') {
-    return BASE_PATH . $path;
+if (!function_exists('base_path')) {
+    function base_path($path = '') {
+        if (defined('BASE_PATH')) {
+            return BASE_PATH . $path;
+        }
+
+        return ROOT_PATH . ltrim($path, DIRECTORY_SEPARATOR);
+    }
 }
 
 if (!function_exists('csrf_token')) {

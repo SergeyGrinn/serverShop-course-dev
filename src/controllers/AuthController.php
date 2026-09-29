@@ -20,6 +20,10 @@ class AuthController {
 
             $errors = [];
 
+            if (!csrf_verify($_POST['csrf_token'] ?? null)) {
+                $errors[] = 'Invalid CSRF token';
+            }
+
             if (empty($name)) $errors[] = 'Name is required';
             if (empty($email)) {
                 $errors[] = 'Email is required';
@@ -48,10 +52,15 @@ class AuthController {
             $email = $_POST['email'] ?? '';
             $password = $_POST['password'] ?? '';
 
-            $user = $this->userModel->findByEmail($email);
+            if (!csrf_verify($_POST['csrf_token'] ?? null)) {
+                $error = 'Invalid CSRF token';
+            } else {
+                $user = $this->userModel->findByEmail($email);
 
             if ($user && password_verify($password, $user['password'])) {
-                session_start();
+                if (session_status() === PHP_SESSION_NONE) {
+                    session_start();
+                }
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['user_name'] = $user['username'];
                 $_SESSION['user_role'] = $user['role'];
@@ -68,7 +77,8 @@ class AuthController {
                 exit;
             }
 
-            $error = 'Invalid email or password';
+                $error = 'Invalid email or password';
+            }
         }
 
         require base_path('templates/header.php');

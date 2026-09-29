@@ -9,8 +9,10 @@ header ('Content-Type: application/json');
 
 $price_from = $_GET['price_from'] ?? null;
 $price_to = $_GET['price_to'] ?? null;
-$ram = $_GET['ram'] ?? null;
-$storage = $_GET['storage'] ?? null;
+$ram_min = $_GET['ram_min'] ?? '';
+$ram_max = $_GET['ram_max'] ?? '';
+$storage_min = $_GET['storage_min'] ?? '';
+$storage_max = $_GET['storage_max'] ?? '';
 $cpu_cores = $_GET['cpu_cores'] ?? null;
 
 $where = ['available = 1'];
@@ -24,13 +26,21 @@ if ($price_to){
     $where[] = 'base_price <= :price_to';
     $params[':price_to'] = $price_to;
 }
-if ($ram){
-    $where[] = 'default_ram = :ram';
-    $params[':ram'] = $ram;
+if ($ram_min !== '' && is_numeric($ram_min)) {
+    $where[] = 'default_ram >= :ram_min';
+    $params[':ram_min'] = (float) $ram_min;
 }
-if ($storage){
-    $where[] = 'default_storage = :storage';
-    $params[':storage'] = $storage;
+if ($ram_max !== '' && is_numeric($ram_max)) {
+    $where[] = 'default_ram <= :ram_max';
+    $params[':ram_max'] = (float) $ram_max;
+}
+if ($storage_min !== '' && is_numeric($storage_min)) {
+    $where[] = 'default_storage >= :storage_min';
+    $params[':storage_min'] = (int) $storage_min;
+}
+if ($storage_max !== '' && is_numeric($storage_max)) {
+    $where[] = 'default_storage <= :storage_max';
+    $params[':storage_max'] = (int) $storage_max;
 }
 if ($cpu_cores){
     $where[] = 'default_cpu_cores = :cpu_cores';

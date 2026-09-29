@@ -19,33 +19,29 @@
             </div>
 
             <div class="flex flex-col gap-2 mb-4">
-                <label class="text-sm text-gray-600">RAM</label>
-                <select data-bind="value: ram" class="w-full border border-gray-300 rounded px-2 py-1 text-sm">
-                    <option value="">Any</option>
-                    <option value="512">512 MB</option>
-                    <option value="1">1 GB</option>
-                    <option value="2">2 GB</option>
-                    <option value="4">4 GB</option>
-                    <option value="8">8 GB</option>
-                    <option value="16">16 GB</option>
-                    <option value="32">32 GB</option>
-                </select>
+                <label class="text-sm text-gray-600">RAM (GB)</label>
+                <div class="flex gap-2 items-center">
+                    <input type="number" placeholder="From" min="0" step="0.001"
+                        data-bind="value: ramFrom, valueUpdate: 'afterkeydown'"
+                        class="w-full min-w-0 border border-gray-300 rounded px-2 py-1 text-sm">
+                    <span class="text-gray-400">—</span>
+                    <input type="number" placeholder="To" min="0" step="0.001"
+                        data-bind="value: ramTo, valueUpdate: 'afterkeydown'"
+                        class="w-full min-w-0 border border-gray-300 rounded px-2 py-1 text-sm">
+                </div>
             </div>
 
             <div class="flex flex-col gap-2 mb-4">
-                <label class="text-sm text-gray-600">Storage</label>
-                <select data-bind="value: storage" class="w-full border border-gray-300 rounded px-2 py-1 text-sm">
-                    <option value="">Any</option>
-                    <option value="16">16 GB</option>
-                    <option value="32">32 GB</option>
-                    <option value="64">64 GB</option>
-                    <option value="128">128 GB</option>
-                    <option value="256">256 GB</option>
-                    <option value="512">512 GB</option>
-                    <option value="1000">1 TB</option>
-                    <option value="2000">2 TB</option>
-                    <option value="4000x">4 TB</option>
-                </select>
+                <label class="text-sm text-gray-600">Storage (GB)</label>
+                <div class="flex gap-2 items-center">
+                    <input type="number" placeholder="From" min="0" step="1"
+                        data-bind="value: storageFrom, valueUpdate: 'afterkeydown'"
+                        class="w-full min-w-0 border border-gray-300 rounded px-2 py-1 text-sm">
+                    <span class="text-gray-400">—</span>
+                    <input type="number" placeholder="To" min="0" step="1"
+                        data-bind="value: storageTo, valueUpdate: 'afterkeydown'"
+                        class="w-full min-w-0 border border-gray-300 rounded px-2 py-1 text-sm">
+                </div>
             </div>
 
             <div class="flex flex-col gap-2 mb-4">
@@ -78,7 +74,7 @@
                         <h2 class="text-lg font-semibold" data-bind="text: name"></h2>
                         <p class="text-sm text-gray-500 mt-1">
                             CPU: <span data-bind="text: default_cpu_cores || 'N/A'"></span> cores | 
-                            RAM: <span data-bind="text: default_ram ? default_ram + ' GB' : 'N/A'"></span> | 
+                            RAM: <span data-bind="text: $root.formatRam(default_ram)"></span> | 
                             GPU: <span data-bind="text: default_gpu_vram ? default_gpu_vram + ' GB' : 'N/A'"></span> | 
                             Storage: <span data-bind="text: default_storage ? default_storage + ' GB' : 'N/A'"></span>
                         </p>
@@ -102,9 +98,18 @@ function CatalogViewModel() {
     self.loading = ko.observable(false);
     self.priceFrom = ko.observable('');
     self.priceTo = ko.observable('');
-    self.ram = ko.observable('');
-    self.storage = ko.observable('');
+    self.ramFrom = ko.observable('');
+    self.ramTo = ko.observable('');
+    self.storageFrom = ko.observable('');
+    self.storageTo = ko.observable('');
     self.cpuCores = ko.observable('');
+
+    self.formatRam = function(value) {
+        if (!value) return 'N/A';
+
+        var ramGb = parseFloat(value);
+        return ramGb < 1 ? Math.round(ramGb * 1000) + ' MB' : ramGb + ' GB';
+    };
 
     self.loadServers = function() {
         self.loading(false);
@@ -112,8 +117,10 @@ function CatalogViewModel() {
         var params = new URLSearchParams();
         if (self.priceFrom()) params.append('price_from', self.priceFrom());
         if (self.priceTo()) params.append('price_to', self.priceTo());
-        if (self.ram()) params.append('ram', self.ram());
-        if (self.storage()) params.append('storage', self.storage());
+        if (self.ramFrom()) params.append('ram_min', self.ramFrom());
+        if (self.ramTo()) params.append('ram_max', self.ramTo());
+        if (self.storageFrom()) params.append('storage_min', self.storageFrom());
+        if (self.storageTo()) params.append('storage_max', self.storageTo());
         if (self.cpuCores()) params.append('cpu_cores', self.cpuCores());
         
 
@@ -128,15 +135,19 @@ function CatalogViewModel() {
     ko.computed(function() {
         self.priceFrom();
         self.priceTo();
-        self.ram();
-        self.storage();
+        self.ramFrom();
+        self.ramTo();
+        self.storageFrom();
+        self.storageTo();
         self.cpuCores();
     }).extend({ rateLimit: 500 });
 
     self.priceFrom.subscribe(self.loadServers);
     self.priceTo.subscribe(self.loadServers);
-    self.ram.subscribe(self.loadServers);
-    self.storage.subscribe(self.loadServers);
+    self.ramFrom.subscribe(self.loadServers);
+    self.ramTo.subscribe(self.loadServers);
+    self.storageFrom.subscribe(self.loadServers);
+    self.storageTo.subscribe(self.loadServers);
     self.cpuCores.subscribe(self.loadServers);
 
     self.loadServers();

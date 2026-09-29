@@ -69,7 +69,10 @@ function loadCart() {
 function removeItem(item_id) {
     fetch(BASE_URL + '/api/cart/remove.php', {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': CSRF_TOKEN
+        },
         body: JSON.stringify({item_id: item_id})
     })
     .then(res => res.json())
