@@ -44,7 +44,19 @@ document.querySelectorAll('.notification-validation-form').forEach(form => {
 			return !field.validity.valid;
 		});
 
-		if (invalidFields.length === 0) return;
+		if (invalidFields.length === 0) {
+			const hardwareToggle = form.querySelector('.built-in-hardware-toggle');
+			if (hardwareToggle?.checked) {
+				const hardwareInputs = form.querySelectorAll('.built-in-hardware-fields input[type="number"]');
+				const hasHardwareValue = Array.from(hardwareInputs).some(input => input.value.trim() !== '');
+				if (!hasHardwareValue) {
+					event.preventDefault();
+					hardwareToggle.focus();
+					showNotification('Enter at least one built-in hardware value.', 'error');
+				}
+			}
+			return;
+		}
 
 		const missingFields = invalidFields.filter(field => field.validity.valueMissing);
 		const rangeField = invalidFields.find(field => field.validity.rangeUnderflow);
@@ -82,6 +94,17 @@ document.querySelectorAll('.custom-file-input').forEach(input => {
 		const fileName = input.closest('.custom-file-picker').querySelector('.custom-file-name');
 		fileName.textContent = input.files[0]?.name || 'No file chosen';
 	});
+});
+
+document.querySelectorAll('.built-in-hardware-toggle').forEach(toggle => {
+	const fields = toggle.closest('form').querySelector('.built-in-hardware-fields');
+
+	const updateHardwareFields = () => {
+		fields.classList.toggle('hidden', !toggle.checked);
+	};
+
+	toggle.addEventListener('change', updateHardwareFields);
+	updateHardwareFields();
 });
 
 document.querySelectorAll('.confirm-delete-form').forEach(form => {

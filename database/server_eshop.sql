@@ -129,7 +129,8 @@ CREATE TABLE `servers` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `default_ram` int(11) DEFAULT NULL,
   `default_storage` int(11) DEFAULT NULL,
-  `default_cpu_cores` int(11) DEFAULT NULL
+  `default_cpu_cores` int(11) DEFAULT NULL,
+  `default_gpu_vram` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --

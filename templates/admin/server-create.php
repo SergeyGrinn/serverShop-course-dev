@@ -1,4 +1,13 @@
-<?php require base_path('templates/header.php'); ?>
+<?php
+require base_path('templates/header.php');
+$hasBuiltInHardware = isset($_POST['has_built_in_hardware']);
+$hardwareValues = [
+    'ram' => $_POST['ram'] ?? '',
+    'storage' => $_POST['storage'] ?? '',
+    'cpu_cores' => $_POST['cpu_cores'] ?? '',
+    'gpu_vram' => $_POST['gpu_vram'] ?? '',
+];
+?>
 
 <main class="p-8">
     <div class="max-w-2xl mx-auto">
@@ -21,6 +30,32 @@
             <div class="mb-4">
                 <label class="block text-sm font-medium mb-2">Description</label>
                 <textarea name="description" class="w-full border rounded px-3 py-2 h-24" required><?= htmlspecialchars($_POST['description'] ?? '') ?></textarea>
+            </div>
+
+            <div class="mb-4">
+                <label class="flex items-center gap-2 font-medium">
+                    <input type="checkbox" name="has_built_in_hardware" value="1" class="built-in-hardware-toggle" <?= $hasBuiltInHardware ? 'checked' : '' ?>>
+                    <span>Has built-in hardware</span>
+                </label>
+            </div>
+
+            <div class="built-in-hardware-fields grid grid-cols-2 gap-4 mb-6 <?= $hasBuiltInHardware ? '' : 'hidden' ?>">
+                <div>
+                    <label class="block text-sm font-medium mb-2" for="default-ram">RAM (GB)</label>
+                    <input id="default-ram" type="number" name="ram" min="1" step="1" value="<?= htmlspecialchars((string) $hardwareValues['ram']) ?>" class="w-full border rounded px-3 py-2">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-2" for="default-cpu-cores">CPU cores</label>
+                    <input id="default-cpu-cores" type="number" name="cpu_cores" min="1" step="1" value="<?= htmlspecialchars((string) $hardwareValues['cpu_cores']) ?>" class="w-full border rounded px-3 py-2">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-2" for="default-gpu-vram">GPU memory (GB)</label>
+                    <input id="default-gpu-vram" type="number" name="gpu_vram" min="1" step="1" value="<?= htmlspecialchars((string) $hardwareValues['gpu_vram']) ?>" class="w-full border rounded px-3 py-2">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-2" for="default-storage">Storage (GB)</label>
+                    <input id="default-storage" type="number" name="storage" min="1" step="1" value="<?= htmlspecialchars((string) $hardwareValues['storage']) ?>" class="w-full border rounded px-3 py-2">
+                </div>
             </div>
 
             <div class="mb-4">

@@ -153,7 +153,16 @@ html:not(.dark-theme) .admin-pages-overlay a {
 }
 
 html:not(.dark-theme) .admin-pages-overlay a span {
-	color: #40627f;
+	color: #40627f !important;
+}
+
+html:not(.dark-theme) .admin-page header .admin-pages-overlay a,
+html:not(.dark-theme) .admin-page header .admin-pages-overlay a strong {
+	color: #173b5d !important;
+}
+
+html:not(.dark-theme) .admin-page header .admin-pages-overlay a span {
+	color: #40627f !important;
 }
 
 html:not(.dark-theme) .admin-pages-overlay a:hover {

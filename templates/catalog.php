@@ -79,6 +79,7 @@
                         <p class="text-sm text-gray-500 mt-1">
                             CPU: <span data-bind="text: default_cpu_cores || 'N/A'"></span> cores | 
                             RAM: <span data-bind="text: default_ram ? default_ram + ' GB' : 'N/A'"></span> | 
+                            GPU: <span data-bind="text: default_gpu_vram ? default_gpu_vram + ' GB' : 'N/A'"></span> | 
                             Storage: <span data-bind="text: default_storage ? default_storage + ' GB' : 'N/A'"></span>
                         </p>
                         <span class="text-green-700 font-bold text-lg mt-2 block" data-bind="text: 'from ' + parseFloat(base_price).toFixed(0) + ' €'"></span>

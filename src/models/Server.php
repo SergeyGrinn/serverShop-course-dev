@@ -32,32 +32,43 @@ class Server {
         return $stmt->fetch();
     }
 
-    public function create($name, $description, $image, $base_price) {
+    public function create(array $serverData) {
         $stmt = $this->pdo->prepare(
-            "INSERT INTO servers (name, description, image, base_price, available) 
-             VALUES (:name, :description, :image, :base_price, TRUE)"
+            "INSERT INTO servers
+             (name, description, image, base_price, default_ram, default_storage, default_cpu_cores, default_gpu_vram, available)
+             VALUES (:name, :description, :image, :base_price, :default_ram, :default_storage, :default_cpu_cores, :default_gpu_vram, TRUE)"
         );
         return $stmt->execute([
-            ':name' => $name,
-            ':description' => $description,
-            ':image' => $image,
-            ':base_price' => $base_price
+            ':name' => $serverData['name'],
+            ':description' => $serverData['description'],
+            ':image' => $serverData['image'],
+            ':base_price' => $serverData['base_price'],
+            ':default_ram' => $serverData['default_ram'],
+            ':default_storage' => $serverData['default_storage'],
+            ':default_cpu_cores' => $serverData['default_cpu_cores'],
+            ':default_gpu_vram' => $serverData['default_gpu_vram']
         ]);
     }
 
-    public function update($id, $name, $description, $image, $base_price, $available) {
+    public function update($id, array $serverData) {
         $stmt = $this->pdo->prepare(
             "UPDATE servers SET name = :name, description = :description, 
-             image = :image, base_price = :base_price, available = :available 
+             image = :image, base_price = :base_price, available = :available,
+             default_ram = :default_ram, default_storage = :default_storage,
+             default_cpu_cores = :default_cpu_cores, default_gpu_vram = :default_gpu_vram
              WHERE id = :id"
         );
         return $stmt->execute([
             ':id' => $id,
-            ':name' => $name,
-            ':description' => $description,
-            ':image' => $image,
-            ':base_price' => $base_price,
-            ':available' => $available
+            ':name' => $serverData['name'],
+            ':description' => $serverData['description'],
+            ':image' => $serverData['image'],
+            ':base_price' => $serverData['base_price'],
+            ':available' => $serverData['available'],
+            ':default_ram' => $serverData['default_ram'],
+            ':default_storage' => $serverData['default_storage'],
+            ':default_cpu_cores' => $serverData['default_cpu_cores'],
+            ':default_gpu_vram' => $serverData['default_gpu_vram']
         ]);
     }
     public function toggleAvailability($id) {

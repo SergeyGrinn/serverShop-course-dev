@@ -39,6 +39,7 @@ class ServerController {
             $base_price = $_POST['base_price'] ?? '';
 
             $errors = [];
+            $hardware = $this->getHardwareDefaults($_POST, $errors);
 
             if (empty($name)) $errors[] = 'Name is required';
             if (empty($description)) $errors[] = 'Description is required';
@@ -47,7 +48,16 @@ class ServerController {
             }
 
             if (empty($errors)) {
-                $this->serverModel->create($name, $description, $image, $base_price);
+                $this->serverModel->create([
+                    'name' => $name,
+                    'description' => $description,
+                    'image' => $image,
+                    'base_price' => $base_price,
+                    'default_ram' => $hardware['default_ram'],
+                    'default_storage' => $hardware['default_storage'],
+                    'default_cpu_cores' => $hardware['default_cpu_cores'],
+                    'default_gpu_vram' => $hardware['default_gpu_vram'],
+                ]);
                 header('Location: ' . BASE_URL . '/admin/servers.php');
                 exit;
             }
@@ -79,6 +89,7 @@ class ServerController {
             $available = $server['available'];
 
             $errors = [];
+            $hardware = $this->getHardwareDefaults($_POST, $errors);
 
             if (empty($name)) $errors[] = 'Name is required';
             if (empty($description)) $errors[] = 'Description is required';
@@ -87,13 +98,65 @@ class ServerController {
             }
 
             if (empty($errors)) {
-                $this->serverModel->update($id, $name, $description, $image, $base_price, $available);
+                $this->serverModel->update($id, [
+                    'name' => $name,
+                    'description' => $description,
+                    'image' => $image,
+                    'base_price' => $base_price,
+                    'available' => $available,
+                    'default_ram' => $hardware['default_ram'],
+                    'default_storage' => $hardware['default_storage'],
+                    'default_cpu_cores' => $hardware['default_cpu_cores'],
+                    'default_gpu_vram' => $hardware['default_gpu_vram'],
+                ]);
                 header('Location: ' . BASE_URL . '/admin/servers.php');
                 exit;
             }
         }
 
         require base_path('templates/admin/server-edit.php');
+    }
+
+    private function getHardwareDefaults(array $input, array &$errors) {
+        $defaults = [
+            'default_ram' => null,
+            'default_storage' => null,
+            'default_cpu_cores' => null,
+            'default_gpu_vram' => null,
+        ];
+
+        if (!isset($input['has_built_in_hardware'])) {
+            return $defaults;
+        }
+
+        $fields = [
+            'default_ram' => ['ram', 'RAM'],
+            'default_storage' => ['storage', 'Storage'],
+            'default_cpu_cores' => ['cpu_cores', 'CPU cores'],
+            'default_gpu_vram' => ['gpu_vram', 'GPU memory'],
+        ];
+
+        $providedCount = 0;
+        foreach ($fields as $column => [$field, $label]) {
+            $value = $input[$field] ?? '';
+            if ($value === '') {
+                continue;
+            }
+
+            if (filter_var($value, FILTER_VALIDATE_INT) === false || (int) $value < 1) {
+                $errors[] = $label . ' must be a positive whole number';
+                continue;
+            }
+
+            $defaults[$column] = (int) $value;
+            $providedCount++;
+        }
+
+        if ($providedCount === 0 && empty($errors)) {
+            $errors[] = 'Enter at least one built-in hardware value';
+        }
+
+        return $defaults;
     }
 
     public function toggleAvailability($id) {

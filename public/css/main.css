@@ -317,6 +317,9 @@ a[style*="background-color"]:active,
  /* === HEADER === */
 
  header {
+    position: sticky;
+    top: 0;
+    z-index: 30;
     background-color: #cbe3c5;
     border-bottom: 1px solid #6a8a63;
     padding: 0 20px;

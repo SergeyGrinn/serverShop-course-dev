@@ -10,6 +10,7 @@
             <p class="text-sm text-gray-500 mt-1">
                 CPU: <?= $server['default_cpu_cores'] ?? 'N/A' ?> cores | 
                 RAM: <?= $server['default_ram'] ? $server['default_ram'] . ' GB' : 'N/A' ?> | 
+                GPU: <?= $server['default_gpu_vram'] ? $server['default_gpu_vram'] . ' GB' : 'N/A' ?> | 
                 Storage: <?= $server['default_storage'] ? $server['default_storage'] . ' GB' : 'N/A' ?>
             </p>
         </div>
