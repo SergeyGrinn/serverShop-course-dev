@@ -382,6 +382,26 @@ a[style*="background-color"]:active,
     gap: 30px;
 }
 
+.verification-notice {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   gap: 16px;
+   padding: 8px 16px;
+   background: #fff3cd;
+   color: #856404;
+   font-size: 14px;
+}
+
+.verification-notice button {
+   padding: 5px 10px;
+   border: 1px solid currentColor;
+   border-radius: 4px;
+   background: transparent;
+   color: inherit;
+   cursor: pointer;
+}
+
 .filters {
     width: 250px;
     flex-shrink: 0;

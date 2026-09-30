@@ -51,6 +51,7 @@ $isAdmin = ($_SESSION['user_role'] ?? '') === 'admin';
             <div class="flex items-center gap-4">
                 <?php if (isset($_SESSION['user_id'])): ?>
                     <span class="text-gray-700">Hello, <?= htmlspecialchars($_SESSION['user_name']) ?></span>
+                    <a href="<?= BASE_URL ?>/profile.php" class="no-underline text-gray-700 hover:text-green-700">Profile</a>
                     <form method="POST" action="<?= BASE_URL ?>/logout.php" class="inline-flex">
                         <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(csrf_token(), ENT_QUOTES, 'UTF-8') ?>">
                         <button type="submit" class="no-underline text-gray-700 hover:text-green-700">Logout</button>
@@ -89,6 +90,14 @@ $isAdmin = ($_SESSION['user_role'] ?? '') === 'admin';
             </div>
         </nav>
     </header>
+    <?php if (isset($_SESSION['user_id']) && empty($_SESSION['email_verified_at'])): ?>
+        <div class="verification-notice">
+            <span>Verify your account to complete registration and be able to place an order.</span>
+            <button id="resend-verification" type="button" data-csrf-token="<?= htmlspecialchars(csrf_token(), ENT_QUOTES, 'UTF-8') ?>">
+                Resend verification email
+            </button>
+        </div>
+    <?php endif; ?>
     <main>
 <script>
 document.getElementById('theme-toggle').addEventListener('click', function () {
@@ -98,3 +107,24 @@ document.getElementById('theme-toggle').addEventListener('click', function () {
     this.setAttribute('title', isDark ? 'Switch to light theme' : 'Switch to dark theme');
 });
 </script>
+<?php if (isset($_SESSION['user_id']) && empty($_SESSION['email_verified_at'])): ?>
+<script>
+document.getElementById('resend-verification').addEventListener('click', async function () {
+    this.disabled = true;
+
+    try {
+        const response = await fetch('<?= BASE_URL ?>/api/auth/resend-verification.php', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: new URLSearchParams({csrf_token: this.dataset.csrfToken})
+        });
+        const data = await response.json();
+        showNotification(data.message, data.success ? 'success' : 'error');
+    } catch (error) {
+        showNotification(error.message, 'error');
+    } finally {
+        this.disabled = false;
+    }
+});
+</script>
+<?php endif; ?>

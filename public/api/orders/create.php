@@ -6,6 +6,7 @@ require_once BASE_PATH . 'src/Core/functions.php';
 require_once BASE_PATH . 'src/Config/db.php';
 require_once BASE_PATH . 'src/Models/Order.php';
 require_once BASE_PATH . 'src/Models/Cart.php';
+require_once BASE_PATH . 'src/Models/User.php';
 require_once BASE_PATH . 'src/Helpers/Response.php';
 
 header('Content-Type: application/json');
@@ -26,6 +27,19 @@ if (!csrf_verify($_SERVER['HTTP_X_CSRF_TOKEN'] ?? null)) {
     http_response_code(403);
     Response::json(['success' => false, 'message' => 'Invalid CSRF token']);
     exit;
+}
+
+if (isset($_SESSION['user_id'])) {
+    $userModel = new User($pdo);
+    $currentUser = $userModel->findById($_SESSION['user_id']);
+
+    if (!$currentUser || $currentUser['email_verified_at'] === null) {
+        http_response_code(403);
+        Response::json([
+            'success' => false,
+            'message' => 'Verify your account to complete registration and be able to place an order.'
+        ]);
+    }
 }
 
 // Validate and sanitize input data

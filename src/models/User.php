@@ -13,13 +13,63 @@ class User {
         return $stmt->fetch();
     }
 
-    public function create($name, $email, $password) {
+    public function findById($id) {
+        $stmt = $this->pdo->prepare("SELECT * FROM users WHERE id = :id");
+        $stmt->execute([':id' => $id]);
+        return $stmt->fetch();
+    }
+
+    public function create($name, $email, $password, $verificationToken) {
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-        $stmt = $this->pdo->prepare("INSERT INTO users (username, email, password) VALUES (:username, :email, :password)");
+        $stmt = $this->pdo->prepare(
+            "INSERT INTO users (username, email, password, email_verification_token, email_verified_at)
+             VALUES (:username, :email, :password, :verification_token, NULL)"
+        );
         $stmt->execute([
             ':username' => $name,
             ':email' => $email,
-            ':password' => $hashedPassword
+            ':password' => $hashedPassword,
+            ':verification_token' => $verificationToken
+        ]);
+    }
+
+    public function findByVerificationToken($token) {
+        $stmt = $this->pdo->prepare(
+            "SELECT * FROM users WHERE email_verification_token = :token"
+        );
+        $stmt->execute([':token' => $token]);
+        return $stmt->fetch();
+    }
+
+    public function verifyEmail($id) {
+        $stmt = $this->pdo->prepare(
+            "UPDATE users
+             SET email_verified_at = NOW(), email_verification_token = NULL
+             WHERE id = :id"
+        );
+        return $stmt->execute([':id' => $id]);
+    }
+
+    public function updateProfile($id, $username, $email) {
+        $stmt = $this->pdo->prepare(
+            "UPDATE users SET username = :username, email = :email WHERE id = :id"
+        );
+        return $stmt->execute([
+            ':id' => $id,
+            ':username' => $username,
+            ':email' => $email
+        ]);
+    }
+
+    public function setVerificationToken($id, $token) {
+        $stmt = $this->pdo->prepare(
+            "UPDATE users
+             SET email_verification_token = :token, email_verified_at = NULL
+             WHERE id = :id"
+        );
+        return $stmt->execute([
+            ':id' => $id,
+            ':token' => $token
         ]);
     }
 }

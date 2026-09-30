@@ -61,9 +61,20 @@ class Cart {
         ]);
     }
 
-    public function removeItem($item_id) {
-        $stmt = $this->pdo->prepare("DELETE FROM cart_items WHERE id = :id");
-        $stmt->execute([':id' => $item_id]);
+    public function removeItem($item_id, $session_id) {
+        $stmt = $this->pdo->prepare("
+            DELETE ci
+            FROM cart_items ci
+            INNER JOIN carts c ON c.id = ci.cart_id
+            WHERE ci.id = :item_id AND c.session_id = :session_id
+        ");
+
+        $stmt->execute([
+            ':item_id' => $item_id,
+            ':session_id' => $session_id
+        ]);
+
+        return $stmt->rowCount() > 0;
     }
 
     public function clearCart($cart_id) {

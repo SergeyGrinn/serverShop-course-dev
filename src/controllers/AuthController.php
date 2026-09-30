@@ -1,6 +1,7 @@
 <?php
 
 require_once base_path('src/Models/User.php');
+require_once base_path('src/Services/Mailer.php');
 
 class AuthController {
     private $userModel;
@@ -36,7 +37,9 @@ class AuthController {
             if (!empty($email) && $this->userModel->findByEmail($email)) $errors[] = 'Email already taken';
 
             if (empty($errors)) {
-                $this->userModel->create($name, $email, $password);
+                $verificationToken = bin2hex(random_bytes(32));
+                $this->userModel->create($name, $email, $password, $verificationToken);
+                Mailer::sendVerificationEmail($email, $name, $verificationToken);
                 header('Location: ' . BASE_URL . '/login.php');
                 exit;
             }
@@ -64,6 +67,7 @@ class AuthController {
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['user_name'] = $user['username'];
                 $_SESSION['user_role'] = $user['role'];
+                $_SESSION['email_verified_at'] = $user['email_verified_at'];
 
             $cartModel = new Cart($this->pdo);
             $cart = $cartModel->getOrCreateCart(session_id());
