@@ -64,7 +64,7 @@ class Order {
         }
 
         $stmt = $this->pdo->prepare("
-            SELECT oi.*, s.name as server_name, s.image
+            SELECT oi.*, s.name AS server_name, s.description AS server_description, s.image
             FROM order_items oi
             JOIN servers s ON oi.server_id = s.id
             WHERE oi.order_id = :order_id
@@ -105,6 +105,16 @@ class Order {
             ORDER BY created_at DESC
         ");
         $stmt->execute([':user_id' => $userId]);
+        return $stmt->fetchAll();
+    }
+
+    public function getAllAdmin() {
+        $stmt = $this->pdo->query("
+            SELECT o.*, u.username AS account_username
+            FROM orders o
+            LEFT JOIN users u ON u.id = o.user_id
+            ORDER BY o.created_at DESC, o.id DESC
+        ");
         return $stmt->fetchAll();
     }
 }

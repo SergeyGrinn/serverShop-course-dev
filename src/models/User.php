@@ -50,14 +50,24 @@ class User {
         return $stmt->execute([':id' => $id]);
     }
 
-    public function updateProfile($id, $username, $email) {
+    public function updateProfile($id, $username, $email, $mobilePhone) {
         $stmt = $this->pdo->prepare(
-            "UPDATE users SET username = :username, email = :email WHERE id = :id"
+            "UPDATE users SET username = :username, email = :email, mobile_phone = :mobile_phone WHERE id = :id"
         );
         return $stmt->execute([
             ':id' => $id,
             ':username' => $username,
-            ':email' => $email
+            ':email' => $email,
+            ':mobile_phone' => $mobilePhone !== '' ? $mobilePhone : null
+        ]);
+    }
+
+    public function updatePassword($id, $password) {
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+        $stmt = $this->pdo->prepare("UPDATE users SET password = :password WHERE id = :id");
+        return $stmt->execute([
+            ':id' => $id,
+            ':password' => $hashedPassword
         ]);
     }
 

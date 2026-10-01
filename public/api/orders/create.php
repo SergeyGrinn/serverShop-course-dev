@@ -33,7 +33,7 @@ if (isset($_SESSION['user_id'])) {
     $userModel = new User($pdo);
     $currentUser = $userModel->findById($_SESSION['user_id']);
 
-    if (!$currentUser || $currentUser['email_verified_at'] === null) {
+    if (!$currentUser || ($currentUser['role'] !== 'admin' && $currentUser['email_verified_at'] === null)) {
         http_response_code(403);
         Response::json([
             'success' => false,

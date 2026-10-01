@@ -174,6 +174,7 @@ CREATE TABLE `users` (
   `id` int(11) NOT NULL,
   `username` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
+  `mobile_phone` varchar(30) DEFAULT NULL,
   `email_verified_at` timestamp NULL DEFAULT NULL,
   `email_verification_token` varchar(64) DEFAULT NULL,
   `password` varchar(255) NOT NULL,

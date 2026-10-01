@@ -36,6 +36,10 @@ if (!$user) {
     Response::json(['success' => false, 'message' => 'User not found']);
 }
 
+if ($user['role'] === 'admin') {
+    Response::json(['success' => true, 'message' => 'Email verification is not required for administrator accounts']);
+}
+
 if ($user['email_verified_at'] !== null) {
     Response::json(['success' => true, 'message' => 'Email is already verified']);
 }

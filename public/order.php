@@ -38,7 +38,9 @@ if (!$order) {
 // If not logged in - check session_id
 // If logged in - check user_id
 $isOwner = false;
-if (isset($_SESSION['user_id']) && $order['user_id'] == $_SESSION['user_id']) {
+if (($_SESSION['user_role'] ?? '') === 'admin') {
+    $isOwner = true;
+} elseif (isset($_SESSION['user_id']) && $order['user_id'] == $_SESSION['user_id']) {
     $isOwner = true;
 } elseif ($order['session_id'] === ($_SESSION['session_id'] ?? session_id())) {
     $isOwner = true;
@@ -136,6 +138,9 @@ require_once '../templates/header.php';
                                     <?= htmlspecialchars($item['server_name']) ?>
                                 </h3>
                                 <p class="text-gray-600 text-sm">Server ID: #<?= $item['server_id'] ?></p>
+                                <?php if (!empty($item['server_description'])): ?>
+                                    <p class="text-sm mt-2"><?= nl2br(htmlspecialchars($item['server_description'])) ?></p>
+                                <?php endif; ?>
                             </div>
                         </div>
                         
@@ -220,6 +225,15 @@ require_once '../templates/header.php';
                     </span>
                 </div>
             </div>
+
+            <button
+                type="button"
+                class="w-full py-3 font-bold rounded border-2 transition mb-6"
+                style="border-color: #6a8a63; color: #6a8a63;"
+                onclick="showNotification('Invoice download will be available soon.', 'info')"
+            >
+                Download Invoice
+            </button>
             
             <!-- Actions Based on Status -->
             <div class="space-y-3">

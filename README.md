@@ -12,11 +12,9 @@ E-Shop for renting physical servers. WIP.
 - 
 - Implement function to download an invoice file
 - Invoice should be sent to client email
-- Implement user profile page
-- Implement order manage page for admin & user
+- Check all CSRF tokens
 - Find a way to build project easily (pref. Docker)
 - Add info to Home and Contact page
-- 
 -  
 
 

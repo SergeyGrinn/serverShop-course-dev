@@ -50,8 +50,7 @@ $isAdmin = ($_SESSION['user_role'] ?? '') === 'admin';
 
             <div class="flex items-center gap-4">
                 <?php if (isset($_SESSION['user_id'])): ?>
-                    <span class="text-gray-700">Hello, <?= htmlspecialchars($_SESSION['user_name']) ?></span>
-                    <a href="<?= BASE_URL ?>/profile.php" class="no-underline text-gray-700 hover:text-green-700">Profile</a>
+                    <span class="text-gray-700">Hello, <a href="<?= BASE_URL ?>/profile.php" class="profile-name-link"><?= htmlspecialchars($_SESSION['user_name']) ?></a></span>
                     <form method="POST" action="<?= BASE_URL ?>/logout.php" class="inline-flex">
                         <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(csrf_token(), ENT_QUOTES, 'UTF-8') ?>">
                         <button type="submit" class="no-underline text-gray-700 hover:text-green-700">Logout</button>
@@ -63,12 +62,25 @@ $isAdmin = ($_SESSION['user_role'] ?? '') === 'admin';
                             </button>
                             <div class="admin-pages-overlay" role="menu">
                                 <a href="<?= BASE_URL ?>/admin/servers.php" role="menuitem">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                                        <rect x="3" y="4" width="18" height="13" rx="2"></rect>
+                                        <path d="M8 21h8M12 17v4M7 8h10M7 12h6"></path>
+                                    </svg>
                                     <strong>Servers</strong>
-                                    <span>Manage servers</span>
                                 </a>
                                 <a href="<?= BASE_URL ?>/admin/components.php" role="menuitem">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                                        <rect x="5" y="5" width="14" height="14" rx="2"></rect>
+                                        <path d="M9 2v3m6-3v3M9 19v3m6-3v3M2 9h3m-3 6h3m14-6h3m-3 6h3M9 9h6v6H9z"></path>
+                                    </svg>
                                     <strong>Components</strong>
-                                    <span>Manage hardware library</span>
+                                </a>
+                                <a href="<?= BASE_URL ?>/admin/orders.php" role="menuitem">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                                        <path d="M7 3h8l4 4v14H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"></path>
+                                        <path d="M15 3v5h5M8 13l2.5 2.5L16 10"></path>
+                                    </svg>
+                                    <strong>Orders</strong>
                                 </a>
                         </div>
                         </div>
@@ -90,7 +102,7 @@ $isAdmin = ($_SESSION['user_role'] ?? '') === 'admin';
             </div>
         </nav>
     </header>
-    <?php if (isset($_SESSION['user_id']) && empty($_SESSION['email_verified_at'])): ?>
+    <?php if (isset($_SESSION['user_id']) && ($_SESSION['user_role'] ?? '') !== 'admin' && empty($_SESSION['email_verified_at'])): ?>
         <div class="verification-notice">
             <span>Verify your account to complete registration and be able to place an order.</span>
             <button id="resend-verification" type="button" data-csrf-token="<?= htmlspecialchars(csrf_token(), ENT_QUOTES, 'UTF-8') ?>">
@@ -107,7 +119,7 @@ document.getElementById('theme-toggle').addEventListener('click', function () {
     this.setAttribute('title', isDark ? 'Switch to light theme' : 'Switch to dark theme');
 });
 </script>
-<?php if (isset($_SESSION['user_id']) && empty($_SESSION['email_verified_at'])): ?>
+<?php if (isset($_SESSION['user_id']) && ($_SESSION['user_role'] ?? '') !== 'admin' && empty($_SESSION['email_verified_at'])): ?>
 <script>
 document.getElementById('resend-verification').addEventListener('click', async function () {
     this.disabled = true;

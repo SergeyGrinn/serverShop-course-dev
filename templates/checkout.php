@@ -76,7 +76,7 @@ require_once base_path('templates/header.php');
             <div class="bg-white border rounded-lg p-6">
                 <h2 class="text-xl font-bold mb-6">Buyer Information</h2>
                 
-                <form id="checkoutForm" class="notification-validation-form no-inline-validation-errors" novalidate>
+                <form id="checkoutForm" method="POST" class="notification-validation-form no-inline-validation-errors" novalidate>
                     
                     <!-- Full Name -->
                     <div class="mb-4">
@@ -155,6 +155,17 @@ require_once base_path('templates/header.php');
 <script>
 document.getElementById('checkoutForm').addEventListener('submit', async function(e) {
     if (!this.checkValidity()) {
+        e.preventDefault();
+
+        const emailField = this.querySelector('[name="email"]');
+        const hasMissingRequired = Array.from(this.querySelectorAll('[required]'))
+            .some(field => field.validity.valueMissing);
+
+        if (!hasMissingRequired && emailField.validity.typeMismatch) {
+            emailField.focus();
+            showNotification('Please enter a valid email address.', 'error');
+        }
+
         return;
     }
 

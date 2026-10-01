@@ -5,6 +5,10 @@
 	color: #172b45;
 }
 
+.admin-page .site-notification-info {
+	background-color: #2b78b8 !important;
+}
+
 .admin-page header {
 	background-color: #164b83 !important;
 	border-color: #2b6aa8 !important;
@@ -24,6 +28,30 @@
 
 .admin-page nav a:hover {
 	color: #b9dcff !important;
+}
+
+.admin-page header .profile-name-link {
+	display: inline-block;
+	padding: 2px 8px;
+	border: 1px solid #5d94c4;
+	border-radius: 5px;
+	background: #245f96;
+	color: #ffffff !important;
+	font-weight: 700;
+	text-decoration: none;
+	transition: background-color 0.18s ease, transform 0.18s ease;
+}
+
+.admin-page header .profile-name-link:hover,
+.admin-page header .profile-name-link:focus-visible {
+	background: #3677ad;
+	color: #ffffff !important;
+	transform: translateY(-1px);
+}
+
+.admin-page header .profile-name-link:focus-visible {
+	outline: 2px solid #b9dcff;
+	outline-offset: 2px;
 }
 
 .admin-pages-menu {
@@ -52,21 +80,21 @@
 .admin-pages-overlay {
 	position: absolute;
 	top: 0;
-	left: 50%;
-	right: auto;
+	left: auto;
+	right: 0;
 	display: grid;
-	grid-template-columns: repeat(2, minmax(150px, 1fr));
+	grid-template-columns: repeat(3, minmax(0, 1fr));
 	gap: 10px;
-	width: 340px;
-	padding: 12px;
+	width: min(390px, calc(100vw - 24px));
+	padding: 10px;
 	border: 1px solid #6f9fc8;
 	border-radius: 8px;
 	background: #263f59;
 	box-shadow: 0 12px 28px rgb(7 24 42 / 28%);
 	opacity: 0;
 	visibility: hidden;
-	transform: translateX(-50%) scale(0.08, 0.7);
-	transform-origin: center center;
+	transform: scale(0.08, 0.7);
+	transform-origin: right center;
 	transition: opacity 0.24s ease, transform 0.42s cubic-bezier(0.2, 0.85, 0.25, 1.2), visibility 0.24s ease;
 	z-index: 60;
 }
@@ -89,7 +117,7 @@
 .admin-pages-menu:focus-within .admin-pages-overlay {
 	opacity: 1;
 	visibility: visible;
-	transform: translateX(-50%) scale(1, 1);
+	transform: scale(1, 1);
 }
 
 .admin-pages-menu:hover .admin-pages-overlay::before,
@@ -107,9 +135,12 @@
 .admin-pages-overlay a {
 	display: flex;
 	flex-direction: column;
-	gap: 5px;
-	min-height: 76px;
-	padding: 12px;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	min-width: 0;
+	min-height: 84px;
+	padding: 10px 6px;
 	border: 1px solid #4f7da4;
 	border-radius: 6px;
 	background: #304d6c;
@@ -133,7 +164,22 @@
 
 .admin-pages-overlay a span {
 	color: #b9d5ef;
-	font-size: 12px;
+	font-size: 11px;
+}
+
+.admin-pages-overlay a strong {
+	text-align: center;
+	font-size: 13px;
+}
+
+.admin-pages-overlay a svg {
+	width: 23px;
+	height: 23px;
+	fill: none;
+	stroke: currentColor;
+	stroke-width: 1.7;
+	stroke-linecap: round;
+	stroke-linejoin: round;
 }
 
 .admin-pages-overlay a:hover {
@@ -215,6 +261,34 @@ html:not(.dark-theme) .admin-pages-overlay a:hover {
 
 .admin-page .bg-gray-100 {
 	background-color: #d7e4f3 !important;
+}
+
+.admin-page .order-status {
+	display: inline-block;
+	padding: 4px 9px;
+	border-radius: 5px;
+	font-size: 12px;
+	font-weight: 700;
+}
+
+.admin-page .order-status-pending {
+	background: #fff3cd;
+	color: #856404;
+}
+
+.admin-page .order-status-processing {
+	background: #d8edff;
+	color: #195889;
+}
+
+.admin-page .order-status-completed {
+	background: #d9f2e2;
+	color: #17613b;
+}
+
+.admin-page .order-status-cancelled {
+	background: #f8dadd;
+	color: #913740;
 }
 
 .admin-page .bg-gray-50 {

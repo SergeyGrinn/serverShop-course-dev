@@ -1,6 +1,14 @@
 <?php
 
-session_start();
+const BASE_PATH = __DIR__ . '/../';
+
+require_once BASE_PATH . 'src/Config/app.php';
+require_once BASE_PATH . 'src/Core/functions.php';
+require_once BASE_PATH . 'src/Config/db.php';
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 // Redirect to login if not authenticated
 if (!isset($_SESSION['user_id'])) {
@@ -8,8 +16,7 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-require_once '../src/Config/db.php';
-require_once '../src/Models/Order.php';
+require_once BASE_PATH . 'src/Models/Order.php';
 
 // Get user's orders 
 
@@ -32,114 +39,69 @@ $statusColors = [
     'cancelled' => ['bg' => '#f8d7da', 'text' => '#721c24', 'label' => 'Cancelled'],
 ];
 
-require_once '../templates/header.php';
+require_once BASE_PATH . 'templates/header.php';
 ?>
 
-<main class="container mx-auto px-8 py-8">
-    <h1 class="text-4xl font-bold mb-8">My Orders</h1>
-    
-    <!-- If no orders -->
+<main class="orders-page">
+    <div class="orders-page-heading">
+        <div>
+            <h1>My Orders</h1>
+            <p class="orders-count"><?= count($orders) ?> order<?= count($orders) !== 1 ? 's' : '' ?></p>
+        </div>
+    </div>
+
     <?php if (empty($orders)): ?>
-        <div class="bg-white border rounded-lg p-12 text-center">
-            <p class="text-xl text-gray-600 mb-4">You haven't placed any orders yet</p>
-            <a href="' . BASE_URL . '/index.php"
-                class="inline-block px-6 py-2 rounded font-semibold text-white transition"
-                style="background-color: #6a8a63; hover:background-color: #5a7a53;"
-            >
-                Start Shopping
-            </a>
-        </div>
-    
-    <!-- If orders exist -->
+        <section class="orders-empty-state">
+            <svg class="orders-empty-icon" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+                <path d="M13 7.5h15l8 8V40H13a3 3 0 0 1-3-3V10.5a3 3 0 0 1 3-3Z" />
+                <path d="M28 8v9h8M17 24h15M17 30h15M17 36h8" />
+            </svg>
+            <div>
+                <h2>No orders yet</h2>
+                <p>Your orders and their statuses will appear here.</p>
+            </div>
+            <a href="<?= BASE_URL ?>/index.php" class="orders-shop-button">Browse Servers</a>
+        </section>
     <?php else: ?>
-        <div class="bg-white border rounded-lg overflow-hidden">
-            <!-- Table Header -->
-            <div class="grid grid-cols-6 gap-4 bg-gray-100 p-4 font-bold border-b">
-                <div>Order ID</div>
-                <div>Date</div>
-                <div>Items</div>
-                <div>Total</div>
-                <div>Status</div>
-                <div>Action</div>
-            </div>
-            
-            <!-- Orders List -->
-            <?php foreach ($orders as $order): 
-                $currentStatus = $statusColors[$order['status']] ?? $statusColors['pending'];
-            ?>
-                <div class="grid grid-cols-6 gap-4 p-4 border-b items-center hover:bg-gray-50 transition">
-                    <!-- Order ID -->
-                    <div class="font-bold">
-                        #<?= $order['id'] ?>
-                    </div>
-                    
-                    <!-- Date -->
-                    <div class="text-sm text-gray-600">
-                        <?= date('M d, Y', strtotime($order['created_at'])) ?>
-                        <br>
-                        <span class="text-xs text-gray-500">
-                            <?= date('H:i', strtotime($order['created_at'])) ?>
-                        </span>
-                    </div>
-                    
-                    <!-- Items Count -->
-                    <div class="text-center">
-                        <span class="inline-block bg-gray-100 px-2 py-1 rounded text-sm font-semibold">
-                            <?= $order['items_count'] ?> item<?= $order['items_count'] !== 1 ? 's' : '' ?>
-                        </span>
-                    </div>
-                    
-                    <!-- Total Price -->
-                    <div class="font-bold" style="color: #6a8a63;">
-                        €<?= number_format($order['total_price'], 2) ?>
-                    </div>
-                    
-                    <!-- Status -->
-                    <div 
-                        class="px-2 py-1 rounded text-sm font-semibold text-center"
-                        style="background-color: <?= $currentStatus['bg'] ?>; color: <?= $currentStatus['text'] ?>;"
-                    >
-                        <?= $currentStatus['label'] ?>
-                    </div>
-                    
-                    <!-- View Button -->
-                    <div>
-                        <a 
-                            href="<?= BASE_URL ?>/order.php?id=<?= $order['id'] ?>"
-                            class="inline-block px-4 py-2 rounded font-semibold transition"
-                            style="background-color: #6a8a63; color: white; hover:background-color: #5a7a53;"
-                        >
-                            View
-                        </a>
-                    </div>
-                </div>
-            <?php endforeach; ?>
-        </div>
-        
-        <!-- Summary -->
-        <div class="mt-8 p-6 bg-gray-50 rounded grid grid-cols-3 gap-4 text-center">
-            <div>
-                <p class="text-gray-600 text-sm">Total Orders</p>
-                <p class="text-3xl font-bold"><?= count($orders) ?></p>
-            </div>
-            
-            <div>
-                <p class="text-gray-600 text-sm">Total Spent</p>
-                <p class="text-3xl font-bold" style="color: #6a8a63;">
-                    €<?= number_format(array_sum(array_column($orders, 'total_price')), 2) ?>
-                </p>
-            </div>
-            
-            <div>
-                <p class="text-gray-600 text-sm">Pending Orders</p>
-                <p class="text-3xl font-bold">
-                    <?= count(array_filter($orders, fn($o) => $o['status'] === 'pending')) ?>
-                </p>
-            </div>
+        <div class="orders-table-wrap">
+            <table class="orders-table">
+                <thead class="bg-gray-100 border-b border-gray-200">
+                    <tr>
+                        <th class="px-5 py-3 text-left">Order ID</th>
+                        <th class="px-5 py-3 text-left">Date</th>
+                        <th class="px-5 py-3 text-left">Items</th>
+                        <th class="px-5 py-3 text-left">Total</th>
+                        <th class="px-5 py-3 text-left">Status</th>
+                        <th class="px-5 py-3 text-left">Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($orders as $order):
+                        $currentStatus = $statusColors[$order['status']] ?? $statusColors['pending'];
+                    ?>
+                        <tr class="border-b border-gray-200 hover:bg-gray-50">
+                            <td class="px-5 py-3 font-semibold">#<?= (int) $order['id'] ?></td>
+                            <td class="px-5 py-3 text-sm">
+                                <?= htmlspecialchars(date('M d, Y H:i', strtotime($order['created_at']))) ?>
+                            </td>
+                            <td class="px-5 py-3"><?= (int) $order['items_count'] ?> item<?= (int) $order['items_count'] !== 1 ? 's' : '' ?></td>
+                            <td class="px-5 py-3 font-semibold">€<?= number_format((float) $order['total_price'], 2) ?></td>
+                            <td class="px-5 py-3">
+                                <span class="px-2 py-1 rounded text-sm font-semibold" style="background-color: <?= $currentStatus['bg'] ?>; color: <?= $currentStatus['text'] ?>;">
+                                    <?= htmlspecialchars($currentStatus['label']) ?>
+                                </span>
+                            </td>
+                            <td class="px-5 py-3">
+                                <a href="<?= BASE_URL ?>/order-details.php?id=<?= (int) $order['id'] ?>" class="inline-block px-4 py-2 rounded font-semibold text-white" style="background-color: #6a8a63;">Details</a>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
         </div>
     <?php endif; ?>
 </main>
 
 <?php
-require_once '../templates/footer.php';
+require_once BASE_PATH . 'templates/footer.php';
 ?>
