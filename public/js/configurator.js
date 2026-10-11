@@ -30,7 +30,6 @@ document.getElementById('add-to-cart').addEventListener('click', function() {
     const selectedInputs = document.querySelectorAll('input[type="radio"]:checked');
 
     const componentIds = Array.from(selectedInputs).map(input => parseInt(input.value));
-    const totalPrice = vm.totalPrice();
 
     fetch(BASE_URL + '/api/cart/add.php', {
         method: 'POST',
@@ -40,8 +39,7 @@ document.getElementById('add-to-cart').addEventListener('click', function() {
         },
         body: JSON.stringify({
             server_id: serverId,
-            component_ids: componentIds,
-            total_price: totalPrice
+            component_ids: componentIds
         }) 
     })
     .then(res => res.json())

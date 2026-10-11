@@ -68,11 +68,11 @@ $hardwareValues = [
                         class="w-32 h-32 object-cover rounded mb-2">
                     <?php endif; ?>
                     <div class="custom-file-picker">
-                        <input id="server-image-edit" type="file" name="image" accept="image/*" class="custom-file-input">
+                        <input id="server-image-edit" type="file" name="image" accept="image/jpeg,image/png,image/webp,image/svg+xml,.svg" class="custom-file-input">
                         <label for="server-image-edit" class="custom-file-button">Choose File</label>
                         <span class="custom-file-name">No file chosen</span>
                     </div>
-                    <p class="text-xs text-gray-400 mt-1">Leave empty to keep current image</p>
+                    <p class="text-xs text-gray-400 mt-1">Leave empty to keep current image. JPEG, PNG, WebP, or sanitized SVG; max 5 MB.</p>
             </div>
 
             <div class="mb-4">

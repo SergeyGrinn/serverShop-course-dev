@@ -75,6 +75,62 @@
                 </form>
             </section>
 
+            <?php if ($profile['user']['role'] === 'admin'): ?>
+                <section class="bg-white rounded-lg border border-gray-200 p-6 md:col-span-3">
+                    <h2 class="font-semibold mb-2">Invoice sender details</h2>
+                    <p class="text-sm text-gray-500 mb-5">These details appear on invoices. Leave a field empty to omit it.</p>
+                    <form method="POST" class="grid gap-4 md:grid-cols-2">
+                        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(csrf_token(), ENT_QUOTES, 'UTF-8') ?>">
+                        <input type="hidden" name="profile_action" value="save_invoice_details">
+
+                        <div class="flex flex-col gap-2">
+                            <label for="invoice-company-name" class="text-sm font-medium">Company / seller name</label>
+                            <input id="invoice-company-name" name="invoice_company_name" maxlength="255" value="<?= htmlspecialchars($profile['formInvoiceDetails']['company_name']) ?>" class="border border-gray-300 rounded px-3 py-2">
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label for="invoice-registration-number" class="text-sm font-medium">Registration number</label>
+                            <input id="invoice-registration-number" name="invoice_registration_number" maxlength="100" value="<?= htmlspecialchars($profile['formInvoiceDetails']['registration_number']) ?>" class="border border-gray-300 rounded px-3 py-2">
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label for="invoice-vat-number" class="text-sm font-medium">VAT number</label>
+                            <input id="invoice-vat-number" name="invoice_vat_number" maxlength="100" value="<?= htmlspecialchars($profile['formInvoiceDetails']['vat_number']) ?>" class="border border-gray-300 rounded px-3 py-2">
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label for="invoice-address" class="text-sm font-medium">Street address</label>
+                            <input id="invoice-address" name="invoice_address" maxlength="255" value="<?= htmlspecialchars($profile['formInvoiceDetails']['address']) ?>" class="border border-gray-300 rounded px-3 py-2">
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label for="invoice-postal-code" class="text-sm font-medium">Postal code</label>
+                            <input id="invoice-postal-code" name="invoice_postal_code" maxlength="30" value="<?= htmlspecialchars($profile['formInvoiceDetails']['postal_code']) ?>" class="border border-gray-300 rounded px-3 py-2">
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label for="invoice-city" class="text-sm font-medium">City</label>
+                            <input id="invoice-city" name="invoice_city" maxlength="100" value="<?= htmlspecialchars($profile['formInvoiceDetails']['city']) ?>" class="border border-gray-300 rounded px-3 py-2">
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label for="invoice-country" class="text-sm font-medium">Country</label>
+                            <input id="invoice-country" name="invoice_country" maxlength="100" value="<?= htmlspecialchars($profile['formInvoiceDetails']['country']) ?>" class="border border-gray-300 rounded px-3 py-2">
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label for="invoice-phone" class="text-sm font-medium">Business phone</label>
+                            <input id="invoice-phone" name="invoice_phone" maxlength="50" value="<?= htmlspecialchars($profile['formInvoiceDetails']['phone']) ?>" class="border border-gray-300 rounded px-3 py-2">
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label for="invoice-email" class="text-sm font-medium">Business email</label>
+                            <input id="invoice-email" type="email" name="invoice_email" maxlength="255" value="<?= htmlspecialchars($profile['formInvoiceDetails']['email']) ?>" class="border border-gray-300 rounded px-3 py-2">
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label for="invoice-bank-account" class="text-sm font-medium">Bank account / IBAN</label>
+                            <input id="invoice-bank-account" name="invoice_bank_account" maxlength="100" value="<?= htmlspecialchars($profile['formInvoiceDetails']['bank_account']) ?>" class="border border-gray-300 rounded px-3 py-2">
+                        </div>
+
+                        <div class="md:col-span-2">
+                            <button type="submit" class="text-white px-5 py-2 rounded-lg font-semibold" style="background-color: #308020;">Save Invoice Details</button>
+                        </div>
+                    </form>
+                </section>
+            <?php endif; ?>
+
             <section class="bg-white rounded-lg border border-gray-200 p-6 md:col-span-3">
                 <h2 class="font-semibold mb-5">Change password</h2>
                 <form method="POST" class="notification-validation-form grid gap-4 md:grid-cols-3" novalidate>

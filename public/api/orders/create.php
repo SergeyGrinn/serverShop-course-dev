@@ -66,6 +66,14 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     exit;
 }
 
+if ($phone !== '' && (!preg_match('/^[0-9]+$/D', $phone) || strlen($phone) > 20)) {
+    http_response_code(400);
+    Response::json([
+        'success' => false,
+        'message' => 'Phone number must contain 1 to 20 digits'
+    ]);
+}
+
 $cartModel = new Cart($pdo);
 
 $cart = $cartModel->getOrCreateCart($_SESSION['session_id'] ?? session_id());
@@ -81,7 +89,33 @@ if (empty($cartItems)) {
     exit;
 }
 
-// Calculate total price
+$validatedCartItems = [];
+foreach ($cartItems as $item) {
+    $componentIds = json_decode((string) ($item['component_ids'] ?? '[]'), true);
+    if (!is_array($componentIds)) {
+        http_response_code(400);
+        Response::json([
+            'success' => false,
+            'message' => 'Cart contains an invalid component selection. Please rebuild the item.',
+        ]);
+    }
+
+    try {
+        $verifiedItem = $cartModel->calculateConfiguredItem($item['server_id'], $componentIds);
+    } catch (InvalidArgumentException $error) {
+        http_response_code(400);
+        Response::json([
+            'success' => false,
+            'message' => 'Cart contains an unavailable configuration. Please rebuild the item.',
+        ]);
+    }
+
+    $item['component_ids'] = json_encode($verifiedItem['component_ids']);
+    $item['total_price'] = $verifiedItem['total_price'];
+    $validatedCartItems[] = $item;
+}
+$cartItems = $validatedCartItems;
+
 $totalPrice = array_sum(array_column($cartItems, 'total_price'));
 
 $orderData = [

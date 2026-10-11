@@ -7,5 +7,6 @@ require_once BASE_PATH . 'src/Config/db.php';
 require_once BASE_PATH . 'src/Controllers/AuthController.php';
 require_once BASE_PATH . 'src/Config/app.php';
 
-$controller = new AuthController($pdo);
-$controller->register();
+header('Content-Type: application/json; charset=utf-8');
+
+(new AuthController($pdo))->registerApi();

@@ -29,13 +29,6 @@ class ServerController {
             $name = $_POST['name'] ?? '';
             $description = $_POST['description'] ?? '';
             $image = 'emptyimage.png';
-                if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-                $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
-                $filename = uniqid() . '.' . $ext;
-                $uploadPath = BASE_PATH . 'public/assets/images/' . $filename;
-                move_uploaded_file($_FILES['image']['tmp_name'], $uploadPath);
-                $image = $filename;
-            }
             $base_price = $_POST['base_price'] ?? '';
 
             $errors = [];
@@ -45,6 +38,10 @@ class ServerController {
             if (empty($description)) $errors[] = 'Description is required';
             if ($base_price === '' || !is_numeric($base_price) || (float) $base_price < 0) {
                 $errors[] = 'Price must be a non-negative number';
+            }
+
+            if (empty($errors) && $this->hasUploadedImage()) {
+                $image = $this->storeServerImage($_FILES['image'], $errors) ?? $image;
             }
 
             if (empty($errors)) {
@@ -78,13 +75,6 @@ class ServerController {
             $name = $_POST['name'] ?? '';
             $description = $_POST['description'] ?? '';
             $image = $server['image'];
-                if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-                $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
-                $filename = uniqid() . '.' . $ext;
-                $uploadPath = BASE_PATH . 'public/assets/images/' . $filename;
-                move_uploaded_file($_FILES['image']['tmp_name'], $uploadPath);
-                $image = $filename;
-            }
             $base_price = $_POST['base_price'] ?? '';
             $available = $server['available'];
 
@@ -95,6 +85,10 @@ class ServerController {
             if (empty($description)) $errors[] = 'Description is required';
             if ($base_price === '' || !is_numeric($base_price) || (float) $base_price < 0) {
                 $errors[] = 'Price must be a non-negative number';
+            }
+
+            if (empty($errors) && $this->hasUploadedImage()) {
+                $image = $this->storeServerImage($_FILES['image'], $errors) ?? $image;
             }
 
             if (empty($errors)) {
@@ -115,6 +109,207 @@ class ServerController {
         }
 
         require base_path('templates/admin/server-edit.php');
+    }
+
+    private function hasUploadedImage(): bool {
+        return isset($_FILES['image'])
+            && is_array($_FILES['image'])
+            && ($_FILES['image']['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_NO_FILE;
+    }
+
+    private function storeServerImage(array $upload, array &$errors): ?string {
+        $uploadError = $upload['error'] ?? UPLOAD_ERR_NO_FILE;
+        if ($uploadError !== UPLOAD_ERR_OK) {
+            $errors[] = in_array($uploadError, [UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE], true)
+                ? 'PHP rejected the upload before the application could inspect its file type. Increase upload_max_filesize and post_max_size to check this file.'
+                : 'Image upload failed';
+            return null;
+        }
+
+        $temporaryPath = $upload['tmp_name'] ?? '';
+        if (!is_string($temporaryPath) || $temporaryPath === '' || !is_uploaded_file($temporaryPath)) {
+            $errors[] = 'Uploaded file is invalid';
+            return null;
+        }
+
+        $allowedTypes = [
+            'image/jpeg' => 'jpg',
+            'image/png' => 'png',
+            'image/webp' => 'webp',
+            'image/svg+xml' => 'svg',
+        ];
+        $fileInfo = new finfo(FILEINFO_MIME_TYPE);
+        $mimeType = $fileInfo->file($temporaryPath);
+
+        if (!isset($allowedTypes[$mimeType])) {
+            $errors[] = 'Only valid JPEG, PNG, WebP, and sanitized SVG images are allowed';
+            return null;
+        }
+
+        $fileSize = filesize($temporaryPath);
+        $maximumImageSize = 5 * 1024 * 1024;
+        if ($fileSize === false || $fileSize < 1 || $fileSize > $maximumImageSize) {
+            $errors[] = 'Image must be 5 MB or smaller';
+            return null;
+        }
+
+        $filename = bin2hex(random_bytes(16)) . '.' . $allowedTypes[$mimeType];
+        $destination = base_path('public/assets/images/' . $filename);
+
+        if ($mimeType === 'image/svg+xml') {
+            $safeSvg = $this->sanitizeSvg($temporaryPath);
+            if ($safeSvg === null) {
+                $errors[] = 'SVG is invalid or contains unsupported active content';
+                return null;
+            }
+
+            $writtenBytes = file_put_contents($destination, $safeSvg, LOCK_EX);
+            if ($writtenBytes !== strlen($safeSvg)) {
+                if (is_file($destination)) {
+                    unlink($destination);
+                }
+                $errors[] = 'Could not save sanitized SVG image';
+                return null;
+            }
+
+            return $filename;
+        }
+
+        $imageInfo = @getimagesize($temporaryPath);
+        if ($imageInfo === false || ($imageInfo['mime'] ?? null) !== $mimeType) {
+            $errors[] = 'Image content does not match its detected type';
+            return null;
+        }
+        if ($imageInfo[0] < 1 || $imageInfo[1] < 1 || $imageInfo[0] * $imageInfo[1] > 25000000) {
+            $errors[] = 'Image dimensions are too large';
+            return null;
+        }
+        if (!move_uploaded_file($temporaryPath, $destination)) {
+            $errors[] = 'Could not save uploaded image';
+            return null;
+        }
+
+        return $filename;
+    }
+
+    private function sanitizeSvg(string $path): ?string {
+        $svgNamespace = 'http://www.w3.org/2000/svg';
+        $allowedElements = array_fill_keys([
+            'svg', 'g', 'defs', 'path', 'rect', 'circle', 'ellipse', 'line',
+            'polyline', 'polygon', 'linearGradient', 'radialGradient', 'stop',
+            'clipPath', 'mask', 'title', 'desc',
+        ], true);
+        $allowedAttributes = array_fill_keys([
+            'xmlns', 'id', 'viewBox', 'width', 'height', 'preserveAspectRatio',
+            'x', 'y', 'x1', 'y1', 'x2', 'y2', 'cx', 'cy', 'r', 'rx', 'ry',
+            'd', 'points', 'fill', 'fill-opacity', 'fill-rule', 'stroke',
+            'stroke-width', 'stroke-opacity', 'stroke-linecap', 'stroke-linejoin',
+            'stroke-miterlimit', 'opacity', 'transform', 'offset', 'stop-color',
+            'stop-opacity', 'gradientUnits', 'gradientTransform', 'clipPathUnits',
+            'maskUnits', 'maskContentUnits', 'clip-path', 'mask',
+        ], true);
+
+        $document = new DOMDocument('1.0', 'UTF-8');
+        $document->resolveExternals = false;
+        $document->substituteEntities = false;
+        $previousLibxmlState = libxml_use_internal_errors(true);
+        try {
+            $loaded = $document->load(
+                $path,
+                LIBXML_NONET | LIBXML_NOBLANKS | LIBXML_NOERROR | LIBXML_NOWARNING | LIBXML_COMPACT
+            );
+        } finally {
+            libxml_clear_errors();
+            libxml_use_internal_errors($previousLibxmlState);
+        }
+
+        $root = $document->documentElement;
+        if (!$loaded || $document->doctype !== null || !$root || $root->localName !== 'svg' || $root->namespaceURI !== $svgNamespace) {
+            return null;
+        }
+
+        $viewBox = preg_split('/[\s,]+/', trim($root->getAttribute('viewBox')));
+        if (count($viewBox) !== 4 || !array_reduce($viewBox, static fn($valid, $value) => $valid && is_numeric($value), true)) {
+            return null;
+        }
+        $viewBoxWidth = (float) $viewBox[2];
+        $viewBoxHeight = (float) $viewBox[3];
+        if ($viewBoxWidth <= 0 || $viewBoxHeight <= 0 || $viewBoxWidth > 8192 || $viewBoxHeight > 8192 || $viewBoxWidth * $viewBoxHeight > 25000000) {
+            return null;
+        }
+
+        $sanitizeAttributes = static function (DOMElement $element) use ($allowedAttributes, $svgNamespace, $root): void {
+            for ($index = $element->attributes->length - 1; $index >= 0; $index--) {
+                $attribute = $element->attributes->item($index);
+                if (!$attribute) {
+                    continue;
+                }
+
+                $attributeName = $attribute->nodeName;
+                $isRootNamespace = $element === $root
+                    && $attributeName === 'xmlns'
+                    && $attribute->value === $svgNamespace;
+                if ($isRootNamespace) {
+                    continue;
+                }
+                if (($attribute->namespaceURI !== null && $attribute->namespaceURI !== '') || !isset($allowedAttributes[$attributeName])) {
+                    $element->removeAttributeNode($attribute);
+                    continue;
+                }
+
+                $value = trim($attribute->value);
+                if (in_array($attributeName, ['fill', 'stroke', 'clip-path', 'mask'], true)
+                    && stripos($value, 'url(') !== false
+                    && !preg_match('/^url\(\s*#[-_a-zA-Z0-9:.]+\s*\)$/i', $value)) {
+                    $element->removeAttributeNode($attribute);
+                    continue;
+                }
+                if ($attributeName === 'id' && !preg_match('/^[A-Za-z_][A-Za-z0-9_.:-]*$/', $value)) {
+                    $element->removeAttributeNode($attribute);
+                    continue;
+                }
+                if (in_array($attributeName, ['width', 'height'], true)
+                    && (!preg_match('/^\d+(?:\.\d+)?(?:px|pt|pc|mm|cm|in|%)?$/i', $value) || (float) $value > 8192)) {
+                    $element->removeAttributeNode($attribute);
+                }
+            }
+        };
+
+        $elementCount = 1;
+        $sanitizeChildren = function (DOMNode $parent) use (&$sanitizeChildren, &$elementCount, $allowedElements, $svgNamespace, $sanitizeAttributes): bool {
+            for ($child = $parent->firstChild; $child !== null;) {
+                $next = $child->nextSibling;
+                if ($child instanceof DOMElement) {
+                    $elementCount++;
+                    if ($elementCount > 5000 || $child->namespaceURI !== $svgNamespace || !isset($allowedElements[$child->localName])) {
+                        $parent->removeChild($child);
+                        $child = $next;
+                        continue;
+                    }
+
+                    $sanitizeAttributes($child);
+                    if (!$sanitizeChildren($child)) {
+                        return false;
+                    }
+                } elseif ($child instanceof DOMText || $child instanceof DOMCdataSection) {
+                    if (!in_array($parent->localName, ['title', 'desc'], true)) {
+                        $parent->removeChild($child);
+                    }
+                } else {
+                    $parent->removeChild($child);
+                }
+                $child = $next;
+            }
+
+            return $elementCount <= 5000;
+        };
+
+        $sanitizeAttributes($root);
+        if (!$sanitizeChildren($root)) {
+            return null;
+        }
+
+        return $document->saveXML($root) ?: null;
     }
 
     private function getHardwareDefaults(array $input, array &$errors) {

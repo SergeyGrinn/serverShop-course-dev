@@ -4,25 +4,15 @@ const BASE_PATH = __DIR__ . '/../../../';
 require_once BASE_PATH . 'src/Config/app.php';
 require_once BASE_PATH . 'src/Core/functions.php';
 require_once BASE_PATH . 'src/Config/db.php';
-require_once BASE_PATH . 'src/Models/Order.php';
+require_once BASE_PATH . 'src/Controllers/OrderController.php';
+require_once BASE_PATH . 'src/Helpers/Response.php';
 
-header('Content-Type: application/json');
+header('Content-Type: application/json; charset=utf-8');
 
-session_start();
-
-$id = $_GET['id'] ?? null;
-
-if (!$id){
-    echo json_encode(['success' => false, 'message' => 'Order ID is required']);
-    exit;
+if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+	http_response_code(405);
+	Response::json(['success' => false, 'message' => 'Request must be GET']);
 }
 
-$orderModel = new Order($pdo);
-$order = $orderModel->get($id);
-
-if ($order) {
-    echo json_encode(['success' => false, 'message' => 'Order not found']);
-    exit;
-}
-
-echo json_encode(['success' => true, 'order' => $order]);
+$controller = new \App\Controllers\OrderController($pdo);
+$controller->getApi($_GET['id'] ?? null);

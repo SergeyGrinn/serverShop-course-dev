@@ -61,14 +61,16 @@ define('LOGS_PATH', ROOT_PATH . 'logs' . DIRECTORY_SEPARATOR);
  */
 
 // Get the directory where public folder is located
-$scriptName = $_SERVER['SCRIPT_NAME'];
+$scriptName = str_replace('\\', '/', $_SERVER['SCRIPT_NAME'] ?? '/');
 
 $publicPos = strpos($scriptName, '/public/');
 
 if ($publicPos !== false) {
     define('APP_URL', substr($scriptName, 0, $publicPos) . '/');
+    define('PUBLIC_URL', APP_URL . 'public/');
 } else {
-    define('APP_URL', dirname($scriptName) . '/');
+    define('APP_URL', '/');
+    define('PUBLIC_URL', '/');
 }
 
 /**
@@ -77,15 +79,13 @@ if ($publicPos !== false) {
  * Example: http://localhost/L/course/public/
  * Use like: <link rel="stylesheet" href="<?= PUBLIC_URL ?>css/main.css">
  */
-define('PUBLIC_URL', APP_URL . 'public/');
-
 /**
  * API_URL: Base URL for API endpoints
  * 
  * Example: http://localhost/L/course/api/
  * Use like: fetch('<?= API_URL ?>orders/create.php', { ... })
  */
-define('API_URL', APP_URL . 'api/');
+define('API_URL', PUBLIC_URL . 'api/');
 
 /**
  * ASSETS_URL: URL to assets folder

@@ -17,13 +17,17 @@
 
             <?php foreach ($order['items'] as $item): ?>
                 <article class="border-b border-gray-200 pb-5 mb-5 last:border-b-0 last:mb-0 last:pb-0">
-                    <div class="flex gap-4 mb-4">
+                    <div class="flex justify-between gap-4 mb-4">
                         <?php if (!empty($item['image'])): ?>
                             <img src="<?= BASE_URL ?>/assets/images/<?= htmlspecialchars($item['image']) ?>" alt="<?= htmlspecialchars($item['server_name']) ?>" class="w-24 h-24 object-cover rounded">
                         <?php endif; ?>
                         <div>
                             <h3 class="text-lg font-semibold"><?= htmlspecialchars($item['server_name']) ?></h3>
                             <p class="text-sm text-gray-500">Server ID: #<?= (int) $item['server_id'] ?></p>
+                        </div>
+                        <div class="ml-auto flex shrink-0 items-center gap-2 text-sm">
+                            <span class="text-gray-500">Server price</span>
+                            <span class="font-semibold">€<?= number_format((float) $item['server_base_price'], 2) ?></span>
                         </div>
                     </div>
 
@@ -37,9 +41,12 @@
                     <?php if (!empty($item['components'])): ?>
                         <div class="bg-gray-50 rounded p-3 mb-4">
                             <h4 class="text-sm font-semibold mb-2">Components</h4>
-                            <ul class="list-disc list-inside text-sm text-gray-700">
+                            <ul class="space-y-1 text-sm text-gray-700">
                                 <?php foreach ($item['components'] as $component): ?>
-                                    <li><?= htmlspecialchars($component['name']) ?>: <?= htmlspecialchars($component['value']) ?></li>
+                                    <li class="flex justify-between gap-4">
+                                        <span>+ <?= htmlspecialchars($component['name']) ?>: <?= htmlspecialchars($component['value']) ?></span>
+                                        <span class="shrink-0 font-medium">€<?= number_format((float) $component['price'], 2) ?></span>
+                                    </li>
                                 <?php endforeach; ?>
                             </ul>
                         </div>
@@ -47,10 +54,6 @@
                         <p class="text-sm text-gray-500 mb-4">No additional components.</p>
                     <?php endif; ?>
 
-                    <div class="flex justify-between font-semibold">
-                        <span>Item total</span>
-                        <span>€<?= number_format((float) $item['total_price'], 2) ?></span>
-                    </div>
                 </article>
             <?php endforeach; ?>
         </section>
@@ -75,10 +78,10 @@
                 </dl>
             </section>
 
-            <button type="button" class="w-full py-3 border-2 border-gray-300 rounded font-semibold hover:bg-gray-50" onclick="showNotification('Invoice download will be available soon.', 'info')">
+            <a href="<?= BASE_URL ?>/invoice.php?id=<?= (int) $order['id'] ?>" class="block w-full py-3 px-4 rounded-lg text-center font-semibold text-white transition" style="background-color: <?= $isAdmin ? '#2b78b8' : '#308020' ?>;">
                 Download Invoice
-            </button>
-            <a href="<?= htmlspecialchars($backUrl) ?>" class="block text-center py-3 border-2 border-gray-300 rounded font-semibold hover:bg-gray-50">
+            </a>
+            <a href="<?= htmlspecialchars($backUrl) ?>" class="block w-full py-3 px-4 rounded-lg border-2 text-center font-semibold transition" style="border-color: <?= $isAdmin ? '#6f9fc8' : '#6a8a63' ?>; color: <?= $isAdmin ? '#164b83' : '#246719' ?>;">
                 <?= htmlspecialchars($backLabel) ?>
             </a>
         </aside>

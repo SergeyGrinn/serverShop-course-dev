@@ -21,18 +21,40 @@ if (!csrf_verify($_SERVER['HTTP_X_CSRF_TOKEN'] ?? null)) {
 }
 
 $data = json_decode(file_get_contents('php://input'), true);
+if (!is_array($data)) {
+    http_response_code(400);
+    echo json_encode(['success' => false, 'message' => 'Invalid request data']);
+    exit;
+}
 
-$server_id = $data['server_id'] ?? null;
-$component_ids = $data['component_ids'] ?? [];
-$total_price = $data['total_price'] ?? 0;
-
-if (!$server_id) {
-    echo json_encode(['success' => false, 'message' => 'No server selected']);
+$serverId = $data['server_id'] ?? null;
+$componentIds = $data['component_ids'] ?? [];
+if (!is_array($componentIds)) {
+    http_response_code(400);
+    echo json_encode(['success' => false, 'message' => 'Invalid component selection']);
     exit;
 }
 
 $cartModel = new Cart($pdo);
-$cart = $cartModel->getOrCreateCart(session_id());
-$cartModel->addItem($cart['id'], $server_id, $component_ids, $total_price);
+$configuredItem = null;
+try {
+    $configuredItem = $cartModel->calculateConfiguredItem($serverId, $componentIds);
+} catch (InvalidArgumentException $error) {
+    http_response_code(400);
+    echo json_encode(['success' => false, 'message' => $error->getMessage()]);
+    exit;
+}
 
-echo json_encode(['success' => true, 'message' => 'Added to cart']);
+$cart = $cartModel->getOrCreateCart(session_id());
+$cartModel->addItem(
+    $cart['id'],
+    $serverId,
+    $configuredItem['component_ids'],
+    $configuredItem['total_price']
+);
+
+echo json_encode([
+    'success' => true,
+    'message' => 'Added to cart',
+    'total_price' => $configuredItem['total_price'],
+]);

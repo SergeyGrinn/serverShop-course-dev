@@ -62,6 +62,41 @@ class User {
         ]);
     }
 
+    public function getAdminInvoiceDetails() {
+        $stmt = $this->pdo->query("SELECT invoice_company_name, invoice_registration_number, invoice_vat_number,
+            invoice_address, invoice_postal_code, invoice_city, invoice_country, invoice_phone,
+            invoice_email, invoice_bank_account FROM users WHERE role = 'admin' ORDER BY id LIMIT 1");
+        return $stmt->fetch();
+    }
+
+    public function updateInvoiceDetails($id, array $details) {
+        $stmt = $this->pdo->prepare("UPDATE users SET
+            invoice_company_name = :company_name,
+            invoice_registration_number = :registration_number,
+            invoice_vat_number = :vat_number,
+            invoice_address = :address,
+            invoice_postal_code = :postal_code,
+            invoice_city = :city,
+            invoice_country = :country,
+            invoice_phone = :phone,
+            invoice_email = :email,
+            invoice_bank_account = :bank_account
+            WHERE id = :id AND role = 'admin'");
+        return $stmt->execute([
+            ':id' => $id,
+            ':company_name' => $details['company_name'] ?: null,
+            ':registration_number' => $details['registration_number'] ?: null,
+            ':vat_number' => $details['vat_number'] ?: null,
+            ':address' => $details['address'] ?: null,
+            ':postal_code' => $details['postal_code'] ?: null,
+            ':city' => $details['city'] ?: null,
+            ':country' => $details['country'] ?: null,
+            ':phone' => $details['phone'] ?: null,
+            ':email' => $details['email'] ?: null,
+            ':bank_account' => $details['bank_account'] ?: null,
+        ]);
+    }
+
     public function updatePassword($id, $password) {
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
         $stmt = $this->pdo->prepare("UPDATE users SET password = :password WHERE id = :id");

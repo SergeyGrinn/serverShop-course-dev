@@ -48,6 +48,73 @@ class Cart {
     return $items;
 }
 
+    public function calculateConfiguredItem($serverId, array $componentIds): array {
+        $serverId = filter_var($serverId, FILTER_VALIDATE_INT);
+        if ($serverId === false || $serverId < 1) {
+            throw new InvalidArgumentException('Invalid server selected');
+        }
+
+        $serverStmt = $this->pdo->prepare('SELECT base_price FROM servers WHERE id = :id AND available = TRUE');
+        $serverStmt->execute([':id' => $serverId]);
+        $server = $serverStmt->fetch();
+        if (!$server) {
+            throw new InvalidArgumentException('Server is unavailable');
+        }
+
+        $selectedIds = [];
+        foreach ($componentIds as $componentId) {
+            if ($componentId === null || $componentId === '') {
+                continue;
+            }
+
+            $componentId = filter_var($componentId, FILTER_VALIDATE_INT);
+            if ($componentId === false || $componentId < 1 || in_array($componentId, $selectedIds, true)) {
+                throw new InvalidArgumentException('Invalid component selection');
+            }
+            $selectedIds[] = $componentId;
+        }
+
+        $totalPrice = (float) $server['base_price'];
+        if ($selectedIds) {
+            $placeholders = [];
+            $params = [':server_id' => $serverId];
+            foreach ($selectedIds as $index => $componentId) {
+                $placeholder = ':component_' . $index;
+                $placeholders[] = $placeholder;
+                $params[$placeholder] = $componentId;
+            }
+
+            $componentStmt = $this->pdo->prepare('
+                SELECT c.id, c.type, c.price
+                FROM components c
+                INNER JOIN server_components sc ON sc.component_id = c.id
+                WHERE sc.server_id = :server_id
+                  AND c.available = TRUE
+                  AND c.id IN (' . implode(', ', $placeholders) . ')
+            ');
+            $componentStmt->execute($params);
+            $components = $componentStmt->fetchAll();
+
+            if (count($components) !== count($selectedIds)) {
+                throw new InvalidArgumentException('One or more components are unavailable for this server');
+            }
+
+            $selectedTypes = [];
+            foreach ($components as $component) {
+                if (in_array($component['type'], $selectedTypes, true)) {
+                    throw new InvalidArgumentException('Only one component per type can be selected');
+                }
+                $selectedTypes[] = $component['type'];
+                $totalPrice += (float) $component['price'];
+            }
+        }
+
+        return [
+            'component_ids' => $selectedIds,
+            'total_price' => round($totalPrice, 2),
+        ];
+    }
+
      public function addItem($cart_id, $server_id, $component_ids, $total_price) {
         $stmt = $this->pdo->prepare("
             INSERT INTO cart_items (cart_id, server_id, component_ids, total_price)

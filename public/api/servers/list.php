@@ -5,7 +5,13 @@ require_once BASE_PATH . 'src/Config/app.php';
 require_once BASE_PATH . 'src/Core/functions.php';
 require_once BASE_PATH . 'src/Config/db.php';
 
-header ('Content-Type: application/json');
+header('Content-Type: application/json; charset=utf-8');
+
+if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+    http_response_code(405);
+    echo json_encode(['success' => false, 'message' => 'Request must be GET']);
+    exit;
+}
 
 $price_from = $_GET['price_from'] ?? null;
 $price_to = $_GET['price_to'] ?? null;

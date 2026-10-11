@@ -5,8 +5,11 @@ require_once BASE_PATH . 'src/Config/app.php';
 require_once BASE_PATH . 'src/Core/functions.php';
 require_once BASE_PATH . 'src/Config/db.php';
 require_once BASE_PATH . 'src/Models/Order.php';
+require_once BASE_PATH . 'src/Models/User.php';
 require_once BASE_PATH . 'src/Models/Cart.php';
 require_once BASE_PATH . 'src/Helpers/Response.php';
+require_once BASE_PATH . 'src/Services/InvoiceGenerator.php';
+require_once BASE_PATH . 'src/Services/Mailer.php';
 
 header('Content-Type: application/json');
 
@@ -76,6 +79,24 @@ try {
         throw new Exception('Failed to update order status');
     }
 
+    $invoiceSent = false;
+    try {
+        $paidOrder = $orderModel->get($orderId);
+        $invoiceSeller = (new User($pdo))->getAdminInvoiceDetails() ?: [];
+        $invoicePdf = InvoiceGenerator::renderPdf($paidOrder, $invoiceSeller);
+        $invoiceSent = Mailer::sendInvoiceEmail(
+            $paidOrder['email'],
+            $paidOrder['name'],
+            $orderId,
+            $invoicePdf
+        );
+        if (!$invoiceSent) {
+            error_log('Invoice email could not be sent for order #' . $orderId);
+        }
+    } catch (Throwable $error) {
+        error_log('Invoice generation/email failed for order #' . $orderId . ': ' . $error->getMessage());
+    }
+
     $cartModel = new Cart($pdo);
     $cart = $cartModel->getOrCreateCart($_SESSION['session_id'] ?? session_id());
     $cartModel->clearCart($cart['id']);
@@ -83,7 +104,10 @@ try {
     http_response_code(200);
     Response::json([
         'success' => true,
-        'message' => 'Payment successfully processed',
+        'message' => $invoiceSent
+            ? 'Payment received successfully. The invoice was sent to your email.'
+            : 'Payment received and order is processing, but the invoice email could not be sent.',
+        'invoiceSent' => $invoiceSent,
         'orderId' => $orderId
     ]);
 

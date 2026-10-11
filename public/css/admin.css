@@ -276,6 +276,11 @@ html:not(.dark-theme) .admin-pages-overlay a:hover {
 	color: #856404;
 }
 
+.admin-page .order-status-paid {
+	background: #dff3ee;
+	color: #12624f;
+}
+
 .admin-page .order-status-processing {
 	background: #d8edff;
 	color: #195889;

@@ -13,7 +13,7 @@ if ($server['default_ram'] !== null) {
 
     <!-- Server Info -->
         <div class="w-80 flex-shrink-0">
-            <img src="<?= APP_URL ?>public/assets/images/<?= htmlspecialchars($server['image']) ?>"
+            <img src="<?= PUBLIC_URL ?>assets/images/<?= htmlspecialchars($server['image']) ?>"
                  alt="<?= htmlspecialchars($server['name']) ?>"
                  class="w-full rounded-lg border border-gray-200">
             <h1 class="text-xl font-bold mt-4"><?= htmlspecialchars($server['name']) ?></h1>
@@ -171,4 +171,4 @@ if ($server['default_ram'] !== null) {
     </div>
 </main>
 
-<script src="<?= APP_URL ?>public/js/configurator.js"></script>
+<script src="<?= PUBLIC_URL ?>js/configurator.js"></script>

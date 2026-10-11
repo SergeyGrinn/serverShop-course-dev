@@ -11,6 +11,11 @@ header('Content-Type: application/json');
 
 session_start();
 
+if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+    http_response_code(405);
+    Response::json(['success' => false, 'message' => 'Request must be GET']);
+}
+
 if (!isset($_SESSION['session_id'])) {
     $_SESSION['session_id'] = session_id();
 }

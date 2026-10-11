@@ -62,10 +62,11 @@ $hardwareValues = [
             <div class="mb-4">
                 <label class="block text-sm font-medium mb-2">Image</label>
                 <div class="custom-file-picker">
-                    <input id="server-image-create" type="file" name="image" accept="image/*" class="custom-file-input">
+                    <input id="server-image-create" type="file" name="image" accept="image/jpeg,image/png,image/webp,image/svg+xml,.svg" class="custom-file-input">
                     <label for="server-image-create" class="custom-file-button">Choose File</label>
                     <span class="custom-file-name">No file chosen</span>
                 </div>
+                <p class="text-xs text-gray-500 mt-1">JPEG, PNG, WebP, or sanitized SVG. Maximum size: 5 MB.</p>
             </div>
 
             <div class="mb-6">

@@ -86,6 +86,7 @@ require_once base_path('templates/header.php');
                             id="name" 
                             name="name" 
                             required
+                            value="<?= htmlspecialchars($checkoutContact['name'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
                             placeholder="Your Name"
                             class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2"
                         >
@@ -100,6 +101,7 @@ require_once base_path('templates/header.php');
                             id="email" 
                             name="email" 
                             required
+                            value="<?= htmlspecialchars($checkoutContact['email'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
                             placeholder="example@example.com"
                             class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2"
                         >
@@ -113,7 +115,11 @@ require_once base_path('templates/header.php');
                             type="tel" 
                             id="phone" 
                             name="phone" 
-                            placeholder="+371-2222-3333"
+                            value="<?= htmlspecialchars($checkoutContact['phone'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
+                            inputmode="numeric"
+                            pattern="[0-9]*"
+                            maxlength="20"
+                            placeholder="37122223333"
                             class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2"
                         >
                         <span class="error-message text-red-500 text-sm hidden"></span>
@@ -153,7 +159,53 @@ require_once base_path('templates/header.php');
 
 <!-- Form submission handler -->
 <script>
-document.getElementById('checkoutForm').addEventListener('submit', async function(e) {
+const checkoutForm = document.getElementById('checkoutForm');
+const checkoutDraftKey = 'checkout-contact-draft';
+const checkoutContactFields = Array.from(checkoutForm.querySelectorAll('[name="name"], [name="email"], [name="phone"], [name="comment"]'));
+
+function saveCheckoutDraft() {
+    const draft = {};
+    checkoutContactFields.forEach(field => {
+        draft[field.name] = field.value;
+    });
+
+    try {
+        sessionStorage.setItem(checkoutDraftKey, JSON.stringify(draft));
+    } catch (error) {
+        // Checkout remains usable if browser storage is unavailable.
+    }
+}
+
+function clearCheckoutDraft() {
+    try {
+        sessionStorage.removeItem(checkoutDraftKey);
+    } catch (error) {
+        // Checkout remains usable if browser storage is unavailable.
+    }
+}
+
+try {
+    const savedDraft = JSON.parse(sessionStorage.getItem(checkoutDraftKey) || 'null');
+    if (savedDraft && typeof savedDraft === 'object') {
+        checkoutContactFields.forEach(field => {
+            if (typeof savedDraft[field.name] === 'string') {
+                field.value = savedDraft[field.name];
+            }
+        });
+    }
+} catch (error) {
+    clearCheckoutDraft();
+}
+
+const phoneField = checkoutForm.querySelector('[name="phone"]');
+phoneField.value = phoneField.value.replace(/[^0-9]/g, '');
+phoneField.addEventListener('input', function() {
+    this.value = this.value.replace(/[^0-9]/g, '');
+});
+
+checkoutContactFields.forEach(field => field.addEventListener('input', saveCheckoutDraft));
+
+checkoutForm.addEventListener('submit', async function(e) {
     if (!this.checkValidity()) {
         e.preventDefault();
 
@@ -191,6 +243,7 @@ document.getElementById('checkoutForm').addEventListener('submit', async functio
         loadingSpinner.classList.add('hidden');
         
         if (data.success) {
+            clearCheckoutDraft();
             showNotification(data.message + ' Redirecting...', 'success');
             
             setTimeout(() => {
@@ -209,6 +262,7 @@ document.getElementById('checkoutForm').addEventListener('submit', async functio
 
 document.querySelectorAll('.remove-checkout-item').forEach(button => {
     button.addEventListener('click', async function() {
+        saveCheckoutDraft();
         this.disabled = true;
 
         try {

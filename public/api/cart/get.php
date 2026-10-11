@@ -8,6 +8,12 @@ require_once BASE_PATH . 'src/Models/Cart.php';
 
 header('Content-Type: application/json');
 
+if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+	http_response_code(405);
+	echo json_encode(['success' => false, 'message' => 'Request must be GET']);
+	exit;
+}
+
 $cartModel = new Cart($pdo);
 $cart = $cartModel->getOrCreateCart(session_id());
 $items = $cartModel->getItems($cart['id']);
