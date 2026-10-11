@@ -31,17 +31,8 @@ if (!isset($_SESSION['user_id'])) {
 
 try {
     $orderModel = new Order($pdo);
-    
-    $orders = $orderModel->getByUser($_SESSION['user_id']);
-    
-    
-    foreach ($orders as &$order) {
-        $stmt = $pdo->prepare("SELECT COUNT(*) as count FROM order_items WHERE order_id = :order_id");
-        $stmt->execute([':order_id' => $order['id']]);
-        $itemCount = $stmt->fetch();
-        $order['items_count'] = $itemCount['count'];
-    }
-    
+    $orders = $orderModel->getByUserWithItemCount($_SESSION['user_id']);
+
     http_response_code(200);
     Response::json([
         'success' => true,

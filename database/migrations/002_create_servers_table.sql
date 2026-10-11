@@ -1,12 +1,14 @@
 CREATE TABLE servers (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    description TEXT,
-    image VARCHAR(255),
+    id INT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL,
+    description TEXT DEFAULT NULL,
+    image VARCHAR(255) DEFAULT NULL,
     base_price DECIMAL(10,2) NOT NULL,
-    default_ram INT NULL,
-    default_storage INT NULL,
-    default_cpu_cores INT NULL,
-    available BOOLEAN DEFAULT TRUE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+    available TINYINT(1) NOT NULL DEFAULT 1,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    default_ram DECIMAL(8,3) DEFAULT NULL,
+    default_storage INT DEFAULT NULL,
+    default_cpu_cores INT DEFAULT NULL,
+    default_gpu_vram INT DEFAULT NULL,
+    PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

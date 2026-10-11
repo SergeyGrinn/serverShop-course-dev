@@ -1,10 +1,23 @@
--- Users
-
 CREATE TABLE users (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id INT NOT NULL AUTO_INCREMENT,
     username VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL UNIQUE,
+    email VARCHAR(255) NOT NULL,
+    mobile_phone VARCHAR(30) DEFAULT NULL,
     password VARCHAR(255) NOT NULL,
     role ENUM('admin', 'user') NOT NULL DEFAULT 'user',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    email_verified_at TIMESTAMP NULL DEFAULT NULL,
+    email_verification_token VARCHAR(64) DEFAULT NULL,
+    invoice_company_name VARCHAR(255) DEFAULT NULL,
+    invoice_registration_number VARCHAR(100) DEFAULT NULL,
+    invoice_vat_number VARCHAR(100) DEFAULT NULL,
+    invoice_address VARCHAR(255) DEFAULT NULL,
+    invoice_postal_code VARCHAR(30) DEFAULT NULL,
+    invoice_city VARCHAR(100) DEFAULT NULL,
+    invoice_country VARCHAR(100) DEFAULT NULL,
+    invoice_phone VARCHAR(50) DEFAULT NULL,
+    invoice_email VARCHAR(255) DEFAULT NULL,
+    invoice_bank_account VARCHAR(100) DEFAULT NULL,
+    PRIMARY KEY (id),
+    UNIQUE KEY email (email)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
