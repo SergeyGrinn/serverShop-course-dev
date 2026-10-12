@@ -24,11 +24,14 @@ $hasError = function (string $message) use ($submitted, $errors) {
                 <label class="text-sm font-medium">Email</label>
                 <input type="email" name="email" data-validation-message="Email is required" value="<?= htmlspecialchars($_POST['email'] ?? '') ?>"
                        class="border border-gray-300 rounded px-3 py-2 text-sm">
-                <?php foreach (['Email is required', 'Invalid email format', 'Email must have a valid domain extension', 'Email already taken'] as $error): ?>
+                <?php foreach (['Email is required', 'Invalid email format', 'Email must have a valid domain extension'] as $error): ?>
                     <?php if ($hasError($error)): ?>
                         <p class="text-red-600 text-sm"><?= $error === 'Email is required' ? 'Email is required' : 'Invalid email format' ?></p>
                     <?php endif; ?>
                 <?php endforeach; ?>
+                <?php if ($hasError('Email already taken')): ?>
+                    <p class="text-red-600 text-sm">This email is already taken</p>
+                <?php endif; ?>
             </div>
             <div class="flex flex-col gap-2 mb-4">
                 <label class="text-sm font-medium">Password</label>

@@ -1,6 +1,6 @@
 <?php $supportEmail = 'servershopcatalog@gmail.com'; ?>
 
-<section class="contact-page">
+<section class="contact-page <?= !empty($isAdmin) ? 'contact-theme--admin' : 'contact-theme--user' ?>">
     <div class="contact-layout">
         <section class="contact-overview">
             <div class="contact-hero">

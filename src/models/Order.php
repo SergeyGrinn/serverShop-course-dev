@@ -30,9 +30,47 @@ class Order {
             $orderId = $this->pdo->lastInsertId();
 
             foreach ($cartItems as $item) {
+                $serverStmt = $this->pdo->prepare(
+                    'SELECT name, description, image, base_price FROM servers WHERE id = :id'
+                );
+                $serverStmt->execute([':id' => $item['server_id']]);
+                $server = $serverStmt->fetch();
+                if (!$server) {
+                    throw new RuntimeException('Cannot save an order item for a missing server.');
+                }
+
+                $componentIds = json_decode((string) ($item['component_ids'] ?? '[]'), true);
+                $componentsById = [];
+                if (is_array($componentIds) && $componentIds !== []) {
+                    $componentIds = array_values(array_unique(array_map('intval', $componentIds)));
+                    $placeholders = implode(',', array_fill(0, count($componentIds), '?'));
+                    $componentsStmt = $this->pdo->prepare(
+                        "SELECT id, name, value, type, price FROM components WHERE id IN ($placeholders)"
+                    );
+                    $componentsStmt->execute($componentIds);
+                    foreach ($componentsStmt->fetchAll() as $component) {
+                        $componentsById[(int) $component['id']] = $component;
+                    }
+                }
+
+                $componentSnapshot = [];
+                foreach ($componentIds ?? [] as $componentId) {
+                    if (isset($componentsById[$componentId])) {
+                        $componentSnapshot[] = $componentsById[$componentId];
+                    }
+                }
+
                 $stmt = $this->pdo->prepare("
-                    INSERT INTO order_items (order_id, server_id, component_ids, total_price)
-                    VALUES (:order_id, :server_id, :component_ids, :total_price)
+                    INSERT INTO order_items (
+                        order_id, server_id, component_ids, total_price,
+                        server_name_snapshot, server_description_snapshot, server_image_snapshot,
+                        server_base_price_snapshot, components_snapshot
+                    )
+                    VALUES (
+                        :order_id, :server_id, :component_ids, :total_price,
+                        :server_name_snapshot, :server_description_snapshot, :server_image_snapshot,
+                        :server_base_price_snapshot, :components_snapshot
+                    )
                 ");
 
                 $stmt->execute([
@@ -40,6 +78,11 @@ class Order {
                     ':server_id' => $item['server_id'],
                     ':component_ids' => $item['component_ids'], // JSON строка
                     ':total_price' => $item['total_price'],
+                    ':server_name_snapshot' => $server['name'],
+                    ':server_description_snapshot' => $server['description'] ?? '',
+                    ':server_image_snapshot' => $server['image'] ?? '',
+                    ':server_base_price_snapshot' => $server['base_price'],
+                    ':components_snapshot' => json_encode($componentSnapshot, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE),
                 ]);
             }
 
@@ -64,9 +107,13 @@ class Order {
         }
 
         $stmt = $this->pdo->prepare("
-            SELECT oi.*, s.name AS server_name, s.description AS server_description, s.image, s.base_price AS server_base_price
+                 SELECT oi.*,
+                     COALESCE(oi.server_name_snapshot, s.name, CONCAT('Deleted server #', oi.server_id)) AS server_name,
+                     COALESCE(oi.server_description_snapshot, s.description) AS server_description,
+                     COALESCE(oi.server_image_snapshot, s.image) AS image,
+                     COALESCE(oi.server_base_price_snapshot, s.base_price) AS server_base_price
             FROM order_items oi
-            JOIN servers s ON oi.server_id = s.id
+                 LEFT JOIN servers s ON oi.server_id = s.id
             WHERE oi.order_id = :order_id
         ");
         $stmt->execute([':order_id' => $orderId]);
@@ -74,6 +121,12 @@ class Order {
 
         //For each order item, decode component_ids and fetch component details
         foreach ($order['items'] as &$item) {
+            $componentSnapshot = json_decode((string) ($item['components_snapshot'] ?? ''), true);
+            if (is_array($componentSnapshot)) {
+                $item['components'] = $componentSnapshot;
+                continue;
+            }
+
             $componentIds = json_decode($item['component_ids'], true);
             if (!empty($componentIds)) {
                 $placeholders = implode(',', array_fill(0, count($componentIds), '?'));

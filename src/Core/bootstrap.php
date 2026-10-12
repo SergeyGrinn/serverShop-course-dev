@@ -2,6 +2,9 @@
 
 define('ROOT_PATH', dirname(__DIR__, 2) . DIRECTORY_SEPARATOR);
 
+require_once ROOT_PATH . 'vendor/autoload.php';
+Dotenv\Dotenv::createImmutable(ROOT_PATH)->safeLoad();
+
 /**
  * PUBLIC_PATH: Path to public folder (where web server serves files from)
  * 

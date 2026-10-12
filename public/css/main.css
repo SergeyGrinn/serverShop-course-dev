@@ -233,17 +233,39 @@
 }
 
 html.dark-theme .home-hero--user {
-   --home-surface: #e3eee0;
-   --home-border: #a9c6a1;
-   --home-ink: #17331b;
-   --home-muted: #405843;
+   --home-surface: #26392c;
+   --home-border: #526f59;
+   --home-ink: #f0f5f1;
+   --home-muted: #c5d3c8;
+   --home-icon-surface: #3b5540;
 }
 
 html.dark-theme .home-hero--admin {
-   --home-surface: #e2ecf6;
-   --home-border: #a5c0d9;
-   --home-ink: #172b45;
-   --home-muted: #405974;
+   --home-surface: #20364c;
+   --home-border: #52728f;
+   --home-ink: #f0f6fc;
+   --home-muted: #c5d8e9;
+   --home-icon-surface: #304d68;
+}
+
+html.dark-theme .home-hero__eyebrow {
+   color: var(--home-muted);
+}
+
+html.dark-theme .home-hero__eyebrow span {
+   background: var(--home-muted);
+}
+
+html.dark-theme .home-hero__features svg {
+   stroke: var(--home-muted);
+}
+
+html.dark-theme .home-hero__media {
+   mix-blend-mode: normal;
+}
+
+html.dark-theme .home-hero__media img {
+   filter: brightness(0.78) saturate(0.9);
 }
 
 @media (max-width: 900px) {
@@ -1048,6 +1070,28 @@ html.dark-theme .contact-faq {
    background: #34483a;
 }
 
+html.dark-theme .contact-page {
+   --contact-border: #526f59;
+   --contact-ink: #f0f5f1;
+   --contact-muted: #c5d3c8;
+   --contact-accent-hover: #b9dcae;
+}
+
+html.dark-theme .contact-theme--admin {
+   --contact-border: #52728f;
+   --contact-ink: #f0f6fc;
+   --contact-muted: #c5d8e9;
+   --contact-accent-hover: #a9c9e5;
+}
+
+html.dark-theme .contact-eyebrow {
+   color: var(--contact-accent-hover);
+}
+
+html.dark-theme .contact-shortcut > svg {
+   stroke: var(--contact-accent-hover);
+}
+
 html.dark-theme .contact-theme--admin .contact-overview,
 html.dark-theme .contact-theme--admin .contact-message,
 html.dark-theme .contact-theme--admin .contact-faq {
@@ -1071,7 +1115,7 @@ html.dark-theme .contact-theme--admin .contact-field textarea {
 }
 
 html.dark-theme .contact-faq details {
-   border-color: #49624f;
+   border-color: var(--contact-border);
 }
 
 @media (max-width: 600px) {

@@ -2,10 +2,15 @@
 
 require_once __DIR__ . '/../Core/bootstrap.php';
 
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'server_eshop');
-define('DB_USER', 'root');
-define('DB_PASS', '');
+$env = static function (string $name, string $default = ''): string {
+    $value = $_ENV[$name] ?? $_SERVER[$name] ?? getenv($name);
+    return is_string($value) ? $value : $default;
+};
+
+define('DB_HOST', $env('DB_HOST', 'localhost'));
+define('DB_NAME', $env('DB_NAME', 'server_eshop'));
+define('DB_USER', $env('DB_USER', 'root'));
+define('DB_PASS', $env('DB_PASS'));
 
 try {
     $pdo = new PDO(

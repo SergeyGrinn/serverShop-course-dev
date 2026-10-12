@@ -4,7 +4,9 @@
   "description": "Repo for course project.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:css": "npx @tailwindcss/cli -i ./public/css/tailwind.css -o ./public/css/tailwind-output.css",
+    "watch:css": "npx @tailwindcss/cli -i ./public/css/tailwind.css -o ./public/css/tailwind-output.css --watch"
   },
   "repository": {
     "type": "git",

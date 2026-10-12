@@ -20,7 +20,7 @@ $isAdmin = ($_SESSION['user_role'] ?? '') === 'admin';
     <title>Server Catalogue</title>
 
     <link rel="stylesheet" href="<?= BASE_URL ?>/css/tailwind-output.css">
-    <link rel="stylesheet" href="<?= BASE_URL ?>/css/main.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/css/main.css?v=<?= filemtime(__DIR__ . '/../public/css/main.css') ?>">
     <?php if ($isAdmin): ?>
         <link rel="stylesheet" href="<?= BASE_URL ?>/css/admin.css">
     <?php endif; ?>

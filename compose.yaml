@@ -1,0 +1,84 @@
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:80:80"
+    volumes:
+      - .:/var/www/html
+      - app-vendor:/var/www/html/vendor
+    environment:
+      DB_HOST: db
+      DB_NAME: ${DOCKER_DB_NAME:-server_eshop}
+      DB_USER: ${DOCKER_DB_USER:-servershop}
+      DB_PASS: ${DOCKER_DB_PASSWORD:-servershop-local}
+      MAILER_HOST: ${DOCKER_MAILER_HOST:-mailpit}
+      MAILER_PORT: ${DOCKER_MAILER_PORT:-1025}
+      MAILER_USERNAME: ${DOCKER_MAILER_USERNAME:-}
+      MAILER_PASSWORD: ${DOCKER_MAILER_PASSWORD:-}
+      MAILER_ENCRYPTION: ${DOCKER_MAILER_ENCRYPTION:-}
+      MAILER_FROM_ADDRESS: ${DOCKER_MAILER_FROM_ADDRESS:-no-reply@servershop.test}
+      MAILER_FROM_NAME: ${DOCKER_MAILER_FROM_NAME:-Server Shop}
+    depends_on:
+      db:
+        condition: service_healthy
+      mailpit:
+        condition: service_started
+
+  db:
+    image: mysql:8.4
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3307:3306"
+    environment:
+      MYSQL_DATABASE: ${DOCKER_DB_NAME:-server_eshop}
+      MYSQL_USER: ${DOCKER_DB_USER:-servershop}
+      MYSQL_PASSWORD: ${DOCKER_DB_PASSWORD:-servershop-local}
+      MYSQL_ROOT_PASSWORD: ${DOCKER_MYSQL_ROOT_PASSWORD:-servershop-root-local}
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./database/server_eshop.sql:/docker-entrypoint-initdb.d/001-seed.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -p\"$${MYSQL_ROOT_PASSWORD}\" --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  phpmyadmin:
+    image: phpmyadmin:5.2-apache
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8081:80"
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 0
+    depends_on:
+      db:
+        condition: service_healthy
+
+  mailpit:
+    image: axllent/mailpit:latest
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:1025:1025"
+      - "127.0.0.1:8025:8025"
+    environment:
+      MP_DATABASE: /data/mailpit.db
+    volumes:
+      - mailpit-data:/data
+
+  tailwind:
+    image: node:22-alpine
+    restart: unless-stopped
+    working_dir: /workspace
+    volumes:
+      - .:/workspace
+      - node-modules:/workspace/node_modules
+    command: sh -c "npm ci && npm run watch:css"
+
+volumes:
+  app-vendor:
+  mysql-data:
+  mailpit-data:
+  node-modules:

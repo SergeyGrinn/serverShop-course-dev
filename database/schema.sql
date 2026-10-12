@@ -95,7 +95,12 @@ CREATE TABLE `order_items` (
   `order_id` int(11) NOT NULL,
   `server_id` int(11) NOT NULL,
   `component_ids` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`component_ids`)),
-  `total_price` decimal(10,2) NOT NULL
+  `total_price` decimal(10,2) NOT NULL,
+  `server_name_snapshot` varchar(255) DEFAULT NULL,
+  `server_description_snapshot` text DEFAULT NULL,
+  `server_image_snapshot` varchar(255) DEFAULT NULL,
+  `server_base_price_snapshot` decimal(10,2) DEFAULT NULL,
+  `components_snapshot` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -291,8 +296,7 @@ ALTER TABLE `cart_items`
 -- Constraints for table `order_items`
 --
 ALTER TABLE `order_items`
-  ADD CONSTRAINT `order_items_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `order_items_ibfk_2` FOREIGN KEY (`server_id`) REFERENCES `servers` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `order_items_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `server_components`

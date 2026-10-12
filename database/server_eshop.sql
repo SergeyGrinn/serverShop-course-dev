@@ -110,7 +110,12 @@ CREATE TABLE `order_items` (
   `order_id` int(11) NOT NULL,
   `server_id` int(11) NOT NULL,
   `component_ids` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`component_ids`)),
-  `total_price` decimal(10,2) NOT NULL
+  `total_price` decimal(10,2) NOT NULL,
+  `server_name_snapshot` varchar(255) DEFAULT NULL,
+  `server_description_snapshot` text DEFAULT NULL,
+  `server_image_snapshot` varchar(255) DEFAULT NULL,
+  `server_base_price_snapshot` decimal(10,2) DEFAULT NULL,
+  `components_snapshot` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -199,6 +204,19 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`id`, `username`, `email`, `password`, `role`, `created_at`) VALUES
 (12, 'testuser', 'user@example.com', '$2y$10$6itKlucMFGNxwqlJcnhebu4EvK9soPI.2Rkqv09u/qlSSaU.ld.0m', 'user', '2026-06-16 14:43:43'),
 (13, 'admin', 'admin@example.com', '$2y$10$rLmHFFSzyguy24toQoGAYe5plMr60J7Ke3dGNx0dW3c1L19J2NmVq', 'admin', '2026-06-16 14:48:44');
+
+UPDATE `users`
+SET `invoice_company_name` = 'SIA SERVER CATALOG',
+    `invoice_registration_number` = '91329916009',
+    `invoice_vat_number` = 'LV91296369969',
+    `invoice_address` = 'Viltus iela 19',
+    `invoice_postal_code` = 'LV-1048',
+    `invoice_city` = 'Riga',
+    `invoice_country` = 'Latvia',
+    `invoice_phone` = '+37128980754',
+    `invoice_email` = 'servershopcatalog@gmail.com',
+    `invoice_bank_account` = 'LV12HABA0001234567890'
+WHERE `role` = 'admin';
 
 --
 -- Indexes for dumped tables
@@ -333,8 +351,7 @@ ALTER TABLE `cart_items`
 -- Constraints for table `order_items`
 --
 ALTER TABLE `order_items`
-  ADD CONSTRAINT `order_items_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `order_items_ibfk_2` FOREIGN KEY (`server_id`) REFERENCES `servers` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `order_items_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `server_components`
