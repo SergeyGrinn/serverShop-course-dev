@@ -22,7 +22,7 @@ $isAdmin = ($_SESSION['user_role'] ?? '') === 'admin';
     <link rel="stylesheet" href="<?= BASE_URL ?>/css/tailwind-output.css">
     <link rel="stylesheet" href="<?= BASE_URL ?>/css/main.css?v=<?= filemtime(__DIR__ . '/../public/css/main.css') ?>">
     <?php if ($isAdmin): ?>
-        <link rel="stylesheet" href="<?= BASE_URL ?>/css/admin.css">
+        <link rel="stylesheet" href="<?= BASE_URL ?>/css/admin.css?v=<?= filemtime(__DIR__ . '/../public/css/admin.css') ?>">
     <?php endif; ?>
     <script src="<?= BASE_URL ?>/js/knockout.js"></script>
     
