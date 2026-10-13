@@ -25,7 +25,7 @@ function ConfiguratorViewModel(basePrice) {
 var vm = new ConfiguratorViewModel(parseFloat(document.getElementById('base-price').value));
 ko.applyBindings(vm, document.getElementById('configurator-app'));
 
-document.getElementById('add-to-cart').addEventListener('click', function() {
+document.getElementById('add-to-cart')?.addEventListener('click', function() {
     const serverId = new URLSearchParams(window.location.search).get('id');
     const selectedInputs = document.querySelectorAll('input[type="radio"]:checked');
 

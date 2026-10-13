@@ -98,7 +98,9 @@ $isAdmin = ($_SESSION['user_role'] ?? '') === 'admin';
                         <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path>
                     </svg>
                 </button>
-                <button id="cart-btn" class="text-white px-4 py-2 rounded-lg" style="background-color: #308020;">Cart</button>
+                <?php if (!$isAdmin): ?>
+                    <button id="cart-btn" class="text-white px-4 py-2 rounded-lg" style="background-color: #308020;">Cart</button>
+                <?php endif; ?>
             </div>
         </nav>
     </header>

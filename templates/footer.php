@@ -1,5 +1,7 @@
 <?php
-require_once base_path('templates/components/cartSidebar.php');
+if (($_SESSION['user_role'] ?? '') !== 'admin') {
+    require_once base_path('templates/components/cartSidebar.php');
+}
 require_once base_path('templates/components/cookieBanner.php');
 ?>
 </main>
@@ -7,7 +9,9 @@ require_once base_path('templates/components/cookieBanner.php');
         <p>&copy; <?= date('Y') ?> Server Catalog. All rights reserved.</p>
     </footer>
 
-<script src="<?= BASE_URL ?>/js/cart.js?v=<?= filemtime(__DIR__ . '/../public/js/cart.js') ?>"></script>
+<?php if (($_SESSION['user_role'] ?? '') !== 'admin'): ?>
+    <script src="<?= BASE_URL ?>/js/cart.js?v=<?= filemtime(__DIR__ . '/../public/js/cart.js') ?>"></script>
+<?php endif; ?>
 <script src="<?= BASE_URL ?>/js/notifications.js?v=<?= filemtime(__DIR__ . '/../public/js/notifications.js') ?>"></script>
 
 </body>
