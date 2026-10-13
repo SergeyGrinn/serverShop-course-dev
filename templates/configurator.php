@@ -164,7 +164,11 @@ if ($server['default_ram'] !== null) {
     <!-- Total Price -->
         <div class="bg-white rounded-lg border border-gray-200 p-5 flex flex-wrap items-center justify-between gap-3">
             <h2 class="text-xl font-bold">Total: <span data-bind="text: totalPrice"></span> €</h2>
-            <button class="text-white px-6 py-2 rounded-lg font-semibold" style="background-color: #308020;" id="add-to-cart">Add to Cart</button>
+            <?php if (($_SESSION['user_role'] ?? '') === 'admin'): ?>
+                <p class="text-sm text-gray-500">Admin accounts cannot place orders.</p>
+            <?php else: ?>
+                <button class="text-white px-6 py-2 rounded-lg font-semibold" style="background-color: #308020;" id="add-to-cart">Add to Cart</button>
+            <?php endif; ?>
         </div>
 
         </div>

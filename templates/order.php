@@ -148,7 +148,13 @@ async function processPayment(orderId) {
 }
 
 async function cancelOrder(orderId) {
-    if (!confirm('Are you sure you want to cancel this order?')) {
+    const confirmed = await showConfirmationDialog({
+        title: 'Cancel this order?',
+        message: 'Are you sure you want to cancel this order? Your cart will not be cleared.',
+        confirmLabel: 'Cancel order',
+        variant: 'user'
+    });
+    if (!confirmed) {
         return;
     }
 

@@ -20,6 +20,12 @@ if (!csrf_verify($_SERVER['HTTP_X_CSRF_TOKEN'] ?? null)) {
     exit;
 }
 
+if (($_SESSION['user_role'] ?? '') === 'admin') {
+    http_response_code(403);
+    echo json_encode(['success' => false, 'message' => 'Administrator accounts cannot place orders']);
+    exit;
+}
+
 $data = json_decode(file_get_contents('php://input'), true);
 if (!is_array($data)) {
     http_response_code(400);

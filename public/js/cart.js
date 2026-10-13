@@ -38,10 +38,12 @@ function loadCart() {
                 if (empty) empty.style.display = 'block';
                 cartItemsContainer.innerHTML = '<p class="text-gray-500">Your cart is empty.</p>';
                 total.textContent = '€0.00';
+                document.querySelectorAll('.clear-cart-button').forEach(button => button.classList.add('hidden'));
                 return;
             }
 
             if (empty) empty.style.display = 'none'; // Hide empty message
+            document.querySelectorAll('.clear-cart-button').forEach(button => button.classList.remove('hidden'));
             let totalPrice = 0; // Initialize total price
 
             cartItemsContainer.innerHTML = data.items.map(item => {
@@ -80,3 +82,43 @@ function removeItem(item_id) {
         if (data.success) loadCart(); // Reload cart after removal
     });
 }
+
+document.querySelectorAll('.clear-cart-button').forEach(button => {
+    button.addEventListener('click', async function() {
+        const confirmed = await showConfirmationDialog({
+            title: 'Clear the cart?',
+            message: 'This will remove every item from your cart. You can add them again later.',
+            confirmLabel: 'Clear Cart',
+            variant: 'user-danger'
+        });
+        if (!confirmed) return;
+
+        document.querySelectorAll('.clear-cart-button').forEach(item => {
+            item.disabled = true;
+        });
+
+        try {
+            const response = await fetch(BASE_URL + '/api/cart/clear.php', {
+                method: 'POST',
+                headers: {'X-CSRF-Token': CSRF_TOKEN}
+            });
+            const data = await response.json();
+            if (!response.ok || !data.success) {
+                throw new Error(data.message || 'Unable to clear cart');
+            }
+
+            if (document.getElementById('checkout-page')) {
+                window.location.href = BASE_URL + '/index.php';
+                return;
+            }
+
+            showNotification(data.message, 'success');
+            loadCart();
+        } catch (error) {
+            showNotification(error.message, 'error');
+            document.querySelectorAll('.clear-cart-button').forEach(item => {
+                item.disabled = false;
+            });
+        }
+    });
+});

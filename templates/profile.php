@@ -6,8 +6,8 @@
             <div>
                 <h1 class="text-3xl font-bold">My Profile</h1>
             </div>
-            <?php if ($profile['user']['role'] !== 'admin'): ?>
-                <a href="<?= BASE_URL ?>/my-orders.php" class="profile-order-link">Order History</a>
+            <?php if (($profile['user']['role'] ?? '') !== 'admin'): ?>
+                <a href="<?= BASE_URL ?>/my-orders.php" class="profile-order-link">My Orders</a>
             <?php endif; ?>
         </div>
 

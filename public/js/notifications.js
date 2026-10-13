@@ -118,39 +118,80 @@ document.querySelectorAll('.built-in-hardware-toggle').forEach(toggle => {
 	updateHardwareFields();
 });
 
+function showConfirmationDialog({title, message, confirmLabel, variant = 'admin'}) {
+	const overlay = document.createElement('div');
+	overlay.className = 'delete-confirmation-overlay';
+	if (variant === 'user' || variant === 'user-danger') {
+		overlay.classList.add('delete-confirmation-overlay-user');
+	}
+	if (variant === 'user-danger') overlay.classList.add('delete-confirmation-danger');
+
+	const dialog = document.createElement('div');
+	dialog.className = 'delete-confirmation-modal';
+	dialog.setAttribute('role', 'dialog');
+	dialog.setAttribute('aria-modal', 'true');
+	dialog.setAttribute('aria-labelledby', 'confirmation-dialog-title');
+
+	const heading = document.createElement('h2');
+	heading.id = 'confirmation-dialog-title';
+	heading.textContent = title;
+	const description = document.createElement('p');
+	description.textContent = message;
+	const actions = document.createElement('div');
+	actions.className = 'delete-confirmation-actions';
+	const cancelButton = document.createElement('button');
+	cancelButton.type = 'button';
+	cancelButton.className = 'delete-confirmation-cancel';
+	cancelButton.textContent = 'Cancel';
+	const confirmButton = document.createElement('button');
+	confirmButton.type = 'button';
+	confirmButton.className = 'delete-confirmation-submit';
+	confirmButton.textContent = confirmLabel;
+
+	actions.append(cancelButton, confirmButton);
+	dialog.append(heading, description, actions);
+	overlay.append(dialog);
+	document.body.append(overlay);
+
+	return new Promise(resolve => {
+		let settled = false;
+		const close = confirmed => {
+			if (settled) return;
+			settled = true;
+			document.removeEventListener('keydown', handleKeydown);
+			overlay.remove();
+			resolve(confirmed);
+		};
+		const handleKeydown = event => {
+			if (event.key === 'Escape') close(false);
+		};
+
+		cancelButton.addEventListener('click', () => close(false));
+		confirmButton.addEventListener('click', () => close(true));
+		overlay.addEventListener('click', event => {
+			if (event.target === overlay) close(false);
+		});
+		document.addEventListener('keydown', handleKeydown);
+		cancelButton.focus();
+	});
+}
+
 document.querySelectorAll('.confirm-delete-form').forEach(form => {
-	form.addEventListener('submit', event => {
+	form.addEventListener('submit', async event => {
 		if (form.dataset.confirmed === 'true') {
 			delete form.dataset.confirmed;
 			return;
 		}
 
 		event.preventDefault();
-
-		const modal = document.createElement('div');
-		modal.className = 'delete-confirmation-overlay';
-		modal.innerHTML = `
-			<div class="delete-confirmation-modal" role="dialog" aria-modal="true" aria-labelledby="delete-confirmation-title">
-				<h2 id="delete-confirmation-title">Delete this item?</h2>
-				<p>This action cannot be undone.</p>
-				<div class="delete-confirmation-actions">
-					<button type="button" class="delete-confirmation-cancel">Cancel</button>
-					<button type="button" class="delete-confirmation-submit">Delete</button>
-				</div>
-			</div>
-		`;
-
-		document.body.appendChild(modal);
-
-		const closeModal = () => modal.remove();
-		modal.querySelector('.delete-confirmation-cancel').addEventListener('click', closeModal);
-		modal.addEventListener('click', event => {
-			if (event.target === modal) closeModal();
+		const confirmed = await showConfirmationDialog({
+			title: 'Delete this item?',
+			message: 'This action cannot be undone.',
+			confirmLabel: 'Delete'
 		});
-		modal.querySelector('.delete-confirmation-submit').addEventListener('click', () => {
-			form.dataset.confirmed = 'true';
-			closeModal();
-			form.requestSubmit();
-		});
+		if (!confirmed) return;
+
+		form.dataset.confirmed = 'true';
+		form.requestSubmit();
 	});
 });

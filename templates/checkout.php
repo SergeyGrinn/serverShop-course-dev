@@ -9,7 +9,10 @@ require_once base_path('templates/header.php');
         <!-- LEFT: CART ITEMS -->
         <div class="flex-1 bg-white border rounded-lg p-6">
             <h1 class="text-3xl font-bold mb-6">Checkout</h1>
-            <h2 class="text-xl font-bold mb-4">Order Summary</h2>
+            <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+                <h2 class="text-xl font-bold">Order Summary</h2>
+                <button type="button" class="clear-cart-button rounded border border-red-300 px-3 py-2 text-sm font-semibold text-red-700">Clear Cart</button>
+            </div>
             
             <?php foreach ($cartItems as $item): ?>
                 <div class="border-b pb-4 mb-4 last:border-b-0">

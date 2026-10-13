@@ -28,6 +28,13 @@ class OrderController {
 		if (session_status() === PHP_SESSION_NONE) {
 			session_start();
 		}
+		header('Cache-Control: no-store, private, max-age=0');
+		header('Pragma: no-cache');
+		header('Expires: 0');
+		if (($_SESSION['user_role'] ?? '') === 'admin') {
+			header('Location: ' . \BASE_URL . '/admin/orders.php');
+			exit;
+		}
 
 		if (!isset($_SESSION['session_id'])) {
 			$_SESSION['session_id'] = session_id();
@@ -71,6 +78,10 @@ class OrderController {
 
 		if (!isset($_SESSION['user_id'])) {
 			header('Location: ' . \BASE_URL . '/login.php?redirect=my-orders.php');
+			exit;
+		}
+		if (($_SESSION['user_role'] ?? '') === 'admin') {
+			header('Location: ' . \BASE_URL . '/admin/orders.php');
 			exit;
 		}
 

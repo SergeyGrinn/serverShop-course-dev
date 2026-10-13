@@ -14,7 +14,14 @@
             <span class="font-semibold">Total:</span>
             <span id="cart-total" class="font-bold text-green-700">0 €</span>
         </div>
-        <a href="<?= BASE_URL ?>/checkout.php" class="block text-center text-white py-2 rounded-lg font-semibold" style="background-color: #308020;">Checkout</a>
+        <div class="grid gap-2">
+            <button type="button" id="cart-clear-sidebar" class="clear-cart-button hidden w-full rounded border border-red-300 px-3 py-2 text-sm font-semibold text-red-700">Clear Cart</button>
+            <?php if (($_SESSION['user_role'] ?? '') === 'admin'): ?>
+                <p class="text-sm text-gray-500">Admin accounts cannot place orders.</p>
+            <?php else: ?>
+                <a href="<?= BASE_URL ?>/checkout.php" class="block text-center text-white py-2 rounded-lg font-semibold" style="background-color: #308020;">Checkout</a>
+            <?php endif; ?>
+        </div>
     </div>
 
 </div>

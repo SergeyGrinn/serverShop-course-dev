@@ -7,8 +7,8 @@ require_once base_path('templates/components/cookieBanner.php');
         <p>&copy; <?= date('Y') ?> Server Catalog. All rights reserved.</p>
     </footer>
 
-<script src="<?= BASE_URL ?>/js/cart.js"></script>
-<script src="<?= BASE_URL ?>/js/notifications.js"></script>
+<script src="<?= BASE_URL ?>/js/cart.js?v=<?= filemtime(__DIR__ . '/../public/js/cart.js') ?>"></script>
+<script src="<?= BASE_URL ?>/js/notifications.js?v=<?= filemtime(__DIR__ . '/../public/js/notifications.js') ?>"></script>
 
 </body>
 </html>

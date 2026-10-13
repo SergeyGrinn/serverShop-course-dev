@@ -386,6 +386,100 @@ html.dark-theme .home-hero__media img {
    }
 }
 
+.delete-confirmation-overlay-user {
+   position: fixed;
+   inset: 0;
+   z-index: 200;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   padding: 24px;
+   background: rgb(17 24 39 / 58%);
+}
+
+.delete-confirmation-overlay-user .delete-confirmation-modal {
+   width: min(100%, 420px);
+   padding: 24px;
+   border: 1px solid #83a57f;
+   border-radius: 10px;
+   background: #f5faf3;
+   color: #17331b;
+   box-shadow: 0 16px 40px rgb(23 51 27 / 24%);
+}
+
+.delete-confirmation-overlay-user .delete-confirmation-modal h2 {
+   margin: 0 0 8px;
+   font-size: 20px;
+}
+
+.delete-confirmation-overlay-user .delete-confirmation-modal p {
+   margin: 0 0 20px;
+   color: #4a604b;
+}
+
+.delete-confirmation-overlay-user .delete-confirmation-actions {
+   display: flex;
+   justify-content: flex-end;
+   gap: 10px;
+}
+
+.delete-confirmation-overlay-user .delete-confirmation-actions button {
+   min-height: 40px;
+   padding: 8px 16px;
+   border: 0;
+   border-radius: 6px;
+   font-weight: 600;
+   cursor: pointer;
+}
+
+.delete-confirmation-overlay-user .delete-confirmation-cancel {
+   background: #d5e8cf;
+   color: #17331b;
+}
+
+.delete-confirmation-overlay-user .delete-confirmation-submit {
+   background: #308020;
+   color: #ffffff;
+}
+
+.delete-confirmation-overlay-user .delete-confirmation-cancel:hover {
+   background: #c5dcbc;
+}
+
+.delete-confirmation-overlay-user .delete-confirmation-submit:hover {
+   background: #246719;
+}
+
+.delete-confirmation-overlay-user-danger .delete-confirmation-submit,
+.delete-confirmation-overlay-user.delete-confirmation-danger .delete-confirmation-submit {
+   background: #c03945;
+}
+
+.delete-confirmation-overlay-user-danger .delete-confirmation-submit:hover,
+.delete-confirmation-overlay-user.delete-confirmation-danger .delete-confirmation-submit:hover {
+   background: #a82e39;
+}
+
+html.dark-theme .delete-confirmation-overlay-user .delete-confirmation-modal {
+   border-color: #526f59;
+   background: #26392c;
+   color: #f0f5f1;
+}
+
+html.dark-theme .delete-confirmation-overlay-user .delete-confirmation-modal p {
+   color: #c5d3c8;
+}
+
+html.dark-theme .delete-confirmation-overlay-user .delete-confirmation-cancel {
+   background: #3b5540;
+   color: #f0f5f1;
+}
+
+html.dark-theme .delete-confirmation-overlay-user .delete-confirmation-submit {
+   background: #4f8060;
+   color: #ffffff;
+}
+
 #cart-sidebar {
    transform: translateX(100%);
    transition: transform 300ms ease;

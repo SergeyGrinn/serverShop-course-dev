@@ -22,8 +22,6 @@ services:
     depends_on:
       db:
         condition: service_healthy
-      mailpit:
-        condition: service_started
 
   db:
     image: mysql:8.4
@@ -58,6 +56,7 @@ services:
         condition: service_healthy
 
   mailpit:
+    profiles: ["mail"]
     image: axllent/mailpit:latest
     restart: unless-stopped
     ports:
