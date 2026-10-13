@@ -21,6 +21,32 @@ $storage_min = $_GET['storage_min'] ?? '';
 $storage_max = $_GET['storage_max'] ?? '';
 $cpu_cores = $_GET['cpu_cores'] ?? null;
 
+$rangePairs = [
+    'price' => [$price_from, $price_to],
+    'RAM' => [$ram_min, $ram_max],
+    'storage' => [$storage_min, $storage_max],
+];
+
+foreach ($rangePairs as $label => [$minimum, $maximum]) {
+    $hasMinimum = $minimum !== null && $minimum !== '';
+    $hasMaximum = $maximum !== null && $maximum !== '';
+
+    if (($hasMinimum && !is_numeric($minimum)) || ($hasMaximum && !is_numeric($maximum))) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'message' => ucfirst($label) . ' range must be numeric']);
+        exit;
+    }
+
+    if ($hasMinimum && $hasMaximum && (float) $minimum > (float) $maximum) {
+        http_response_code(400);
+        echo json_encode([
+            'success' => false,
+            'message' => 'Maximum ' . $label . ' must be greater than or equal to minimum.',
+        ]);
+        exit;
+    }
+}
+
 $where = ['available = 1'];
 $params = [];
 

@@ -8,6 +8,7 @@ require_once BASE_PATH . 'src/Models/Order.php';
 require_once BASE_PATH . 'src/Models/Cart.php';
 require_once BASE_PATH . 'src/Models/User.php';
 require_once BASE_PATH . 'src/Helpers/Response.php';
+require_once BASE_PATH . 'src/Helpers/Validator.php';
 
 header('Content-Type: application/json');
 
@@ -46,6 +47,7 @@ if (isset($_SESSION['user_id'])) {
 $name = trim($_POST['name'] ?? ''); 
 $email = trim($_POST['email'] ?? '');
 $phone = trim($_POST['phone'] ?? '');
+$normalizedPhone = Validator::normalizePhoneNumber($phone);
 $comment = trim($_POST['comment'] ?? '');
 
 if (empty($name) || empty($email)) {
@@ -66,13 +68,15 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     exit;
 }
 
-if ($phone !== '' && (!preg_match('/^[0-9]+$/D', $phone) || strlen($phone) > 20)) {
+if (strlen($phone) > 30 || $normalizedPhone === null) {
     http_response_code(400);
     Response::json([
         'success' => false,
-        'message' => 'Phone number must contain 1 to 20 digits'
+        'message' => 'Phone must contain up to 15 digits and may start with +'
     ]);
+    exit;
 }
+$phone = $normalizedPhone;
 
 $cartModel = new Cart($pdo);
 

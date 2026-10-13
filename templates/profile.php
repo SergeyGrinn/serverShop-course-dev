@@ -68,7 +68,7 @@
 
                     <div class="flex flex-col gap-2 mb-6">
                         <label for="profile-mobile-phone" class="text-sm font-medium">Mobile phone</label>
-                        <input id="profile-mobile-phone" type="tel" name="mobile_phone" maxlength="30" value="<?= htmlspecialchars($profile['formMobilePhone']) ?>" class="border border-gray-300 rounded px-3 py-2">
+                        <input id="profile-mobile-phone" type="tel" name="mobile_phone" inputmode="tel" autocomplete="tel" maxlength="16" pattern="\+?[0-9]{1,15}" value="<?= htmlspecialchars($profile['formMobilePhone']) ?>" class="phone-number-input border border-gray-300 rounded px-3 py-2">
                     </div>
 
                     <button type="submit" class="text-white px-5 py-2 rounded-lg font-semibold" style="background-color: #308020;">Save Changes</button>

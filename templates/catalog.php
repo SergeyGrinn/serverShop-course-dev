@@ -21,12 +21,12 @@
             <div class="flex flex-col gap-2 mb-4">
                 <label class="text-sm text-gray-600">RAM (GB)</label>
                 <div class="flex gap-2 items-center">
-                    <input type="number" placeholder="From" min="0" step="0.001"
-                        data-bind="value: ramFrom, valueUpdate: 'afterkeydown'"
+                    <input type="number" placeholder="From" min="0" step="0.1"
+                        data-ram-range data-bind="value: ramFrom, valueUpdate: 'input'"
                         class="w-full min-w-0 border border-gray-300 rounded px-2 py-1 text-sm">
                     <span class="text-gray-400">—</span>
-                    <input type="number" placeholder="To" min="0" step="0.001"
-                        data-bind="value: ramTo, valueUpdate: 'afterkeydown'"
+                    <input type="number" placeholder="To" min="0" step="0.1"
+                        data-ram-range data-bind="value: ramTo, valueUpdate: 'input'"
                         class="w-full min-w-0 border border-gray-300 rounded px-2 py-1 text-sm">
                 </div>
             </div>
@@ -61,6 +61,7 @@
                     <option value="32">32 Cores</option>
                 </select>
             </div>
+            <p class="text-sm text-red-600" data-bind="visible: rangeError, text: rangeError"></p>
         </aside>
 
         <!-- Catalog -->
@@ -103,6 +104,7 @@ function CatalogViewModel() {
     self.storageFrom = ko.observable('');
     self.storageTo = ko.observable('');
     self.cpuCores = ko.observable('');
+    self.rangeError = ko.observable('');
 
     self.formatRam = function(value) {
         if (!value) return 'N/A';
@@ -113,6 +115,25 @@ function CatalogViewModel() {
 
     self.loadServers = function() {
         self.loading(false);
+
+        var ranges = [
+            {label: 'price', min: self.priceFrom(), max: self.priceTo()},
+            {label: 'RAM', min: self.ramFrom(), max: self.ramTo()},
+            {label: 'storage', min: self.storageFrom(), max: self.storageTo()}
+        ];
+        var invalidRange = ranges.find(function(range) {
+            return range.min !== '' && range.max !== ''
+                && Number.isFinite(Number(range.min))
+                && Number.isFinite(Number(range.max))
+                && Number(range.min) > Number(range.max);
+        });
+
+        if (invalidRange) {
+            self.rangeError('Maximum ' + invalidRange.label + ' must be greater than or equal to minimum.');
+            self.servers([]);
+            return;
+        }
+        self.rangeError('');
 
         var params = new URLSearchParams();
         if (self.priceFrom()) params.append('price_from', self.priceFrom());
@@ -152,6 +173,16 @@ function CatalogViewModel() {
 
     self.loadServers();
 }
+
+document.querySelectorAll('[data-ram-range]').forEach(function(input) {
+    input.addEventListener('input', function() {
+        var shortDecimal = this.value.match(/^0([1-9])$/);
+        if (shortDecimal) {
+            this.value = '0.' + shortDecimal[1];
+            this.dispatchEvent(new Event('input', {bubbles: true}));
+        }
+    });
+});
 
 ko.applyBindings(new CatalogViewModel(), document.getElementById('catalog-app'));
 </script>

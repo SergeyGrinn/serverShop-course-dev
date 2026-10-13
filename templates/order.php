@@ -1,4 +1,4 @@
-<main class="container mx-auto px-8 py-8">
+<main id="order-page" class="container mx-auto px-8 py-8">
     <div class="mb-8">
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-4xl font-bold">Order #<?= $order['id'] ?></h1>

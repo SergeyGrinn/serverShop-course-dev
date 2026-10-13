@@ -688,3 +688,17 @@ html.dark-theme .admin-page .hover\:text-green-700:hover {
 		padding-right: 12px;
 	}
 }
+
+@media (max-width: 640px) {
+	.admin-page main.p-8 {
+		padding: 16px !important;
+	}
+
+	.admin-page main .grid.grid-cols-2 {
+		grid-template-columns: minmax(0, 1fr) !important;
+	}
+
+	.admin-page .overflow-x-auto table {
+		min-width: 680px;
+	}
+}

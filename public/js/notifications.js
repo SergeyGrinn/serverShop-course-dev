@@ -89,6 +89,17 @@ document.querySelectorAll('.notification-validation-form').forEach(form => {
 	});
 });
 
+document.querySelectorAll('.phone-number-input').forEach(input => {
+	const normalizePhoneInput = () => {
+		const hasLeadingPlus = input.value.trim().startsWith('+');
+		const digits = input.value.replace(/[^0-9]/g, '').slice(0, 15);
+		input.value = (hasLeadingPlus ? '+' : '') + digits;
+	};
+
+	normalizePhoneInput();
+	input.addEventListener('input', normalizePhoneInput);
+});
+
 document.querySelectorAll('.custom-file-input').forEach(input => {
 	input.addEventListener('change', () => {
 		const fileName = input.closest('.custom-file-picker').querySelector('.custom-file-name');

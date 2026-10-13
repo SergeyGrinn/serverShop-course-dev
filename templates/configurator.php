@@ -8,7 +8,7 @@ if ($server['default_ram'] !== null) {
 }
 ?>
 
-<main class="max-w-6xl mx-auto px-5 py-8">
+<main id="configurator-page" class="max-w-6xl mx-auto px-5 py-8">
     <div class="flex gap-8">
 
     <!-- Server Info -->

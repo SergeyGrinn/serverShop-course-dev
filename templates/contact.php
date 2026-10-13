@@ -17,7 +17,7 @@
                     </svg>
                     <h2>Email us</h2>
                     <p>Questions about products and orders.</p>
-                    <a href="mailto:<?= htmlspecialchars($supportEmail, ENT_QUOTES, 'UTF-8') ?>"><?= htmlspecialchars($supportEmail) ?></a>
+                    <span class="contact-email"><?= htmlspecialchars($supportEmail, ENT_QUOTES, 'UTF-8') ?></span>
                 </section>
 
                 <section class="contact-shortcut">

@@ -3,6 +3,7 @@
 require_once base_path('src/Models/User.php');
 require_once base_path('src/Services/Mailer.php');
 require_once base_path('src/Helpers/Response.php');
+require_once base_path('src/Helpers/Validator.php');
 
 class ProfileController {
     private $userModel;
@@ -46,6 +47,7 @@ class ProfileController {
         $username = trim($this->apiString($data['username'] ?? null));
         $email = trim($this->apiString($data['email'] ?? null));
         $mobilePhone = trim($this->apiString($data['mobile_phone'] ?? null));
+        $normalizedMobilePhone = Validator::normalizePhoneNumber($mobilePhone);
 
         if ($username === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
             http_response_code(400);
@@ -55,6 +57,10 @@ class ProfileController {
             http_response_code(400);
             Response::json(['success' => false, 'message' => 'One or more profile fields exceed the allowed length']);
         }
+        if ($normalizedMobilePhone === null) {
+            http_response_code(400);
+            Response::json(['success' => false, 'message' => 'Phone must contain up to 15 digits and may start with +']);
+        }
 
         $emailChanged = strcasecmp($email, $user['email']) !== 0;
         if ($emailChanged && $this->userModel->findByEmail($email)) {
@@ -62,7 +68,7 @@ class ProfileController {
             Response::json(['success' => false, 'message' => 'Email already taken']);
         }
 
-        $this->userModel->updateProfile($user['id'], $username, $email, $mobilePhone);
+        $this->userModel->updateProfile($user['id'], $username, $email, $normalizedMobilePhone);
         $emailVerificationSent = null;
         if ($emailChanged && $user['role'] !== 'admin') {
             $verificationToken = bin2hex(random_bytes(32));
@@ -174,6 +180,7 @@ class ProfileController {
         $username = trim($_POST['username'] ?? '');
         $email = trim($_POST['email'] ?? '');
         $mobilePhone = trim($_POST['mobile_phone'] ?? '');
+        $normalizedMobilePhone = Validator::normalizePhoneNumber($mobilePhone);
         $profile['formUsername'] = $username;
         $profile['formEmail'] = $email;
         $profile['formMobilePhone'] = $mobilePhone;
@@ -189,6 +196,8 @@ class ProfileController {
         }
         if (strlen($mobilePhone) > 30) {
             $profile['errors'][] = 'Mobile phone must not exceed 30 characters';
+        } elseif ($normalizedMobilePhone === null) {
+            $profile['errors'][] = 'Phone must contain up to 15 digits and may start with +';
         }
 
         $emailChanged = strcasecmp($email, $profile['user']['email']) !== 0;
@@ -201,7 +210,7 @@ class ProfileController {
         }
 
         $user = $profile['user'];
-        $this->userModel->updateProfile($user['id'], $username, $email, $mobilePhone);
+        $this->userModel->updateProfile($user['id'], $username, $email, $normalizedMobilePhone);
 
         if ($requiresEmailVerification) {
             $verificationToken = bin2hex(random_bytes(32));

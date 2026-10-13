@@ -10,6 +10,12 @@ E-Shop for renting physical servers. WIP.
 
 - [x] Provide a repeatable local development stack with Docker Compose.
 - [ ] Expand automated coverage for registration, checkout, and admin workflows.
+- [ ] Verify protected order/checkout pages and API calls cannot be used after logout via browser back navigation.
+- [ ] Reproduce and identify the reported DevTools console error in a clean browser profile without extensions.
+
+### Product behavior decisions
+
+- Keep the cart after an order is cancelled so the customer can edit it and place a new order. Do not clear the cart automatically on cancellation.
 
 ### Local email testing with Mailpit
 
@@ -17,7 +23,7 @@ Mailpit captures application emails locally instead of delivering them to real r
 
 1. Start Docker Desktop and run `docker compose up -d mailpit` from the project root.
 2. Add the `MAILER_*` values from `.env.example` to the existing local `.env` file.
-3. Open the Mailpit inbox at `http://localhost:8025`. The application connects to SMTP at `127.0.0.1:1025`.
+3. Open the Mailpit inbox at `http://localhost:8026`. Host PHP connects to SMTP at `127.0.0.1:1026`; the Docker app connects internally at `mailpit:1025`.
 
 Stop Mailpit with `docker compose stop mailpit`. The inbox is retained in a Docker volume.
 

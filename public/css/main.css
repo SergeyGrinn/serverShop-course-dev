@@ -940,7 +940,8 @@ a[style*="background-color"]:active,
    line-height: 1.45;
 }
 
-.contact-shortcut a {
+.contact-shortcut a,
+.contact-shortcut .contact-email {
    color: var(--contact-accent-hover);
    font-size: 12px;
    font-weight: 700;
@@ -1416,5 +1417,211 @@ html.dark-theme .contact-faq details {
 
 .btn:hover {
    background: #2a7016;
+}
+
+@media (max-width: 640px) {
+   body > header {
+      height: auto !important;
+      padding: 10px 14px !important;
+   }
+
+   body > header > nav {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      height: auto;
+      align-items: center;
+      gap: 10px 8px;
+   }
+
+   body > header > nav > div:first-child {
+      min-width: 0;
+   }
+
+   body > header > nav > div:first-child span {
+      font-size: 16px;
+   }
+
+   body > header > nav > ul {
+      grid-column: 1 / -1;
+      grid-row: 2;
+      width: 100%;
+      justify-content: space-between;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      font-size: 14px;
+   }
+
+   body > header > nav > div:last-child {
+      grid-column: 2;
+      grid-row: 1;
+      display: flex;
+      min-width: 0;
+      max-width: 230px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 6px;
+      font-size: 12px;
+   }
+
+   body > header > nav > div:last-child > span {
+      white-space: normal;
+   }
+
+   body > header #cart-btn {
+      padding: 6px 10px !important;
+   }
+
+   .verification-notice {
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 14px;
+      font-size: 12px;
+      text-align: center;
+   }
+
+   #catalog-app {
+      width: 100%;
+      max-width: 100%;
+      padding: 20px 14px;
+   }
+
+   #catalog-app > div {
+      flex-direction: column;
+      gap: 18px;
+   }
+
+   #catalog-app aside {
+      width: 100%;
+      min-width: 0;
+      flex-shrink: 1;
+      padding: 16px;
+   }
+
+   #catalog-app section {
+      width: 100%;
+      min-width: 0;
+   }
+
+   #catalog-app section > div.grid {
+      grid-template-columns: minmax(0, 1fr) !important;
+      gap: 14px;
+   }
+
+   #catalog-app section > div.grid > div {
+      min-width: 0;
+      padding: 12px;
+   }
+
+   #catalog-app img {
+      height: 180px;
+   }
+
+   #cookie-banner {
+      z-index: 70;
+      padding: 12px !important;
+      font-size: 13px;
+   }
+
+   #cookie-banner button {
+      min-height: 40px;
+      flex: 1;
+   }
+
+   #cart-sidebar {
+      width: min(100vw, 360px) !important;
+   }
+
+   #checkout-page {
+      width: 100%;
+      max-width: 100%;
+      padding: 20px 14px;
+   }
+
+   #checkout-page > div {
+      flex-direction: column;
+      gap: 16px;
+   }
+
+   #checkout-page > div > div,
+   #checkout-page .sticky {
+      width: 100%;
+      min-width: 0;
+      position: static;
+   }
+
+   #checkout-page .bg-white {
+      padding: 16px;
+   }
+
+   #checkout-page li {
+      min-width: 0;
+      gap: 10px;
+   }
+
+   #configurator-page {
+      padding: 20px 14px;
+   }
+
+   #configurator-page > div {
+      flex-direction: column;
+      gap: 18px;
+   }
+
+   #configurator-page > div > .w-80 {
+      width: 100%;
+      flex-shrink: 1;
+   }
+
+   #configurator-app {
+      width: 100%;
+      min-width: 0;
+   }
+
+   #order-page.container {
+      display: block;
+      width: 100%;
+      max-width: 1200px;
+      padding: 20px 14px;
+   }
+
+   #order-page .grid.grid-cols-4 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+   }
+
+   #order-page .grid.grid-cols-3 {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 16px;
+   }
+
+   #order-page .col-span-1,
+   #order-page .col-span-2 {
+      grid-column: auto;
+   }
+
+   #order-page .flex.justify-between {
+      flex-wrap: wrap;
+   }
+
+   #order-page .shrink-0 {
+      flex-shrink: 1;
+   }
+}
+
+@media (max-width: 380px) {
+   body > header > nav > div:last-child {
+      max-width: 190px;
+   }
+
+   body > header > nav > ul {
+      gap: 5px;
+      font-size: 13px;
+   }
+
+   #catalog-app {
+      padding-right: 10px;
+      padding-left: 10px;
+   }
 }
 

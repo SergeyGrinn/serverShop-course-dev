@@ -3,7 +3,7 @@
 require_once base_path('templates/header.php');
 ?>
 
-<main class="max-w-6xl mx-auto px-8 py-8">
+<main id="checkout-page" class="max-w-6xl mx-auto px-8 py-8">
     <div class="flex gap-8 items-start">
         
         <!-- LEFT: CART ITEMS -->
@@ -116,11 +116,12 @@ require_once base_path('templates/header.php');
                             id="phone" 
                             name="phone" 
                             value="<?= htmlspecialchars($checkoutContact['phone'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
-                            inputmode="numeric"
-                            pattern="[0-9]*"
-                            maxlength="20"
-                            placeholder="37122223333"
-                            class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2"
+                            inputmode="tel"
+                            autocomplete="tel"
+                            pattern="\+?[0-9]{1,15}"
+                            maxlength="16"
+                            placeholder="+37122223333"
+                            class="phone-number-input w-full border rounded px-3 py-2 focus:outline-none focus:ring-2"
                         >
                         <span class="error-message text-red-500 text-sm hidden"></span>
                     </div>
@@ -198,11 +199,6 @@ try {
 }
 
 const phoneField = checkoutForm.querySelector('[name="phone"]');
-phoneField.value = phoneField.value.replace(/[^0-9]/g, '');
-phoneField.addEventListener('input', function() {
-    this.value = this.value.replace(/[^0-9]/g, '');
-});
-
 checkoutContactFields.forEach(field => field.addEventListener('input', saveCheckoutDraft));
 
 checkoutForm.addEventListener('submit', async function(e) {
