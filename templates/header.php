@@ -132,6 +132,9 @@ document.getElementById('resend-verification').addEventListener('click', async f
         });
         const data = await response.json();
         showNotification(data.message, data.success ? 'success' : 'error');
+        if (data.emailVerified) {
+            document.querySelector('.verification-notice')?.remove();
+        }
     } catch (error) {
         showNotification(error.message, 'error');
     } finally {

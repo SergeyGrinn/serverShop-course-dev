@@ -41,7 +41,12 @@ if ($user['role'] === 'admin') {
 }
 
 if ($user['email_verified_at'] !== null) {
-    Response::json(['success' => true, 'message' => 'Email is already verified']);
+    $_SESSION['email_verified_at'] = $user['email_verified_at'];
+    Response::json([
+        'success' => true,
+        'message' => 'Email is already verified',
+        'emailVerified' => true,
+    ]);
 }
 
 $token = bin2hex(random_bytes(32));

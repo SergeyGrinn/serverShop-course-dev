@@ -26,10 +26,12 @@ Stop Mailpit with `docker compose stop mailpit`. The inbox is retained in a Dock
 Docker Desktop must be running. From the project root, run:
 
 ```powershell
-docker compose up --build
+docker compose up -d --build
 ```
 
-Open the application at `http://localhost:8080`, phpMyAdmin at `http://localhost:8081`, and Mailpit at `http://localhost:8025`. MySQL is available to host tools at `127.0.0.1:3307`; app and phpMyAdmin connect to the `db` service internally. Tailwind runs in watch mode and updates `public/css/tailwind-output.css` when source files change.
+Open the application at `http://localhost:8080`, phpMyAdmin at `http://localhost:8081`, and Mailpit at `http://localhost:8025`. The app and tools are bound to localhost; MySQL is available to host tools at `127.0.0.1:3307`. The app and phpMyAdmin connect to the `db` service internally. Tailwind runs in watch mode and updates `public/css/tailwind-output.css` when source files change.
+
+To demo on another computer, copy the project files there (do not copy `.env`), install and start Docker Desktop, then run `docker compose up -d --build` from the project root. No XAMPP, host PHP, Composer, Node.js, or MySQL installation is needed. Open `http://localhost:8080` on that computer. The sample database is initialized from `database/server_eshop.sql` on its first start.
 
 By default, the Docker app sends mail to Mailpit. To send through Gmail instead, set `DOCKER_MAILER_HOST=smtp.gmail.com`, `DOCKER_MAILER_PORT=587`, `DOCKER_MAILER_USERNAME` to the Gmail address, `DOCKER_MAILER_PASSWORD` to its app password, and `DOCKER_MAILER_ENCRYPTION=tls` in the ignored local `.env`, then recreate the app with `docker compose up -d app`. Gmail delivery bypasses the Mailpit inbox.
 
