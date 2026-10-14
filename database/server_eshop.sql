@@ -202,8 +202,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `email`, `password`, `role`, `created_at`) VALUES
-(12, 'testuser', 'user@example.com', '$2y$10$6itKlucMFGNxwqlJcnhebu4EvK9soPI.2Rkqv09u/qlSSaU.ld.0m', 'user', '2026-06-16 14:43:43'),
-(13, 'admin', 'admin@example.com', '$2y$10$rLmHFFSzyguy24toQoGAYe5plMr60J7Ke3dGNx0dW3c1L19J2NmVq', 'admin', '2026-06-16 14:48:44');
+(12, 'testuser', 'user@example.com', '$2y$10$Q/QkG6/7lO/9eSbCk666fOW9M6y74ZUhnUZn2rjyagiYMBX0NrlbC', 'user', '2026-06-16 14:43:43'),
+(13, 'admin', 'admin@example.com', '$2y$10$fUkbV53yIE3nK9IASaRr0ulp/BC9hyOAWt8jDQrD7HT1kuuCMtIiC', 'admin', '2026-06-16 14:48:44');
 
 UPDATE `users`
 SET `invoice_company_name` = 'SIA SERVER CATALOG',

@@ -445,6 +445,7 @@ class ServerController {
             }
         }
 
+        $_SESSION['server_components_saved'] = true;
         header("Location: servers.php?action=components&id={$id}");
         exit;
     }

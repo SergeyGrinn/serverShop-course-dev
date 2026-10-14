@@ -2,6 +2,15 @@
 
 <main class="p-8">
     <div class="max-w-5xl mx-auto">
+        <?php if (!empty($_SESSION['server_components_saved'])): ?>
+            <?php unset($_SESSION['server_components_saved']); ?>
+            <script>
+                window.addEventListener('DOMContentLoaded', function () {
+                    showNotification('Server components saved successfully.', 'success');
+                });
+            </script>
+        <?php endif; ?>
+
         <h1 class="text-3xl font-bold mb-2">Server Components</h1>
         <p class="text-gray-600 mb-6">Manage components for: <span class="font-semibold"><?= htmlspecialchars($server['name']) ?></span></p>
 
