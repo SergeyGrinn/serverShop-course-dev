@@ -50,12 +50,9 @@ if (!$order) {
     exit;
 }
 
-$isOwner = false;
-if (isset($_SESSION['user_id']) && $order['user_id'] == $_SESSION['user_id']) {
-    $isOwner = true;
-} elseif ($order['session_id'] === ($_SESSION['session_id'] ?? session_id())) {
-    $isOwner = true;
-}
+$isOwner = isset($_SESSION['user_id'])
+    && $order['user_id'] !== null
+    && (int) $order['user_id'] === (int) $_SESSION['user_id'];
 
 if (!$isOwner) {
     http_response_code(403);

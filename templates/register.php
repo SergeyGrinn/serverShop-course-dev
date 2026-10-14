@@ -1,4 +1,5 @@
 <?php
+$registerRedirect = $registerRedirect ?? 'index.php';
 $submitted = $_SERVER['REQUEST_METHOD'] === 'POST';
 $errors = $errors ?? [];
 $hasError = function (string $message) use ($submitted, $errors) {

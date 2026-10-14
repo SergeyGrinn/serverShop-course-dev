@@ -197,15 +197,8 @@ class OrderController {
 			return true;
 		}
 
-		if (isset($_SESSION['user_id']) && $order['user_id'] !== null) {
-			return (int) $order['user_id'] === (int) $_SESSION['user_id'];
-		}
-
-		if ($order['user_id'] === null && !empty($order['session_id'])) {
-			$currentSessionId = $_SESSION['session_id'] ?? session_id();
-			return hash_equals((string) $order['session_id'], (string) $currentSessionId);
-		}
-
-		return false;
+		return isset($_SESSION['user_id'])
+			&& $order['user_id'] !== null
+			&& (int) $order['user_id'] === (int) $_SESSION['user_id'];
 	}
 }

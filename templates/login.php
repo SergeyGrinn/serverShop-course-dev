@@ -1,3 +1,5 @@
+<?php $loginRedirect = $loginRedirect ?? 'index.php'; ?>
+
 <main class="max-w-md mx-auto px-5 py-16">
     <div class="bg-white rounded-lg border border-gray-200 p-8">
         <h1 class="text-2xl font-bold mb-6">Login</h1>

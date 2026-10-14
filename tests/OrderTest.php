@@ -5,7 +5,7 @@ use PHPUnit\Framework\TestCase;
 final class OrderTest extends TestCase
 {
     private ?\PDO $pdo = null;
-    private ?string $sessionId = null;
+    private ?int $userId = null;
     private ?int $serverId = null;
     private ?int $componentId = null;
 
@@ -31,7 +31,17 @@ final class OrderTest extends TestCase
 
         require_once dirname(__DIR__) . '/src/Models/Order.php';
 
-        $this->sessionId = 'phpunit_' . bin2hex(random_bytes(16));
+        $statement = $this->pdo->prepare(
+            'INSERT INTO users (username, email, password, role, email_verified_at)
+             VALUES (:username, :email, :password, \'user\', NOW())'
+        );
+        $statement->execute([
+            ':username' => 'PHPUnit customer',
+            ':email' => 'phpunit_' . bin2hex(random_bytes(8)) . '@example.test',
+            ':password' => password_hash('phpunit-password', PASSWORD_DEFAULT),
+        ]);
+        $this->userId = (int) $this->pdo->lastInsertId();
+
         $statement = $this->pdo->prepare(
             'INSERT INTO servers (name, description, base_price) VALUES (:name, :description, :base_price)'
         );
@@ -57,14 +67,17 @@ final class OrderTest extends TestCase
 
     protected function tearDown(): void
     {
-        if ($this->pdo !== null && $this->sessionId !== null) {
+        if ($this->pdo !== null && $this->userId !== null) {
             $statement = $this->pdo->prepare(
-                'DELETE oi FROM order_items oi INNER JOIN orders o ON o.id = oi.order_id WHERE o.session_id = :session_id'
+                'DELETE oi FROM order_items oi INNER JOIN orders o ON o.id = oi.order_id WHERE o.user_id = :user_id'
             );
-            $statement->execute([':session_id' => $this->sessionId]);
+            $statement->execute([':user_id' => $this->userId]);
 
-            $statement = $this->pdo->prepare('DELETE FROM orders WHERE session_id = :session_id');
-            $statement->execute([':session_id' => $this->sessionId]);
+            $statement = $this->pdo->prepare('DELETE FROM orders WHERE user_id = :user_id');
+            $statement->execute([':user_id' => $this->userId]);
+
+            $statement = $this->pdo->prepare('DELETE FROM users WHERE id = :id');
+            $statement->execute([':id' => $this->userId]);
         }
 
         if ($this->pdo !== null && $this->serverId !== null) {
@@ -84,8 +97,8 @@ final class OrderTest extends TestCase
     {
         $order = new Order($this->pdo);
         $orderId = $order->create([
-            'user_id' => null,
-            'session_id' => $this->sessionId,
+            'user_id' => $this->userId,
+            'session_id' => null,
             'total_price' => 149.50,
             'name' => 'PHPUnit Test',
             'email' => 'phpunit@example.test',
@@ -102,6 +115,7 @@ final class OrderTest extends TestCase
         $createdOrder = $order->get($orderId);
         self::assertIsArray($createdOrder);
         self::assertSame('pending', $createdOrder['status']);
+        self::assertSame($this->userId, (int) $createdOrder['user_id']);
         self::assertSame('149.50', $createdOrder['total_price']);
         self::assertCount(1, $createdOrder['items']);
         self::assertSame('PHPUnit test server', $createdOrder['items'][0]['server_name']);

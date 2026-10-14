@@ -25,15 +25,12 @@ if (!$order) {
     exit('Order not found');
 }
 
-$isOwner = ($_SESSION['user_role'] ?? '') === 'admin';
-if (!$isOwner && isset($_SESSION['user_id']) && $order['user_id'] !== null) {
-    $isOwner = (int) $order['user_id'] === (int) $_SESSION['user_id'];
-} elseif (!$isOwner && $order['user_id'] === null && !empty($order['session_id'])) {
-    $currentSessionId = $_SESSION['session_id'] ?? session_id();
-    $isOwner = hash_equals((string) $order['session_id'], (string) $currentSessionId);
-}
+$isAdmin = ($_SESSION['user_role'] ?? '') === 'admin';
+$isOwner = isset($_SESSION['user_id'])
+    && $order['user_id'] !== null
+    && (int) $order['user_id'] === (int) $_SESSION['user_id'];
 
-if (!$isOwner) {
+if (!$isAdmin && !$isOwner) {
     http_response_code(403);
     exit('Access denied');
 }
