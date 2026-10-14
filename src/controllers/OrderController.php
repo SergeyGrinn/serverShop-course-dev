@@ -35,6 +35,23 @@ class OrderController {
 			header('Location: ' . \BASE_URL . '/admin/orders.php');
 			exit;
 		}
+		if (empty($_SESSION['user_id'])) {
+			header('Location: ' . \BASE_URL . '/login.php?redirect=checkout.php');
+			exit;
+		}
+
+		$checkoutUser = (new \User($this->pdo))->findById($_SESSION['user_id']);
+		if (!$checkoutUser) {
+			$_SESSION = [];
+			session_destroy();
+			header('Location: ' . \BASE_URL . '/login.php?redirect=checkout.php');
+			exit;
+		}
+		$_SESSION['email_verified_at'] = $checkoutUser['email_verified_at'];
+		if ($checkoutUser['email_verified_at'] === null) {
+			header('Location: ' . \BASE_URL . '/index.php');
+			exit;
+		}
 
 		if (!isset($_SESSION['session_id'])) {
 			$_SESSION['session_id'] = session_id();
@@ -54,16 +71,11 @@ class OrderController {
 			'email' => '',
 			'phone' => '',
 		];
-		if (!empty($_SESSION['user_id'])) {
-			$checkoutUser = (new \User($this->pdo))->findById($_SESSION['user_id']);
-			if ($checkoutUser) {
-				$checkoutContact = [
-					'name' => $checkoutUser['username'] ?? '',
-					'email' => $checkoutUser['email'] ?? '',
-					'phone' => $checkoutUser['mobile_phone'] ?? '',
-				];
-			}
-		}
+		$checkoutContact = [
+			'name' => $checkoutUser['username'] ?? '',
+			'email' => $checkoutUser['email'] ?? '',
+			'phone' => $checkoutUser['mobile_phone'] ?? '',
+		];
 
 		$totalPrice = array_sum(array_column($cartItems, 'total_price'));
 		require_once \base_path('templates/header.php');

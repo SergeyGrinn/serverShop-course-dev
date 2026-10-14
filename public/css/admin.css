@@ -470,6 +470,26 @@ html:not(.dark-theme) .admin-pages-overlay a:hover {
 	background: #a8323f;
 }
 
+html:not(.dark-theme) .delete-confirmation-modal {
+	border-color: #b8cfe5;
+	background: #f5f9fd;
+	color: #172b45;
+	box-shadow: 0 16px 40px rgb(23 43 69 / 18%);
+}
+
+html:not(.dark-theme) .delete-confirmation-modal p {
+	color: #4c6077;
+}
+
+html:not(.dark-theme) .delete-confirmation-cancel {
+	background: #e2ecf6;
+	color: #173b5d;
+}
+
+html:not(.dark-theme) .delete-confirmation-cancel:hover {
+	background: #d2e7f8;
+}
+
 .admin-page .hover\:text-green-700:hover {
 	color: #2b78b8 !important;
 }

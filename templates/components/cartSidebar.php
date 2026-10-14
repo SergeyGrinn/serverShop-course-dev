@@ -18,6 +18,8 @@
             <button type="button" id="cart-clear-sidebar" class="clear-cart-button hidden w-full rounded border border-red-300 px-3 py-2 text-sm font-semibold text-red-700">Clear Cart</button>
             <?php if (($_SESSION['user_role'] ?? '') === 'admin'): ?>
                 <p class="text-sm text-gray-500">Admin accounts cannot place orders.</p>
+            <?php elseif (empty($_SESSION['user_id'])): ?>
+                <a href="<?= BASE_URL ?>/login.php?redirect=checkout.php" class="block text-center text-white py-2 rounded-lg font-semibold" style="background-color: #308020;">Sign in to Checkout</a>
             <?php else: ?>
                 <a href="<?= BASE_URL ?>/checkout.php" class="block text-center text-white py-2 rounded-lg font-semibold" style="background-color: #308020;">Checkout</a>
             <?php endif; ?>

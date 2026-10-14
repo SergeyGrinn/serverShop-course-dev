@@ -15,6 +15,8 @@ class AuthController {
     }
 
     public function register() {
+        $registerRedirect = $this->safeLoginRedirect($_POST['redirect'] ?? $_GET['redirect'] ?? null);
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $name = $_POST['name'] ?? '';
             $email = $_POST['email'] ?? '';
@@ -42,7 +44,7 @@ class AuthController {
                 $verificationToken = bin2hex(random_bytes(32));
                 $this->userModel->create($name, $email, $password, $verificationToken);
                 Mailer::sendVerificationEmail($email, $name, $verificationToken);
-                header('Location: ' . BASE_URL . '/login.php');
+                header('Location: ' . BASE_URL . '/login.php?redirect=' . rawurlencode($registerRedirect));
                 exit;
             }
         }
@@ -53,6 +55,8 @@ class AuthController {
     }
 
     public function login() {
+        $loginRedirect = $this->safeLoginRedirect($_POST['redirect'] ?? $_GET['redirect'] ?? null);
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $email = $_POST['email'] ?? '';
             $password = $_POST['password'] ?? '';
@@ -79,7 +83,10 @@ class AuthController {
                 ':cart_id' => $cart['id']
             ]);
 
-                header('Location: ' . BASE_URL . '/index.php');
+                $destination = $user['role'] !== 'admin' && $user['email_verified_at'] === null
+                    ? 'index.php'
+                    : $loginRedirect;
+                header('Location: ' . BASE_URL . '/' . $destination);
                 exit;
             }
 
@@ -90,6 +97,17 @@ class AuthController {
         require base_path('templates/header.php');
         require base_path('templates/login.php');
         require base_path('templates/footer.php');
+    }
+
+    private function safeLoginRedirect($redirect): string {
+        if (!is_string($redirect)) {
+            return 'index.php';
+        }
+
+        $redirect = ltrim($redirect, '/');
+        return in_array($redirect, ['checkout.php', 'my-orders.php'], true)
+            ? $redirect
+            : 'index.php';
     }
 
     public function loginApi(): void {

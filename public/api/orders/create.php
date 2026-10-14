@@ -30,28 +30,27 @@ if (!csrf_verify($_SERVER['HTTP_X_CSRF_TOKEN'] ?? null)) {
     exit;
 }
 
-if (isset($_SESSION['user_id'])) {
-    $userModel = new User($pdo);
-    $currentUser = $userModel->findById($_SESSION['user_id']);
+if (empty($_SESSION['user_id'])) {
+    http_response_code(401);
+    Response::json(['success' => false, 'message' => 'Sign in to place an order']);
+}
 
-    if (!$currentUser) {
-        http_response_code(403);
-        Response::json([
-            'success' => false,
-            'message' => 'Authentication required'
-        ]);
-    }
-    if ($currentUser['role'] === 'admin') {
-        http_response_code(403);
-        Response::json(['success' => false, 'message' => 'Administrator accounts cannot place orders']);
-    }
-    if ($currentUser['role'] !== 'admin' && $currentUser['email_verified_at'] === null) {
-        http_response_code(403);
-        Response::json([
-            'success' => false,
-            'message' => 'Verify your account to complete registration and be able to place an order.'
-        ]);
-    }
+$userModel = new User($pdo);
+$currentUser = $userModel->findById($_SESSION['user_id']);
+if (!$currentUser) {
+    http_response_code(401);
+    Response::json(['success' => false, 'message' => 'Authentication required']);
+}
+if ($currentUser['role'] === 'admin') {
+    http_response_code(403);
+    Response::json(['success' => false, 'message' => 'Administrator accounts cannot place orders']);
+}
+if ($currentUser['email_verified_at'] === null) {
+    http_response_code(403);
+    Response::json([
+        'success' => false,
+        'message' => 'Verify your account to complete registration and be able to place an order.'
+    ]);
 }
 
 // Validate and sanitize input data

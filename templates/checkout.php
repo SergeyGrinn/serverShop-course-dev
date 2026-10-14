@@ -164,12 +164,18 @@ require_once base_path('templates/header.php');
 <!-- Form submission handler -->
 <script>
 const checkoutForm = document.getElementById('checkoutForm');
-const checkoutDraftKey = 'checkout-contact-draft';
+const checkoutUsesProfileContact = <?= !empty($_SESSION['user_id']) ? 'true' : 'false' ?>;
+const checkoutDraftKey = <?= json_encode(
+    !empty($_SESSION['user_id'])
+        ? 'checkout-contact-draft-user-' . (int) $_SESSION['user_id']
+        : 'checkout-contact-draft-session-' . session_id()
+) ?>;
 const checkoutContactFields = Array.from(checkoutForm.querySelectorAll('[name="name"], [name="email"], [name="phone"], [name="comment"]'));
 
 function saveCheckoutDraft() {
     const draft = {};
     checkoutContactFields.forEach(field => {
+        if (checkoutUsesProfileContact && field.name !== 'comment') return;
         draft[field.name] = field.value;
     });
 
@@ -192,6 +198,7 @@ try {
     const savedDraft = JSON.parse(sessionStorage.getItem(checkoutDraftKey) || 'null');
     if (savedDraft && typeof savedDraft === 'object') {
         checkoutContactFields.forEach(field => {
+            if (checkoutUsesProfileContact && field.name !== 'comment') return;
             if (typeof savedDraft[field.name] === 'string') {
                 field.value = savedDraft[field.name];
             }

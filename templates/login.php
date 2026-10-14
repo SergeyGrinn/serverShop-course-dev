@@ -10,6 +10,7 @@
 
         <form method="POST">
             <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(csrf_token(), ENT_QUOTES, 'UTF-8') ?>">
+            <input type="hidden" name="redirect" value="<?= htmlspecialchars($loginRedirect, ENT_QUOTES, 'UTF-8') ?>">
             <div class="flex flex-col gap-2 mb-4">
                 <label class="text-sm font-medium">Email</label>
                 <input type="email" name="email" value="<?= htmlspecialchars($_POST['email'] ?? '') ?>"
@@ -26,7 +27,7 @@
         </form>
 
         <p class="text-center text-sm text-gray-500 mt-4">
-            Don't have an account? <a href="register.php" class="text-green-700 hover:underline">Register</a>
+            Don't have an account? <a href="register.php?redirect=<?= rawurlencode($loginRedirect) ?>" class="text-green-700 hover:underline">Register</a>
         </p>
     </div>
 </main>

@@ -12,6 +12,7 @@ $hasError = function (string $message) use ($submitted, $errors) {
 
         <form method="POST" class="notification-validation-form" novalidate>
             <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(csrf_token(), ENT_QUOTES, 'UTF-8') ?>">
+            <input type="hidden" name="redirect" value="<?= htmlspecialchars($registerRedirect, ENT_QUOTES, 'UTF-8') ?>">
             <div class="flex flex-col gap-2 mb-4">
                 <label class="text-sm font-medium">Name</label>
                 <input type="text" name="name" data-validation-message="Name is required" value="<?= htmlspecialchars($_POST['name'] ?? '') ?>"
@@ -57,7 +58,7 @@ $hasError = function (string $message) use ($submitted, $errors) {
         </form>
 
         <p class="text-center text-sm text-gray-500 mt-4">
-            Already have an account? <a href="login.php" class="text-green-700 hover:underline">Login</a>
+            Already have an account? <a href="login.php?redirect=<?= rawurlencode($registerRedirect) ?>" class="text-green-700 hover:underline">Login</a>
         </p>
     </div>
 </main>
