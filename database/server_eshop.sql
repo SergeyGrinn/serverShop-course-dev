@@ -359,6 +359,11 @@ ALTER TABLE `order_items`
 ALTER TABLE `server_components`
   ADD CONSTRAINT `server_components_ibfk_1` FOREIGN KEY (`server_id`) REFERENCES `servers` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `server_components_ibfk_2` FOREIGN KEY (`component_id`) REFERENCES `components` (`id`) ON DELETE CASCADE;
+
+UPDATE `users`
+SET `email_verified_at` = CURRENT_TIMESTAMP,
+    `email_verification_token` = NULL
+WHERE `id` = 12 AND `username` = 'testuser' AND `email` = 'user@example.com';
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
