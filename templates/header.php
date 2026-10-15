@@ -39,7 +39,7 @@ $isAdmin = ($_SESSION['user_role'] ?? '') === 'admin';
     <header class="border-b px-8 h-16 flex items-center" style="background-color: #cbe3c5; border-color: #6a8a63;">
         <nav class="w-full flex items-center justify-between">
             <div class="flex items-center gap-3">
-                <a href="<?= BASE_URL ?>/index.php" class="font-bold text-lg no-underline text-gray-900 hover:text-green-700">Server Catalog</a>
+                <a href="<?= BASE_URL ?>/home.php" class="font-bold text-lg no-underline text-gray-900 hover:text-green-700">Server Catalog</a>
             </div>
 
             <ul class="flex gap-8 list-none">
