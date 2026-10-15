@@ -372,7 +372,6 @@ html.dark-theme .home-hero__media img {
       padding-right: 18px;
       padding-left: 18px;
    }
-
    .home-hero__content h1 {
       font-size: 32px;
    }
@@ -383,6 +382,74 @@ html.dark-theme .home-hero__media img {
 
    .home-hero__features li {
       padding-right: 5px;
+   }
+}
+
+@media (min-width: 1600px) {
+   .home-page {
+      padding-right: 48px;
+      padding-left: 48px;
+   }
+
+   .home-hero {
+      width: min(100%, 1680px);
+      min-height: 700px;
+   }
+
+   .home-hero__content {
+      padding: 72px 68px;
+   }
+
+   .home-hero__content h1 {
+      max-width: 760px;
+      font-size: 64px;
+   }
+
+   .home-hero__description {
+      max-width: 600px;
+      font-size: 19px;
+   }
+
+   #catalog-app {
+      max-width: min(calc(100% - 96px), 1760px) !important;
+   }
+
+   #catalog-app > div {
+      gap: 36px;
+   }
+
+   #catalog-app aside {
+      width: 300px;
+   }
+
+   #catalog-app section > div.grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+      gap: 28px;
+   }
+
+   #catalog-app section > div.grid > div {
+      padding: 20px;
+   }
+
+   #catalog-app img {
+      height: 220px;
+   }
+
+   main.max-w-6xl {
+      max-width: 1600px;
+   }
+
+   .profile-layout {
+      width: min(100%, 1180px);
+   }
+
+   .contact-page {
+      width: min(calc(100% - 96px), 1360px);
+   }
+
+   .orders-page,
+   #order-page.container {
+      max-width: 1440px;
    }
 }
 

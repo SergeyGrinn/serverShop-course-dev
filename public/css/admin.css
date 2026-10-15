@@ -722,3 +722,9 @@ html.dark-theme .admin-page .hover\:text-green-700:hover {
 		min-width: 680px;
 	}
 }
+
+@media (min-width: 1600px) {
+	.admin-page main.p-8 > .max-w-6xl {
+		max-width: 1600px !important;
+	}
+}

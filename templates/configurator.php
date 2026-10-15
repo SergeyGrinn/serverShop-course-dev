@@ -39,7 +39,7 @@ if ($server['default_ram'] !== null) {
             <input type="radio" name="cpu" value="" checked
                 data-bind="click: function() { $root.selectComponent('cpu', 0); return true; }">
             <span class="flex-1 text-gray-400">None</span>
-            <span class="text-gray-400">+0 €</span>
+            <span class="text-gray-400">+0.00 €</span>
         </label>
         <?php foreach ($grouped['cpu'] as $cpu): ?>
             <label class="flex items-center gap-3 py-2 cursor-pointer <?= !$cpu['available'] ? 'opacity-40' : '' ?>">
@@ -51,7 +51,7 @@ if ($server['default_ram'] !== null) {
                     <?= htmlspecialchars($cpu['name']) ?>
                     (<?= htmlspecialchars($cpu['value']) ?>)
                 </span>
-                <span class="text-green-700 font-semibold">+<?= number_format($cpu['price'], 0, '.', ' ') ?> €</span>
+                <span class="text-green-700 font-semibold">+<?= number_format($cpu['price'], 2, '.', ' ') ?> €</span>
             </label>
         <?php endforeach; ?>
     </div>
@@ -65,7 +65,7 @@ if ($server['default_ram'] !== null) {
             <input type="radio" name="ram" value="" checked
                 data-bind="click: function() { $root.selectComponent('ram', 0); return true; }">
             <span class="flex-1 text-gray-400">None</span>
-            <span class="text-gray-400">+0 €</span>
+            <span class="text-gray-400">+0.00 €</span>
         </label>
         <?php foreach ($grouped['ram'] as $ram): ?>
             <label class="flex items-center gap-3 py-2 cursor-pointer <?= !$ram['available'] ? 'opacity-40' : '' ?>">
@@ -77,7 +77,7 @@ if ($server['default_ram'] !== null) {
                     <?= htmlspecialchars($ram['name']) ?>
                     (<?= htmlspecialchars($ram['value']) ?>)
                 </span>
-                <span class="text-green-700 font-semibold">+<?= number_format($ram['price'], 0, '.', ' ') ?> €</span>
+                <span class="text-green-700 font-semibold">+<?= number_format($ram['price'], 2, '.', ' ') ?> €</span>
             </label>
         <?php endforeach; ?>
     </div>
@@ -91,7 +91,7 @@ if ($server['default_ram'] !== null) {
             <input type="radio" name="ssd" value="" checked
                 data-bind="click: function() { $root.selectComponent('ssd', 0); return true; }">
             <span class="flex-1 text-gray-400">None</span>
-            <span class="text-gray-400">+0 €</span>
+            <span class="text-gray-400">+0.00 €</span>
         </label>
         <?php foreach ($grouped['ssd'] as $ssd): ?>
             <label class="flex items-center gap-3 py-2 cursor-pointer <?= !$ssd['available'] ? 'opacity-40' : '' ?>">
@@ -103,7 +103,7 @@ if ($server['default_ram'] !== null) {
                     <?= htmlspecialchars($ssd['name']) ?>
                     (<?= htmlspecialchars($ssd['value']) ?>)
                 </span>
-                <span class="text-green-700 font-semibold">+<?= number_format($ssd['price'], 0, '.', ' ') ?> €</span>
+                <span class="text-green-700 font-semibold">+<?= number_format($ssd['price'], 2, '.', ' ') ?> €</span>
             </label>
         <?php endforeach; ?>
     </div>
@@ -117,7 +117,7 @@ if ($server['default_ram'] !== null) {
             <input type="radio" name="hdd" value="" checked
                 data-bind="click: function() { $root.selectComponent('hdd', 0); return true; }">
             <span class="flex-1 text-gray-400">None</span>
-            <span class="text-gray-400">+0 €</span>
+            <span class="text-gray-400">+0.00 €</span>
         </label>
         <?php foreach ($grouped['hdd'] as $hdd): ?>
             <label class="flex items-center gap-3 py-2 cursor-pointer <?= !$hdd['available'] ? 'opacity-40' : '' ?>">
@@ -129,7 +129,7 @@ if ($server['default_ram'] !== null) {
                     <?= htmlspecialchars($hdd['name']) ?>
                     (<?= htmlspecialchars($hdd['value']) ?>)
                 </span>
-                <span class="text-green-700 font-semibold">+<?= number_format($hdd['price'], 0, '.', ' ') ?> €</span>
+                <span class="text-green-700 font-semibold">+<?= number_format($hdd['price'], 2, '.', ' ') ?> €</span>
             </label>
         <?php endforeach; ?>
     </div>
@@ -143,7 +143,7 @@ if ($server['default_ram'] !== null) {
             <input type="radio" name="gpu" value="" checked
                 data-bind="click: function() { $root.selectComponent('gpu', 0); return true; }">
             <span class="flex-1 text-gray-400">None</span>
-            <span class="text-gray-400">+0 €</span>
+            <span class="text-gray-400">+0.00 €</span>
         </label>
         <?php foreach ($grouped['gpu'] as $gpu): ?>
             <label class="flex items-center gap-3 py-2 cursor-pointer <?= !$gpu['available'] ? 'opacity-40' : '' ?>">
@@ -155,7 +155,7 @@ if ($server['default_ram'] !== null) {
                     <?= htmlspecialchars($gpu['name']) ?>
                     (<?= htmlspecialchars($gpu['value']) ?>)
                 </span>
-                <span class="text-green-700 font-semibold">+<?= number_format($gpu['price'], 0, '.', ' ') ?> €</span>
+                <span class="text-green-700 font-semibold">+<?= number_format($gpu['price'], 2, '.', ' ') ?> €</span>
             </label>
         <?php endforeach; ?>
     </div>
