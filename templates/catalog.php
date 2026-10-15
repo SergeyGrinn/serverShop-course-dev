@@ -2,7 +2,7 @@
     <div class="flex gap-8">
 
         <!-- Filters -->
-        <aside class="w-64 flex-shrink-0 bg-white rounded-lg border border-gray-200 p-5 h-fit sticky top-20">
+        <aside class="w-64 flex-shrink-0 bg-white rounded-lg border border-gray-200 p-5 h-fit catalog-filters">
             <h2 class="text-lg font-bold mb-4">Filter</h2>
 
             <div class="flex flex-col gap-2 mb-4">

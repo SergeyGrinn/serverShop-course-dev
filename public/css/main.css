@@ -1518,6 +1518,13 @@ html.dark-theme .contact-faq details {
     height: fit-content;
 }
 
+@media (min-width: 769px) {
+   .catalog-filters {
+      position: sticky;
+      top: 80px;
+   }
+}
+
  .filter-group {
       display: flex;
       flex-direction: column;
