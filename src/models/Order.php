@@ -1,15 +1,32 @@
 <?php
 
+/**
+ * Data-access model for orders and their items.
+ */
 class Order {
     private $pdo;
 
+    /**
+     * Stores the database connection used by all order queries.
+     *
+     * @param PDO $pdo Active database connection.
+     */
     public function __construct($pdo) {
         $this->pdo = $pdo;
     }
 
+    /**
+     * Creates an order and its items atomically, saving snapshots of server/component data.
+     *
+     * @param array $data Order fields: user_id, session_id, total_price, name, email, phone, comment.
+     * @param array $cartItems Cart rows with server_id, component_ids (JSON) and total_price.
+     * @return string Id of the new order.
+     * @throws Exception If any insert fails or a server no longer exists (transaction is rolled back).
+     */
     // Create new order with items
     public function create($data, $cartItems) {
         try {
+            // Transaction: either the order and all items are saved, or nothing is
             $this->pdo->beginTransaction();
 
             $stmt = $this->pdo->prepare("
@@ -54,6 +71,7 @@ class Order {
                 }
 
                 $componentSnapshot = [];
+                // Snapshot keeps the order accurate even if components are later changed or deleted
                 foreach ($componentIds ?? [] as $componentId) {
                     if (isset($componentsById[$componentId])) {
                         $componentSnapshot[] = $componentsById[$componentId];
@@ -91,11 +109,18 @@ class Order {
             return $orderId;
 
         } catch (Exception $e) {
+            // Undo partial inserts, then let the caller handle the error
             $this->pdo->rollBack();
             throw $e;
         }
     }
 
+    /**
+     * Loads an order with its items; falls back to live data when no snapshot exists.
+     *
+     * @param int $orderId Order id.
+     * @return array|false Order with 'items', or false if not found.
+     */
     // Get order by ID
     public function get($orderId) {
         $stmt = $this->pdo->prepare("SELECT * FROM orders WHERE id = :id");
@@ -142,6 +167,13 @@ class Order {
 
         return $order;
     }
+    /**
+     * Sets an order status unconditionally (admin use).
+     *
+     * @param int $orderId Order id.
+     * @param string $status New status.
+     * @return bool True on success.
+     */
     // Update order status
     public function updateStatus($orderId, $status) {
         $stmt = $this->pdo->prepare("UPDATE orders SET status = :status WHERE id = :id");
@@ -151,7 +183,16 @@ class Order {
         ]);
     }
 
+    /**
+     * Changes status only if the order is still in the expected status.
+     *
+     * @param int $orderId Order id.
+     * @param string $currentStatus Status the order must currently have.
+     * @param string $newStatus Status to set.
+     * @return bool True if exactly one row changed.
+     */
     public function transitionStatus($orderId, $currentStatus, $newStatus) {
+        // Checking the current status in WHERE avoids race conditions and invalid transitions
         $stmt = $this->pdo->prepare("UPDATE orders SET status = :new_status WHERE id = :id AND status = :current_status");
         $stmt->execute([
             ':new_status' => $newStatus,
@@ -161,6 +202,12 @@ class Order {
         return $stmt->rowCount() === 1;
     }
 
+    /**
+     * Lists all orders of one user, newest first.
+     *
+     * @param int $userId User id.
+     * @return array Order rows.
+     */
     // Get all orders for a user
     public function getByUser($userId) {
         $stmt = $this->pdo->prepare("
@@ -172,6 +219,12 @@ class Order {
         return $stmt->fetchAll();
     }
 
+    /**
+     * Lists a user's orders with the number of items in each, for the profile page.
+     *
+     * @param int $userId User id.
+     * @return array Order rows with items_count.
+     */
     public function getByUserWithItemCount($userId) {
         $stmt = $this->pdo->prepare("
             SELECT o.*,
@@ -184,6 +237,12 @@ class Order {
         return $stmt->fetchAll();
     }
 
+    /**
+     * Lists all orders for the admin panel, optionally filtered by status.
+     *
+     * @param string|null $status Status to filter by, or null for all.
+     * @return array Order rows with account_username.
+     */
     public function getAllAdmin($status = null) {
         $sql = "
             SELECT o.*, u.username AS account_username

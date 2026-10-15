@@ -7,6 +7,9 @@ require_once \base_path('src/Models/Cart.php');
 require_once \base_path('src/Models/User.php');
 require_once \base_path('src/Helpers/Response.php');
 
+/**
+ * Renders checkout and order pages and serves order data, enforcing ownership/admin access.
+ */
 class OrderController {
 	private const STATUS_COLORS = [
 		'pending' => ['bg' => '#fff3cd', 'text' => '#856404', 'label' => 'Awaiting Payment'],
@@ -19,27 +22,41 @@ class OrderController {
 	private $orderModel;
 	private $pdo;
 
+	/**
+	 * Sets up the controller with the database and the order model.
+	 *
+	 * @param \PDO $pdo Active database connection.
+	 */
 	public function __construct($pdo) {
 		$this->pdo = $pdo;
 		$this->orderModel = new \Order($pdo);
 	}
 
+	/**
+	 * Shows the checkout page for a verified customer with a non-empty cart.
+	 *
+	 * @return void
+	 */
 	public function checkout(): void {
 		if (session_status() === PHP_SESSION_NONE) {
 			session_start();
 		}
+		// Prevent caching so a stale cart/price is never shown after navigation
 		header('Cache-Control: no-store, private, max-age=0');
 		header('Pragma: no-cache');
 		header('Expires: 0');
+		// Admins manage orders and do not buy
 		if (($_SESSION['user_role'] ?? '') === 'admin') {
 			header('Location: ' . \BASE_URL . '/admin/orders.php');
 			exit;
 		}
+		// Guests must log in first
 		if (empty($_SESSION['user_id'])) {
 			header('Location: ' . \BASE_URL . '/login.php?redirect=checkout.php');
 			exit;
 		}
 
+		// Re-read the user from the DB: the session may refer to a deleted account
 		$checkoutUser = (new \User($this->pdo))->findById($_SESSION['user_id']);
 		if (!$checkoutUser) {
 			$_SESSION = [];
@@ -48,6 +65,7 @@ class OrderController {
 			exit;
 		}
 		$_SESSION['email_verified_at'] = $checkoutUser['email_verified_at'];
+		// Only users with a verified email may place orders
 		if ($checkoutUser['email_verified_at'] === null) {
 			header('Location: ' . \BASE_URL . '/index.php');
 			exit;
@@ -61,6 +79,7 @@ class OrderController {
 		$cart = $cartModel->getOrCreateCart($_SESSION['session_id']);
 		$cartItems = $cartModel->getItems($cart['id']);
 
+		// Nothing to buy: send the user back to the catalog
 		if (empty($cartItems)) {
 			header('Location: ' . \BASE_URL . '/index.php');
 			exit;
@@ -83,6 +102,11 @@ class OrderController {
 		require_once \base_path('templates/footer.php');
 	}
 
+	/**
+	 * Shows the current customer's order history.
+	 *
+	 * @return void
+	 */
 	public function myOrders(): void {
 		if (session_status() === PHP_SESSION_NONE) {
 			session_start();
@@ -97,6 +121,7 @@ class OrderController {
 			exit;
 		}
 
+		// Only the user's own orders are loaded, using the id from the session
 		$orders = $this->orderModel->getByUserWithItemCount($_SESSION['user_id']);
 		foreach ($orders as &$order) {
 			$order['current_status'] = self::STATUS_COLORS[$order['status']] ?? self::STATUS_COLORS['pending'];
@@ -108,11 +133,18 @@ class OrderController {
 		require_once \base_path('templates/footer.php');
 	}
 
+	/**
+	 * Renders a full order page if the current user may view it.
+	 *
+	 * @param mixed $requestedOrderId Untrusted order id from the request.
+	 * @return void
+	 */
 	public function showOrder($requestedOrderId): void {
 		if (session_status() === PHP_SESSION_NONE) {
 			session_start();
 		}
 
+		// Validate the id as a positive integer before querying
 		$orderId = filter_var($requestedOrderId, FILTER_VALIDATE_INT);
 		if ($orderId === false || $orderId < 1) {
 			header('Location: ' . \BASE_URL . '/index.php?message=Order%20not%20found');
@@ -125,6 +157,7 @@ class OrderController {
 			exit;
 		}
 
+		// Access check: only the owner or an admin
 		if (!$this->canViewOrder($order)) {
 			http_response_code(403);
 			header('Location: ' . \BASE_URL . '/index.php?message=Access%20denied');
@@ -137,11 +170,18 @@ class OrderController {
 		require_once \base_path('templates/footer.php');
 	}
 
+	/**
+	 * Renders the order details fragment (used by the order lists) with plain-text errors.
+	 *
+	 * @param mixed $requestedOrderId Untrusted order id from the request.
+	 * @return void
+	 */
 	public function details($requestedOrderId): void {
 		if (session_status() === PHP_SESSION_NONE) {
 			session_start();
 		}
 
+		// Validate the id as a positive integer before querying
 		$orderId = filter_var($requestedOrderId, FILTER_VALIDATE_INT);
 		if ($orderId === false || $orderId < 1) {
 			http_response_code(400);
@@ -154,6 +194,7 @@ class OrderController {
 			exit('Order not found');
 		}
 
+		// Access check: only the owner or an admin
 		if (!$this->canViewOrder($order)) {
 			http_response_code(403);
 			exit('Access denied');
@@ -167,11 +208,18 @@ class OrderController {
 		require_once \base_path('templates/order-details.php');
 	}
 
+	/**
+	 * Returns an order as JSON if the current user may view it.
+	 *
+	 * @param mixed $requestedOrderId Untrusted order id from the request.
+	 * @return void
+	 */
 	public function getApi($requestedOrderId): void {
 		if (session_status() === PHP_SESSION_NONE) {
 			session_start();
 		}
 
+		// Validate the id as a positive integer before querying
 		$orderId = filter_var($requestedOrderId, FILTER_VALIDATE_INT);
 		if ($orderId === false || $orderId < 1) {
 			http_response_code(400);
@@ -184,6 +232,7 @@ class OrderController {
 			\Response::json(['success' => false, 'message' => 'Order not found']);
 		}
 
+		// Access check: only the owner or an admin
 		if (!$this->canViewOrder($order)) {
 			http_response_code(403);
 			\Response::json(['success' => false, 'message' => 'Access denied']);
@@ -192,6 +241,12 @@ class OrderController {
 		\Response::json(['success' => true, 'order' => $order]);
 	}
 
+	/**
+	 * Decides whether the current session user may see the order (owner or admin).
+	 *
+	 * @param array $order Order row containing user_id.
+	 * @return bool True if access is allowed.
+	 */
 	private function canViewOrder(array $order): bool {
 		if (($_SESSION['user_role'] ?? '') === 'admin') {
 			return true;

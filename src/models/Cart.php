@@ -1,12 +1,26 @@
 <?php
 
+/**
+ * Data-access model for shopping carts and their items, keyed by PHP session.
+ */
 class Cart {
     private $pdo;
 
+    /**
+     * Stores the database connection used by all cart queries.
+     *
+     * @param PDO $pdo Active database connection.
+     */
     public function __construct($pdo) {
         $this->pdo = $pdo;
     }
 
+    /**
+     * Returns the cart bound to the session, creating it so every visitor always has one.
+     *
+     * @param string $session_id Current PHP session id.
+     * @return array Cart row (at least id and session_id).
+     */
     public function getOrCreateCart($session_id){ // Get existing cart for session or create new one
         $stmt = $this->pdo->prepare("SELECT * FROM carts WHERE session_id = :session_id"); // Try to find cart for current session
         $stmt->execute([':session_id' => $session_id]); // If cart exists, return it. Otherwise, create new cart and return it
@@ -19,6 +33,12 @@ class Cart {
         return $cart;
     }
 
+    /**
+     * Loads cart items with server info and the details of each chosen component.
+     *
+     * @param int $cart_id Cart identifier.
+     * @return array List of items, each with a 'components' array.
+     */
     public function getItems($cart_id) {
     $stmt = $this->pdo->prepare("
         SELECT ci.*, s.name, s.image
@@ -32,6 +52,7 @@ class Cart {
     foreach ($items as &$item) {
         $ids = json_decode($item['component_ids'], true);
         if (!empty($ids)) {
+            // One "?" per id keeps the IN() list parameterized (no SQL injection)
             $placeholders = implode(',', array_fill(0, count($ids), '?'));
             $stmt2 = $this->pdo->prepare("
                 SELECT name, value, type, price
@@ -48,6 +69,15 @@ class Cart {
     return $items;
 }
 
+    /**
+     * Validates a configuration and recalculates its price on the server,
+     * so prices sent by the browser are never trusted.
+     *
+     * @param mixed $serverId Server id from the request.
+     * @param array $componentIds Selected component ids from the request.
+     * @return array ['component_ids' => int[], 'total_price' => float].
+     * @throws InvalidArgumentException If the server/components are invalid, unavailable or duplicated by type.
+     */
     public function calculateConfiguredItem($serverId, array $componentIds): array {
         $serverId = filter_var($serverId, FILTER_VALIDATE_INT);
         if ($serverId === false || $serverId < 1) {
@@ -61,6 +91,7 @@ class Cart {
             throw new InvalidArgumentException('Server is unavailable');
         }
 
+        // Cast every id to a positive int and reject duplicates
         $selectedIds = [];
         foreach ($componentIds as $componentId) {
             if ($componentId === null || $componentId === '') {
@@ -76,6 +107,7 @@ class Cart {
 
         $totalPrice = (float) $server['base_price'];
         if ($selectedIds) {
+            // Named placeholders keep the query safe from SQL injection
             $placeholders = [];
             $params = [':server_id' => $serverId];
             foreach ($selectedIds as $index => $componentId) {
@@ -95,6 +127,7 @@ class Cart {
             $componentStmt->execute($params);
             $components = $componentStmt->fetchAll();
 
+            // A mismatch means some component is unavailable or not compatible with this server
             if (count($components) !== count($selectedIds)) {
                 throw new InvalidArgumentException('One or more components are unavailable for this server');
             }
@@ -115,6 +148,15 @@ class Cart {
         ];
     }
 
+    /**
+     * Adds a configured server to the cart; components are stored as JSON.
+     *
+     * @param int $cart_id Target cart id.
+     * @param int $server_id Chosen server id.
+     * @param array $component_ids Validated component ids.
+     * @param float $total_price Price calculated on the server.
+     * @return void
+     */
      public function addItem($cart_id, $server_id, $component_ids, $total_price) {
         $stmt = $this->pdo->prepare("
             INSERT INTO cart_items (cart_id, server_id, component_ids, total_price)
@@ -128,7 +170,15 @@ class Cart {
         ]);
     }
 
+    /**
+     * Removes an item only if its cart belongs to the given session.
+     *
+     * @param int $item_id Cart item id.
+     * @param string $session_id Current session id.
+     * @return bool True if an item was deleted.
+     */
     public function removeItem($item_id, $session_id) {
+        // Joining on session_id prevents deleting items from other users' carts
         $stmt = $this->pdo->prepare("
             DELETE ci
             FROM cart_items ci
@@ -144,6 +194,12 @@ class Cart {
         return $stmt->rowCount() > 0;
     }
 
+    /**
+     * Deletes all items from a cart, e.g. after an order is placed.
+     *
+     * @param int $cart_id Cart identifier.
+     * @return bool True on success.
+     */
     public function clearCart($cart_id) {
         $stmt = $this->pdo->prepare("DELETE FROM cart_items WHERE cart_id = :cart_id");
         return $stmt->execute([':cart_id' => $cart_id]);

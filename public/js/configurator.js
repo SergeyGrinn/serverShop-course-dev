@@ -1,3 +1,8 @@
+/**
+ * Knockout view model that keeps a live price estimate for the server configurator.
+ *
+ * @param {number} basePrice - Base price of the selected server.
+ */
 function ConfiguratorViewModel(basePrice) {
     var self = this;
 
@@ -5,7 +10,15 @@ function ConfiguratorViewModel(basePrice) {
     self.selectedComponents = ko.observableArray([]);
     self.selectedByType = {};
 
+    /**
+     * Records a component choice, replacing the previous one of the same type.
+     *
+     * @param {string} type - Component type (e.g. RAM, CPU).
+     * @param {string|number} price - Price of the chosen component.
+     * @returns {void}
+     */
     self.selectComponent = function(type, price) {
+        // Only one component per type may be counted in the total
         if (self.selectedByType[type]) {
             self.selectedComponents.remove(self.selectedByType[type]);
         }
@@ -13,6 +26,11 @@ function ConfiguratorViewModel(basePrice) {
         self.selectedComponents.push(price);
     };
 
+    /**
+     * Base price plus selected components; display-only, the server recalculates the real price.
+     *
+     * @returns {string} Total formatted with two decimals.
+     */
     self.totalPrice = ko.computed(function() {
         var total = self.basePrice;
         self.selectedComponents().forEach(function(price) {
@@ -31,6 +49,7 @@ document.getElementById('add-to-cart')?.addEventListener('click', function() {
 
     const componentIds = Array.from(selectedInputs).map(input => parseInt(input.value));
 
+    // Send only ids; the price is recalculated on the server. CSRF token protects the POST
     fetch(BASE_URL + '/api/cart/add.php', {
         method: 'POST',
         headers: {
