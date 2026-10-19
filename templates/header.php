@@ -19,7 +19,7 @@ $isAdmin = ($_SESSION['user_role'] ?? '') === 'admin';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Server Catalogue</title>
 
-    <link rel="stylesheet" href="<?= BASE_URL ?>/css/tailwind-output.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/css/tailwind-output.css?v=<?= filemtime(__DIR__ . '/../public/css/tailwind-output.css') ?>">
     <link rel="stylesheet" href="<?= BASE_URL ?>/css/main.css?v=<?= filemtime(__DIR__ . '/../public/css/main.css') ?>">
     <?php if ($isAdmin): ?>
         <link rel="stylesheet" href="<?= BASE_URL ?>/css/admin.css?v=<?= filemtime(__DIR__ . '/../public/css/admin.css') ?>">
